@@ -1,1 +1,1 @@
-export { default } from './MdViewer';
+export { default } from "./MarkdownComponent";

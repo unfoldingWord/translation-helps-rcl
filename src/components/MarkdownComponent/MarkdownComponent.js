@@ -3,8 +3,9 @@ import { BlockEditable } from 'markdown-translatable';
 
 const MarkdownComponent = ({
   markdown,
+  onMarkdownChange,
 }) => {
-  const [preview, SetPreview] = useState(false);
+  const [preview, setPreview] = useState(false);
 
   return (
     <div>
@@ -12,7 +13,7 @@ const MarkdownComponent = ({
         onClick={() => {
           console.log("--- --- ---");
           console.log("Current state:" + markdown);
-          SetPreview(!preview);
+          setPreview(!preview);
         }}
       >
         {!preview ? "Markdown" : "HTML"}
@@ -20,9 +21,9 @@ const MarkdownComponent = ({
       <BlockEditable
         markdown={markdown}
         preview={preview}
-        // onEdit={(_markdown) => {
-        //   setState({ _markdown });
-        // }}
+        onEdit={(_markdown) => {
+          onMarkdownChange(_markdown);
+        }}
       />
     </div>
   );
