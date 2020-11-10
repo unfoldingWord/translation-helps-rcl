@@ -4,7 +4,7 @@ const { styles, theme } = require("./styleguide.styles");
 module.exports = {
   title: `${name} v${version}`,
   ribbon: {
-    url: repository.url,
+    url: repository,
     text: "View on GitHub",
   },
   styles,
