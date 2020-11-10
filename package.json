@@ -1,6 +1,6 @@
 {
   "name": "translation-helps-rcl",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
   "author": "mannycolon <colonmanuel7@gmail.com>",
