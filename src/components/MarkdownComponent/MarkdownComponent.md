@@ -16,12 +16,18 @@ function Component() {
   const [markdown, setMarkdown] = useState("");
   // const reference = { bookId: 'tit', chapter: 1, verse: 1, filePath: '' };
   const reference = {
-    bookId: "translate",
+    bookId: "bible",
     chapter: 1,
     verse: 1,
-    filePath: "figs-metaphor/01.md",
+    filePath: "kt/jesus.md",
   };
-  const resourceLink = "unfoldingWord/en/ta/master";
+  // const reference = {
+  //   bookId: "translate",
+  //   chapter: 1,
+  //   verse: 1,
+  //   filePath: "figs-metaphor/01.md",
+  // };
+  const resourceLink = "unfoldingWord/en/tw/master";
   const config = {
     server: "https://git.door43.org",
     cache: {
