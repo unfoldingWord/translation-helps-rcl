@@ -8,7 +8,7 @@
   "scripts": {
     "start": "styleguidist server",
     "build": "styleguidist build",
-    "prepublishOnly": "rm -fr ./dist & babel ./src --out-dir ./dist -s inline"
+    "prepublishOnly": "rm -fr ./lib & babel ./src --out-dir ./lib -s inline"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.x",
