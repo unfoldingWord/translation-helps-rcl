@@ -8,9 +8,8 @@ import Card from "./Card";
 
 <Card
   alert
-  // closeable
-  title={<div>Title</div>}
-  center={<div>Center</div>}
+  title={<div>Notes</div>}
+  center={<div>{"< 1 of 7 >"}</div>}
   onClose={() => console.log("closed")}
 >
   <p>Description</p>
