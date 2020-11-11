@@ -1,37 +1,37 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import Badge from "@material-ui/core/Badge";
-import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import Badge from '@material-ui/core/Badge'
+import CloseIcon from '@material-ui/icons/Close'
+import { makeStyles } from '@material-ui/core/styles'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import AnnouncementIcon from '@material-ui/icons/Announcement'
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
 const useStyles = makeStyles(() => ({
   dragIcon: {
-    color: "gray",
+    color: 'gray',
     opacity: 0.5,
-    margin: "0px 10px 0px 0px",
-    cursor: (props) => (props.dragging ? "grabbing" : "grab"),
+    margin: '0px 10px 0px 0px',
+    cursor: props => (props.dragging ? 'grabbing' : 'grab'),
   },
   chevronIcon: {
-    margin: "0px 12px",
-    cursor: "pointer",
+    margin: '0px 12px',
+    cursor: 'pointer',
   },
   pointerIcon: {
-    cursor: "pointer",
+    cursor: 'pointer',
   },
   children: {
-    textAlign: "start",
-    padding: "0px 0px 0px 4px",
+    textAlign: 'start',
+    padding: '0px 0px 0px 4px',
   },
   paddingRight: {
-    padding: "0px 15px 0px 0px",
+    padding: '0px 15px 0px 0px',
   },
-}));
+}))
 
 const Paper = styled.div`
   margin: 2.5px;
@@ -41,17 +41,17 @@ const Paper = styled.div`
   position: relative;
   margin-bottom: 50px;
   transition: all 0.2s ease-in-out;
-`;
+`
 
 const FlexDiv = styled.div`
   display: flex;
   align-items: center;
-`;
+`
 
 const FlexSpacedDiv = styled.div`
   display: flex;
   justify-content: space-between;
-`;
+`
 
 const Navigation = ({ notes, classes, noteIndex, onPrevItem, onNextItem }) => (
   <FlexSpacedDiv>
@@ -59,7 +59,7 @@ const Navigation = ({ notes, classes, noteIndex, onPrevItem, onNextItem }) => (
     <FlexDiv>{`${noteIndex + 1} of ${notes.length}`}</FlexDiv>
     <ChevronRightIcon className={classes.chevronIcon} onClick={onNextItem} />
   </FlexSpacedDiv>
-);
+)
 
 const Card = ({
   alert,
@@ -72,34 +72,34 @@ const Card = ({
   closeable,
   classes: { root, header, children: childrenClassName },
 }) => {
-  const [noteIndex, setNoteIndex] = useState(0);
-  const classes = useStyles({ dragging });
+  const [noteIndex, setNoteIndex] = useState(0)
+  const classes = useStyles({ dragging })
 
   const onAlertClick = () => {
-    console.log("onAlertClick");
-  };
+    console.log('onAlertClick')
+  }
 
   const onMenuClick = () => {
-    console.log("onMenuClick");
-  };
+    console.log('onMenuClick')
+  }
 
   const onPrevItem = () => {
-    const newIndex = noteIndex - 1;
+    const newIndex = noteIndex - 1
     if (newIndex < 0) {
-      setNoteIndex(items.length - 1);
+      setNoteIndex(items.length - 1)
     } else {
-      setNoteIndex(newIndex);
+      setNoteIndex(newIndex)
     }
-  };
+  }
 
   const onNextItem = () => {
-    const newIndex = noteIndex + 1;
+    const newIndex = noteIndex + 1
     if (newIndex > items.length - 1) {
-      setNoteIndex(0);
+      setNoteIndex(0)
     } else {
-      setNoteIndex(newIndex);
+      setNoteIndex(newIndex)
     }
-  };
+  }
 
   return (
     <Paper ref={dragRef} className={root}>
@@ -129,8 +129,8 @@ const Card = ({
                 onClick={onAlertClick}
               >
                 <Badge
-                  color="secondary"
-                  variant="dot"
+                  color='secondary'
+                  variant='dot'
                   // invisible={invisible}
                 >
                   <AnnouncementIcon />
@@ -148,19 +148,19 @@ const Card = ({
         {children}
       </div>
     </Paper>
-  );
-};
+  )
+}
 
 Card.defaultProps = {
   classes: {
-    root: "",
-    header: "",
-    children: "",
+    root: '',
+    header: '',
+    children: '',
   },
   alert: false,
   dragging: false,
   closeable: false,
-};
+}
 
 Card.propTypes = {
   /** Root ref, used as reference for drag action */
@@ -181,6 +181,6 @@ Card.propTypes = {
   onClose: PropTypes.func.isRequired,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
-};
+}
 
-export default Card;
+export default Card
