@@ -59,5 +59,5 @@ function Component() {
   )
 }
 
-;<Component />
+<Component />
 ```
