@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
-import { BlockEditable } from 'markdown-translatable';
+import React, { useState } from "react";
+import { BlockEditable } from "markdown-translatable";
 
-const MarkdownComponent = ({
-  markdown,
-  onMarkdownChange,
-}) => {
+const MarkdownComponent = ({ markdown, onMarkdownChange }) => {
   const [preview, setPreview] = useState(false);
 
   return (

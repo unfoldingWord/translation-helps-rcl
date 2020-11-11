@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Badge from "@material-ui/core/Badge";
@@ -7,6 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const useStyles = makeStyles(() => ({
   dragIcon: {
@@ -15,14 +17,19 @@ const useStyles = makeStyles(() => ({
     margin: "0px 10px 0px 0px",
     cursor: (props) => (props.dragging ? "grabbing" : "grab"),
   },
+  chevronIcon: {
+    margin: "0px 12px",
+    cursor: "pointer",
+  },
   pointerIcon: {
     cursor: "pointer",
   },
   children: {
+    textAlign: "start",
     padding: "0px 0px 0px 4px",
   },
   paddingRight: {
-    padding: "0px 13px 0px 0px",
+    padding: "0px 15px 0px 0px",
   },
 }));
 
@@ -46,10 +53,18 @@ const FlexSpacedDiv = styled.div`
   justify-content: space-between;
 `;
 
+const Navigation = ({ notes, classes, noteIndex, onPrevItem, onNextItem }) => (
+  <FlexSpacedDiv>
+    <ChevronLeftIcon className={classes.chevronIcon} onClick={onPrevItem} />
+    <FlexDiv>{`${noteIndex + 1} of ${notes.length}`}</FlexDiv>
+    <ChevronRightIcon className={classes.chevronIcon} onClick={onNextItem} />
+  </FlexSpacedDiv>
+);
+
 const Card = ({
   alert,
   title,
-  center,
+  items,
   dragRef,
   onClose,
   dragging,
@@ -57,6 +72,7 @@ const Card = ({
   closeable,
   classes: { root, header, children: childrenClassName },
 }) => {
+  const [noteIndex, setNoteIndex] = useState(0);
   const classes = useStyles({ dragging });
 
   const onAlertClick = () => {
@@ -67,6 +83,24 @@ const Card = ({
     console.log("onMenuClick");
   };
 
+  const onPrevItem = () => {
+    const newIndex = noteIndex - 1;
+    if (newIndex < 0) {
+      setNoteIndex(items.length - 1);
+    } else {
+      setNoteIndex(newIndex);
+    }
+  };
+
+  const onNextItem = () => {
+    const newIndex = noteIndex + 1;
+    if (newIndex > items.length - 1) {
+      setNoteIndex(0);
+    } else {
+      setNoteIndex(newIndex);
+    }
+  };
+
   return (
     <Paper ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
@@ -74,7 +108,17 @@ const Card = ({
           <DragIndicatorIcon className={classes.dragIcon} />
           <div>{title}</div>
         </FlexDiv>
-        <FlexDiv>{center}</FlexDiv>
+        <FlexDiv>
+          {items && items.length > 0 && (
+            <Navigation
+              notes={items}
+              classes={classes}
+              noteIndex={noteIndex}
+              onPrevItem={onPrevItem}
+              onNextItem={onNextItem}
+            />
+          )}
+        </FlexDiv>
         {closeable ? (
           <CloseIcon className={classes.pointerIcon} onClick={onClose} />
         ) : (
@@ -129,8 +173,8 @@ Card.propTypes = {
   closeable: PropTypes.bool,
   /** Class names to modify the root, header and children */
   classes: PropTypes.object,
-  /** JSX to be render in the center of the card header */
-  center: PropTypes.node.isRequired,
+  /** Array of items (articles, tsv files) */
+  items: PropTypes.array.isRequired,
   /** JSX text for the title */
   title: PropTypes.node.isRequired,
   /** Function fired when the close (x) icon is clicked */
