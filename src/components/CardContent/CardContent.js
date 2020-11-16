@@ -2,27 +2,30 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useRsrc } from 'scripture-resources-rcl'
 import { BlockEditable } from 'markdown-translatable'
+import TsvContent from '../TsvContent'
+import tsvToJson from '../../core/tsvToJson'
 
 const CardContent = ({
   verse,
-  bookId,
+  owner,
   branch,
   server,
   chapter,
   filePath,
+  projectId,
   languageId,
   resourceId,
 }) => {
-  // const [preview, setPreview] = useState(false)
   const [content, setContent] = useState('')
 
   const reference = {
     verse,
-    bookId,
     chapter,
     filePath,
+    projectId,
+    bibleId: projectId
   }
-  const resourceLink = `unfoldingWord/${languageId}/${resourceId}/${branch}`
+  const resourceLink = `${owner}/${languageId}/${resourceId}/${branch}`
   const config = {
     server,
     cache: {
@@ -47,10 +50,19 @@ const CardContent = ({
     }
   })
 
+  console.log({ state })
+  console.log({ content })
+
   const path = state?.project?.path.includes('tsv')
     ? state?.project?.path
     : null
   const fileType = path ? path.split('.').pop() : filePath.split('.').pop()
+
+  const tsvs = tsvToJson(content);
+  const tsvItem = tsvs.length ? tsvs[2] : null;
+
+  console.log('tsvItem', tsvItem)
+
 
   if (fileType === 'md') {
     return (
@@ -62,8 +74,22 @@ const CardContent = ({
         }}
       />
     )
+  } else if (tsvItem) {
+    return (
+      <TsvContent
+        id={tsvItem.ID}
+        book={tsvItem.Book}
+        verse={tsvItem.Verse}
+        chapter={tsvItem.Chapter}
+        glQuote={tsvItem.GLQuote}
+        occurrence={tsvItem.Occurrence}
+        originalQuote={tsvItem.OrigQuote}
+        occurrenceNote={tsvItem.OccurrenceNote}
+        supportReference={tsvItem.SupportReference}
+      />
+    )
   } else {
-    return <div>{content}</div>
+    return <div></div>
   }
 }
 
@@ -79,8 +105,8 @@ CardContent.propTypes = {
   branch: PropTypes.string,
   chapter: PropTypes.number,
   filePath: PropTypes.string,
-  bookId: PropTypes.string.isRequired,
   server: PropTypes.string.isRequired,
+  projectId: PropTypes.string.isRequired,
   languageId: PropTypes.string.isRequired,
   resourceId: PropTypes.string.isRequired,
 }

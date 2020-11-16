@@ -3,10 +3,7 @@
 A Card Component.
 
 ```jsx
-import React from 'react'
-import Card from './Card'
-
-;<Card
+<Card
   alert
   title={<div>Notes</div>}
   items={[1, 2, 3]}

@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
   },
   children: {
     textAlign: 'start',
-    padding: '0px 0px 0px 4px',
+    padding: '4px 0px 0px 4px',
   },
   paddingRight: {
     padding: '0px 15px 0px 0px',
@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
 
 const Paper = styled.div`
   margin: 2.5px;
-  padding: 13px;
+  padding: 16px;
   box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   position: relative;
@@ -61,6 +61,8 @@ const Navigation = ({ notes, classes, noteIndex, onPrevItem, onNextItem }) => (
   </FlexSpacedDiv>
 )
 
+// TODO: support one item view
+// TODO:
 const Card = ({
   alert,
   title,
@@ -70,7 +72,7 @@ const Card = ({
   dragging,
   children,
   closeable,
-  classes: { root, header, children: childrenClassName },
+  classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [noteIndex, setNoteIndex] = useState(0)
   const classes = useStyles({ dragging })
@@ -105,7 +107,9 @@ const Card = ({
     <Paper ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
         <FlexDiv>
-          <DragIndicatorIcon className={classes.dragIcon} />
+          <DragIndicatorIcon
+            className={`${classes.dragIcon} ${dragIndicator}`}
+          />
           <div>{title}</div>
         </FlexDiv>
         <FlexDiv>
@@ -156,6 +160,7 @@ Card.defaultProps = {
     root: '',
     header: '',
     children: '',
+    dragIndicator: '',
   },
   alert: false,
   dragging: false,

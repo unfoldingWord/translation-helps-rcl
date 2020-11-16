@@ -9,6 +9,8 @@
   "scripts": {
     "start": "styleguidist server",
     "build": "styleguidist build",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "prepublishOnly": "rm -fr ./dist & babel ./src --out-dir ./dist -s inline"
   },
@@ -37,7 +39,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-styleguidist": "^11.1.1",
-    "scripture-resources-rcl": "^2.0.8",
+    "scripture-resources-rcl": "file:.yalc/scripture-resources-rcl",
     "webpack": "4.44.0"
   },
   "dependencies": {
