@@ -23,7 +23,6 @@ const CardContent = ({
     chapter,
     filePath,
     projectId,
-    bibleId: projectId
   }
   const resourceLink = `${owner}/${languageId}/${resourceId}/${branch}`
   const config = {
@@ -50,19 +49,14 @@ const CardContent = ({
     }
   })
 
-  console.log({ state })
-  console.log({ content })
-
   const path = state?.project?.path.includes('tsv')
     ? state?.project?.path
     : null
   const fileType = path ? path.split('.').pop() : filePath.split('.').pop()
 
-  const tsvs = tsvToJson(content);
-  const tsvItem = tsvs.length ? tsvs[2] : null;
-
-  console.log('tsvItem', tsvItem)
-
+  const tsvs = tsvToJson(content)
+  // TODO: How should note navigation work based on reference?
+  const tsvItem = tsvs.length ? tsvs[2] : null
 
   if (fileType === 'md') {
     return (
