@@ -158,10 +158,14 @@ const NotesSettingsCard = ({
   )
 }
 
+NotesSettingsCard.defaultProps = {
+  filters: [],
+}
+
 NotesSettingsCard.propTypes = {
+  filters: PropTypes.array,
   onClose: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
-  filters: PropTypes.array.isRequired,
   onRemoveCard: PropTypes.func.isRequired,
   onShowMarkdown: PropTypes.func.isRequired,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
