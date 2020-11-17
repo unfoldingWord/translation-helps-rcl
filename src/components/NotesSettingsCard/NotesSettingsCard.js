@@ -80,8 +80,9 @@ const NotesSettingsCard = ({
   title,
   onClose,
   headers,
+  filters, // TODO: Make use of this prop
   onRemoveCard,
-  onShowMarkdown,
+  onShowMarkdown, // TODO: Make use of this prop
 }) => {
   const initialState = {
     markdownView: false,
@@ -89,7 +90,7 @@ const NotesSettingsCard = ({
   // Initialize headers to initial state
   headers.forEach(header => (initialState[header] = false))
   const [state, setState] = useState(initialState)
-  // TODO: THIS IS TEMP
+  // TODO: Move font size state up the component tree.
   const [fontSize, setFontSize] = useState(100)
   const classes = useStyles()
 
@@ -149,10 +150,21 @@ const NotesSettingsCard = ({
       </div>
       <Divider />
       <div className={classes.cardRemovalSection}>
-        <div className={classes.removeText}>Remove Resource Card</div>
+        <div className={classes.removeText} onClick={onRemoveCard}>
+          Remove Resource Card
+        </div>
       </div>
     </Card>
   )
+}
+
+NotesSettingsCard.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  headers: PropTypes.array.isRequired,
+  filters: PropTypes.array.isRequired,
+  onRemoveCard: PropTypes.func.isRequired,
+  onShowMarkdown: PropTypes.func.isRequired,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 }
 
 export default NotesSettingsCard
