@@ -12,8 +12,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
 const useStyles = makeStyles(() => ({
   dragIcon: {
-    color: 'gray',
-    opacity: 0.5,
+    color: '#ECECEC',
     margin: '0px 10px 0px 0px',
     cursor: props => (props.dragging ? 'grabbing' : 'grab'),
   },
@@ -62,7 +61,6 @@ const Navigation = ({ notes, classes, noteIndex, onPrevItem, onNextItem }) => (
 )
 
 // TODO: support one item view
-// TODO:
 const Card = ({
   alert,
   title,
@@ -113,7 +111,7 @@ const Card = ({
           <div>{title}</div>
         </FlexDiv>
         <FlexDiv>
-          {items && items.length > 0 && (
+          {items && items.length > 1 && (
             <Navigation
               notes={items}
               classes={classes}
@@ -179,11 +177,11 @@ Card.propTypes = {
   /** Class names to modify the root, header and children */
   classes: PropTypes.object,
   /** Array of items (articles, tsv files) */
-  items: PropTypes.array.isRequired,
+  items: PropTypes.array,
   /** JSX text for the title */
   title: PropTypes.node.isRequired,
   /** Function fired when the close (x) icon is clicked */
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
 }
