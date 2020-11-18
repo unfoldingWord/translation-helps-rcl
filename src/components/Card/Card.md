@@ -5,8 +5,9 @@ A Card Component.
 ```jsx
 <Card
   alert
+  noteIndex={0}
+  notes={[1, 2, 3]}
   title={<div>Notes</div>}
-  items={[1, 2, 3]}
   onClose={() => console.log('closed')}
 >
   <p>

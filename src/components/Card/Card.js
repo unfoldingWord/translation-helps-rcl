@@ -60,19 +60,19 @@ const Navigation = ({ notes, classes, noteIndex, onPrevItem, onNextItem }) => (
   </FlexSpacedDiv>
 )
 
-// TODO: support one item view
 const Card = ({
   alert,
   title,
-  items,
+  notes,
   dragRef,
   onClose,
   dragging,
   children,
+  noteIndex,
   closeable,
+  setNoteIndex,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
-  const [noteIndex, setNoteIndex] = useState(0)
   const classes = useStyles({ dragging })
 
   const onAlertClick = () => {
@@ -86,7 +86,7 @@ const Card = ({
   const onPrevItem = () => {
     const newIndex = noteIndex - 1
     if (newIndex < 0) {
-      setNoteIndex(items.length - 1)
+      setNoteIndex(notes.length - 1)
     } else {
       setNoteIndex(newIndex)
     }
@@ -94,7 +94,7 @@ const Card = ({
 
   const onNextItem = () => {
     const newIndex = noteIndex + 1
-    if (newIndex > items.length - 1) {
+    if (newIndex > notes.length - 1) {
       setNoteIndex(0)
     } else {
       setNoteIndex(newIndex)
@@ -111,9 +111,9 @@ const Card = ({
           <div>{title}</div>
         </FlexDiv>
         <FlexDiv>
-          {items && items.length > 1 && (
+          {notes && notes.length > 1 && (
             <Navigation
-              notes={items}
+              notes={notes}
               classes={classes}
               noteIndex={noteIndex}
               onPrevItem={onPrevItem}
@@ -166,6 +166,8 @@ Card.defaultProps = {
 }
 
 Card.propTypes = {
+  /** Current note index */
+  noteIndex: PropTypes.number,
   /** Root ref, used as reference for drag action */
   dragRef: PropTypes.node,
   /** Show alert icon */
@@ -176,8 +178,8 @@ Card.propTypes = {
   closeable: PropTypes.bool,
   /** Class names to modify the root, header and children */
   classes: PropTypes.object,
-  /** Array of items (articles, tsv files) */
-  items: PropTypes.array,
+  /** Array of notes (articles, tsv files) */
+  notes: PropTypes.array,
   /** JSX text for the title */
   title: PropTypes.node.isRequired,
   /** Function fired when the close (x) icon is clicked */

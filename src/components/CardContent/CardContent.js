@@ -1,85 +1,31 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { useRsrc } from 'scripture-resources-rcl'
 import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
-import tsvToJson from '../../core/tsvToJson'
 
-const CardContent = ({
-  verse,
-  owner,
-  branch,
-  server,
-  chapter,
-  filePath,
-  projectId,
-  languageId,
-  resourceId,
-}) => {
-  const [content, setContent] = useState('')
-
-  const reference = {
-    verse,
-    chapter,
-    filePath,
-    projectId,
-  }
-  const resourceLink = `${owner}/${languageId}/${resourceId}/${branch}`
-  const config = {
-    server,
-    cache: {
-      maxAge: 1 * 1 * 1 * 60 * 1000, // override cache to 1 minute
-    },
-  }
-
-  const { state, actions } = useRsrc({
-    resourceLink,
-    reference,
-    config,
-  })
-
-  useEffect(async () => {
-    async function getContent() {
-      const file = await actions.getFile()
-      setContent(file || '')
-    }
-
-    if (actions.getFile) {
-      getContent()
-    }
-  })
-
-  const path = state?.project?.path.includes('tsv')
-    ? state?.project?.path
-    : null
-  const fileType = path ? path.split('.').pop() : filePath.split('.').pop()
-
-  const tsvs = tsvToJson(content)
-  // TODO: How should note navigation work based on reference?
-  const tsvItem = tsvs.length ? tsvs[2] : null
-
-  if (fileType === 'md') {
+const CardContent = ({ markdown, note }) => {
+  if (markdown && typeof markdown === 'string') {
     return (
       <BlockEditable
-        markdown={content}
         preview={true}
-        onEdit={_markdown => {
-          onMarkdownChange(_markdown)
-        }}
+        markdown={markdown}
+        // onEdit={_markdown => {
+        //   onMarkdownChange(_markdown)
+        // }}
       />
     )
-  } else if (tsvItem) {
+  } else if (note) {
     return (
       <TsvContent
-        id={tsvItem.ID}
-        book={tsvItem.Book}
-        verse={tsvItem.Verse}
-        chapter={tsvItem.Chapter}
-        glQuote={tsvItem.GLQuote}
-        occurrence={tsvItem.Occurrence}
-        originalQuote={tsvItem.OrigQuote}
-        occurrenceNote={tsvItem.OccurrenceNote}
-        supportReference={tsvItem.SupportReference}
+        id={note.ID}
+        book={note.Book}
+        verse={note.Verse}
+        chapter={note.Chapter}
+        glQuote={note.GLQuote}
+        occurrence={note.Occurrence}
+        originalQuote={note.OrigQuote}
+        occurrenceNote={note.OccurrenceNote}
+        supportReference={note.SupportReference}
       />
     )
   } else {
@@ -87,22 +33,9 @@ const CardContent = ({
   }
 }
 
-CardContent.defaultProps = {
-  verse: 1,
-  chapter: 1,
-  filePath: '',
-  branch: 'master',
-}
-
 CardContent.propTypes = {
-  verse: PropTypes.number,
-  branch: PropTypes.string,
-  chapter: PropTypes.number,
-  filePath: PropTypes.string,
-  server: PropTypes.string.isRequired,
-  projectId: PropTypes.string.isRequired,
-  languageId: PropTypes.string.isRequired,
-  resourceId: PropTypes.string.isRequired,
+  note: PropTypes.object,
+  markdown: PropTypes.string,
 }
 
 export default CardContent

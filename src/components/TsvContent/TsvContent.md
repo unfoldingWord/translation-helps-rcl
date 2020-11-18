@@ -3,28 +3,49 @@
 Renders TSV data.
 
 ```jsx
-import React from 'react'
+import React, { useState } from 'react'
 import Card from '../Card'
+import useContent from '../../hooks/useContent.js'
 
 function Component() {
-  return (
-    <Card
-      title={<div>Notes</div>}
-      onClose={() => console.log('closed')}
-    >
-      <TsvContent
-        id='kx1g'
-        book='EPH'
-        verse={1}
-        chapter={1}
-        occurrence={1}
-        supportReference='figs-you'
-        glQuote='Paul, an apostle…to the saints who are in Ephesus'
-        originalQuote='Παῦλος, ἀπόστολος Χριστοῦ Ἰησοῦ…τοῖς ἁγίοις τοῖς οὖσιν ἐν Ἐφέσῳ'
-        occurrenceNote='Your language may have a particular way of introducing the author of a letter and its intended audience. Alternate translation: “I, Paul, an apostle…write this letter to you, God’s holy people in Ephesus”'
-      />
-    </Card>
-  )
+  const [noteIndex, setNoteIndex] = useState(0)
+  const { markdown, notes } = useContent({
+    verse: 1,
+    chapter: 1,
+    projectId: 'tit',
+    branch: 'master',
+    languageId: 'en',
+    resourceId: 'tn',
+    owner: 'unfoldingWord',
+    server: 'https://git.door43.org',
+  })
+  const note = notes ? notes[noteIndex] : null
+
+  if (note) {
+    return (
+      <Card
+        notes={notes}
+        noteIndex={noteIndex}
+        title={<div>Notes</div>}
+        setNoteIndex={setNoteIndex}
+        onClose={() => console.log('closed')}
+      >
+        <TsvContent
+          id={note.ID}
+          book={note.Book}
+          verse={note.Verse}
+          chapter={note.Chapter}
+          glQuote={note.GLQuote}
+          occurrence={note.Occurrence}
+          originalQuote={note.OrigQuote}
+          occurrenceNote={note.OccurrenceNote}
+          supportReference={note.SupportReference}
+        />
+      </Card>
+    )
+  } else {
+    return null
+  }
 }
 
 <Component />

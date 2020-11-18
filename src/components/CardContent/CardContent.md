@@ -5,31 +5,52 @@ Card Content component. Automagically detects MD or TSV content and renders it r
 ## TSV Content Example
 
 ```jsx
-<CardContent
-  verse={1}
-  chapter={1}
-  // filePath={''}
-  projectId={'tit'}
-  branch={'master'}
-  languageId={'en'}
-  resourceId={'tn'}
-  owner={'unfoldingWord'}
-  server={'https://git.door43.org'}
-/>
+import useContent from '../../hooks/useContent.js'
+
+const Component = () => {
+  const { markdown, notes } = useContent({
+    verse: 1,
+    chapter: 1,
+    projectId: 'tit',
+    branch: 'master',
+    languageId: 'en',
+    resourceId: 'tn',
+    owner: 'unfoldingWord',
+    server: 'https://git.door43.org',
+  })
+  const note = notes ? notes[1] : null
+
+  return (
+    <CardContent note={note} markdown={markdown} />
+  )
+}
+
+<Component/>
 ```
 
 ## Markdown Content Example
 
 ```jsx
-<CardContent
-  verse={1}
-  chapter={1}
-  filePath={'kt/jesus.md'}
-  projectId={'bible'}
-  branch={'master'}
-  languageId={'en'}
-  resourceId={'tw'}
-  owner={'unfoldingWord'}
-  server={'https://git.door43.org'}
-/>
+import useContent from '../../hooks/useContent.js'
+
+const Component = () => {
+  const { markdown, notes } = useContent({
+    verse: 1,
+    chapter: 1,
+    projectId: 'bible',
+    branch: 'master',
+    languageId: 'en',
+    resourceId: 'tw',
+    owner: 'unfoldingWord',
+    filePath: 'kt/jesus.md',
+    server: 'https://git.door43.org',
+  })
+  const note = notes ? notes[1] : null
+
+  return (
+    <CardContent note={note} markdown={markdown}/>
+  )
+}
+
+<Component/>
 ```
