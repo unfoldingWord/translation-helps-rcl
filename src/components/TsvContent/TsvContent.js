@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 
 const Container = styled.div`
@@ -22,19 +22,16 @@ const ItemContainer = styled.div`
 
 const Label = styled.div`
   margin-bottom: 7px;
+  color: ${props => (props.color ? props.color : '#000000')};
+  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
 `
 
-const Item = ({
-  label,
-  value,
-}) => (
+const Item = ({ label, value }) => (
   <ItemContainer>
-    <Label>
+    <Label color='#424242' fontSize='14px'>
       {label}
     </Label>
-    <Label>
-      {value}
-    </Label>
+    <Label>{value}</Label>
   </ItemContainer>
 )
 
@@ -62,32 +59,50 @@ const TsvContent = ({
       <Table>
         <tbody>
           <tr>
-            <TD><Item label='Book' value={book}/></TD>
-            <TD><Item label='Chapter' value={chapter}/></TD>
-            <TD><Item label='Verse' value={verse}/></TD>
-            <TD><Item label='ID' value={id}/></TD>
+            <TD>
+              <Item label='Book' value={book} />
+            </TD>
+            <TD>
+              <Item label='Chapter' value={chapter} />
+            </TD>
+            <TD>
+              <Item label='Verse' value={verse} />
+            </TD>
+            <TD>
+              <Item label='ID' value={id} />
+            </TD>
           </tr>
           <tr>
-            <TD><Item label='Support Reference' value={supportReference}/></TD>
-            <TD><Item label='Occurrence' value={occurrence}/></TD>
+            <TD>
+              <Item label='Support Reference' value={supportReference} />
+            </TD>
+            <TD>
+              <Item label='Occurrence' value={occurrence} />
+            </TD>
           </tr>
         </tbody>
       </Table>
       <Table>
         <tbody>
           <tr>
-            <TD><Item label='Original Quote' value={originalQuote}/></TD>
+            <TD>
+              <Item label='Original Quote' value={originalQuote} />
+            </TD>
           </tr>
           <tr>
-            <TD><Item label='GL Quote' value={glQuote}/></TD>
+            <TD>
+              <Item label='GL Quote' value={glQuote} />
+            </TD>
           </tr>
           <tr>
-            <TD><Item label='Occurrence Note' value={OccurrenceNote}/></TD>
+            <TD>
+              <Item label='Occurrence Note' value={OccurrenceNote} />
+            </TD>
           </tr>
         </tbody>
       </Table>
     </Container>
-  );
-};
+  )
+}
 
-export default TsvContent;
+export default TsvContent
