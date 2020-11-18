@@ -81,22 +81,26 @@ const NotesSettingsCard = ({
   title,
   onClose,
   headers,
-  filters, // TODO: Make use of this prop
+  filters,
+  fontSize,
+  setFilters,
+  setFontSize,
+  markdownView,
   onRemoveCard,
-  onShowMarkdown, // TODO: Make use of this prop
+  onShowMarkdown,
 }) => {
-  const initialState = {
-    markdownView: false,
-  }
-  // Initialize headers to initial state
-  headers.forEach(header => (initialState[header] = false))
-  const [state, setState] = useState(initialState)
-  // TODO: Move font size state up the component tree.
-  const [fontSize, setFontSize] = useState(100)
   const classes = useStyles()
 
-  const handleChange = event => {
-    setState({ ...state, [event.target.name]: event.target.checked })
+  const handleCheckboxClick = event => {
+    let newFilters = []
+
+    if (filters.includes(event.target.name)) {
+      newFilters = filters.filter(item => item !== event.target.name)
+    } else {
+      newFilters = [...filters, event.target.name]
+    }
+
+    setFilters(newFilters)
   }
 
   return (
@@ -105,8 +109,8 @@ const NotesSettingsCard = ({
         <FormControlLabel
           control={
             <BlueSwitch
-              checked={state.markdownView}
-              onChange={handleChange}
+              checked={markdownView}
+              onChange={e => onShowMarkdown(e.target.checked)}
               name='markdownView'
             />
           }
@@ -138,8 +142,8 @@ const NotesSettingsCard = ({
                 classes={{ root: classes.label }}
                 control={
                   <BlueCheckbox
-                    checked={state[header]}
-                    onChange={handleChange}
+                    checked={filters.includes(header)}
+                    onChange={handleCheckboxClick}
                     name={header}
                     color='primary'
                   />
@@ -167,7 +171,11 @@ NotesSettingsCard.propTypes = {
   filters: PropTypes.array,
   onClose: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
+  fontSize: PropTypes.number.isRequired,
+  setFilters: PropTypes.func.isRequired,
+  setFontSize: PropTypes.func.isRequired,
   onRemoveCard: PropTypes.func.isRequired,
+  markdownView: PropTypes.bool.isRequired,
   onShowMarkdown: PropTypes.func.isRequired,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 }
