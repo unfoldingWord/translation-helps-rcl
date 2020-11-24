@@ -13,7 +13,7 @@ function PaperComponent(props) {
   )
 }
 
-export default function DraggableCard({ open, handleClose, children }) {
+export default function DraggableModalCard({ open, handleClose, children }) {
   return (
     <Dialog
       open={open}
