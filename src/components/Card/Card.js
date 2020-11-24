@@ -70,7 +70,7 @@ const Card = ({
   dragging,
   children,
   closeable,
-  classes: { root, header, children: childrenClassName },
+  classes: { root, header, dragIndicator, children: childrenClassName },
 }) => {
   const [noteIndex, setNoteIndex] = useState(0)
   const classes = useStyles({ dragging })
@@ -105,7 +105,7 @@ const Card = ({
     <Paper ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
         <FlexDiv>
-          <DragIndicatorIcon className={classes.dragIcon} />
+          <DragIndicatorIcon className={classes.dragIcon + ` ${dragIndicator}`} />
           <div>{title}</div>
         </FlexDiv>
         <FlexDiv>
@@ -122,27 +122,27 @@ const Card = ({
         {closeable ? (
           <CloseIcon className={classes.pointerIcon} onClick={onClose} />
         ) : (
-          <FlexDiv>
-            {alert && (
-              <div
-                className={`${classes.pointerIcon} ${classes.paddingRight}`}
-                onClick={onAlertClick}
-              >
-                <Badge
-                  color='secondary'
-                  variant='dot'
-                  // invisible={invisible}
+            <FlexDiv>
+              {alert && (
+                <div
+                  className={`${classes.pointerIcon} ${classes.paddingRight}`}
+                  onClick={onAlertClick}
                 >
-                  <AnnouncementIcon />
-                </Badge>
-              </div>
-            )}
-            <MoreHorizIcon
-              className={classes.pointerIcon}
-              onClick={onMenuClick}
-            />
-          </FlexDiv>
-        )}
+                  <Badge
+                    color='secondary'
+                    variant='dot'
+                  // invisible={invisible}
+                  >
+                    <AnnouncementIcon />
+                  </Badge>
+                </div>
+              )}
+              <MoreHorizIcon
+                className={classes.pointerIcon}
+                onClick={onMenuClick}
+              />
+            </FlexDiv>
+          )}
       </FlexSpacedDiv>
       <div className={`${classes.children} ${childrenClassName}`}>
         {children}
@@ -178,7 +178,7 @@ Card.propTypes = {
   /** JSX text for the title */
   title: PropTypes.node.isRequired,
   /** Function fired when the close (x) icon is clicked */
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
 }
