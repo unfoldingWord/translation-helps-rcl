@@ -922,7 +922,7 @@
     core-js-pure "^3.0.0"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.11.2", "@babel/runtime@^7.7.2":
+"@babel/runtime@^7.11.2":
   version "7.12.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
   integrity sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
@@ -2914,7 +2914,7 @@ deep-equal@^1.0.1:
     object-keys "^1.1.1"
     regexp.prototype.flags "^1.2.0"
 
-deep-freeze@0.0.1, deep-freeze@^0.0.1:
+deep-freeze@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/deep-freeze/-/deep-freeze-0.0.1.tgz#3a0b0005de18672819dfd38cd31f91179c893e84"
   integrity sha1-OgsABd4YZygZ39OM0x+RF5yJPoQ=
@@ -3002,11 +3002,6 @@ depd@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
-
-dequal@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/dequal/-/dequal-1.0.1.tgz#dbbf9795ec626e9da8bd68782f4add1d23700d8b"
-  integrity sha512-Fx8jxibzkJX2aJgyfSdLhr9tlRoTnHKrRJuu2XHlAgKioN2j19/Bcbe0d4mFXYZ3+wpE2KVobUVTfDutcD17xQ==
 
 dequal@^2.0.2:
   version "2.0.2"
@@ -3913,6 +3908,23 @@ getpass@^0.1.1:
   integrity sha1-Xv+OPmhNVprkyysSgmBOi6YhSfo=
   dependencies:
     assert-plus "^1.0.0"
+
+gitea-react-toolkit@1.3.13:
+  version "1.3.13"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.3.13.tgz#be4e5cc7fca6096d2051bc2f535a147a7389b41e"
+  integrity sha512-Mbq8xRQRbbveH9CIRsvFgT7JULdfwuSYQcsmQOSAICREAL5LB1e70hTKWZEMyjsxESaQaYcyJ+41Xq/wQhQyOw==
+  dependencies:
+    awesome-debounce-promise "2.1.0"
+    axios "0.19.0"
+    axios-cache-adapter "2.4.1"
+    base-64 "0.1.0"
+    jszip "3.2.1"
+    localforage "1.7.3"
+    markdown-translatable "1.2.8"
+    prop-types "15.7.2"
+    react-json-view "^1.19.1"
+    use-deep-compare-effect "^1.3.1"
+    utf8 "3.0.0"
 
 gitea-react-toolkit@^1.3.12:
   version "1.3.12"
@@ -5348,6 +5360,19 @@ markdown-to-jsx@^6.11.4:
     prop-types "^15.6.2"
     unquote "^1.1.0"
 
+markdown-translatable@1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.8.tgz#730a9668cd65585d6d40a7e231f286d2d17f69e4"
+  integrity sha512-Yv80Ct6ZSheYWrXAy+7H66sGPkaBlczJfxKNkWhbdjMekbStWbISskf1RSgivtwdzWToAlvUHn+u2CBHE7t00w==
+  dependencies:
+    deep-freeze "^0.0.1"
+    md5 "^2.2.1"
+    prop-types "^15.7.2"
+    react-markdown "4.0.6"
+    showdown "^1.9.1"
+    turndown "^6.0.0"
+    turndown-plugin-gfm "^1.0.2"
+
 markdown-translatable@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.1.tgz#136ea96c4c6f51d9aeb1ff78c0330786a7fe68f6"
@@ -6355,7 +6380,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@15.7.2, prop-types@^15.0.0, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.1, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.0.0, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.1, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -6643,6 +6668,19 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-markdown@4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-4.0.6.tgz#927d44421735cd90b7634bb221e9d7d8656e01e9"
+  integrity sha512-E1d/q+OBk5eumId42oYqVrJRB/+whrZdk+YHqUBCCNeWxqeV+Qzt+yLTsft9+4HRDj89Od7eAbUPQBYq8ZwShQ==
+  dependencies:
+    html-to-react "^1.3.4"
+    mdast-add-list-metadata "1.0.1"
+    prop-types "^15.6.1"
+    remark-parse "^5.0.0"
+    unified "^6.1.5"
+    unist-util-visit "^1.3.0"
+    xtend "^4.0.1"
 
 react-markdown@^4.0.6:
   version "4.3.1"
@@ -7222,19 +7260,21 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-"scripture-resources-rcl@file:.yalc/scripture-resources-rcl":
-  version "2.0.10"
+scripture-resources-rcl@^2.1.0-rc.1:
+  version "2.1.0-rc.1"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-2.1.0-rc.1.tgz#3c8c182c40100a9d5cc6d51cbadfcbbfaafd0e0d"
+  integrity sha512-1xvE2OYTeZMeL9mTbrX285p23V2xd1jb1XMcHCM9pEW1tphV5m5bZVYhSRfr74KONosmvt//PNE+iPhceIwd1Q==
   dependencies:
-    deep-freeze "0.0.1"
-    gitea-react-toolkit "^1.3.12"
+    deep-freeze "^0.0.1"
+    gitea-react-toolkit "1.3.13"
     js-yaml-parser "^1.0.0"
     lodash "^4.17.15"
-    markdown-translatable "^1.2.6"
+    markdown-translatable "1.2.8"
     nyc "^15.0.0-beta.3"
     prop-types "^15.7.2"
     react-waypoint "^9.0.2"
-    string-punctuation-tokenizer "^2.1.2"
-    use-deep-compare-effect "1.3.1"
+    string-punctuation-tokenizer "2.1.2"
+    use-deep-compare-effect "^1.3.1"
     usfm-js "^2.0.2"
 
 select-hose@^2.0.0:
@@ -7665,7 +7705,7 @@ stream-shift@^1.0.0:
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
 
-string-punctuation-tokenizer@^2.1.2:
+string-punctuation-tokenizer@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/string-punctuation-tokenizer/-/string-punctuation-tokenizer-2.1.2.tgz#db2b5707bbab6d20540ebf0fd49c18280d94d898"
   integrity sha512-jFVSLxWca5xIjaoi8vTSipXXK0Ng3+BdbfAtjCgqS4ZxHTGLYvKrGaARpATtBHIAOEMXhwMaBKLrypnyQ6cR6A==
@@ -8341,15 +8381,6 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
-
-use-deep-compare-effect@1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/use-deep-compare-effect/-/use-deep-compare-effect-1.3.1.tgz#90bdbed97e1acb8423f7bb0bf24de58590d021af"
-  integrity sha512-ejL+Al+aeDyC9Sywx56ti4PtSwkf6BH27tEptMWF2cfO41/auG0nRRsArh6Vv5bUyBe3z7IyxmgQCK5nas70hg==
-  dependencies:
-    "@babel/runtime" "^7.7.2"
-    "@types/use-deep-compare-effect" "^1.2.0"
-    dequal "^1.0.0"
 
 use-deep-compare-effect@^1.3.1:
   version "1.4.0"

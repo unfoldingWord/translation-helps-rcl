@@ -22,7 +22,7 @@
     "prop-types": "^15.x",
     "react": "^17.x",
     "react-dom": "^17.x",
-    "scripture-resources-rcl": "^1.x"
+    "scripture-resources-rcl": "^2.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
@@ -40,7 +40,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-styleguidist": "^11.1.1",
-    "scripture-resources-rcl": "file:.yalc/scripture-resources-rcl",
+    "scripture-resources-rcl": "^2.1.0-rc.1",
     "webpack": "4.44.0"
   },
   "dependencies": {
