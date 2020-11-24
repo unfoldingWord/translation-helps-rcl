@@ -9,6 +9,7 @@ import AnnouncementIcon from '@material-ui/icons/Announcement'
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import SettingsCard from '../SettingsCard'
 
 const useStyles = makeStyles(() => ({
   dragIcon: {
@@ -35,7 +36,9 @@ const useStyles = makeStyles(() => ({
 const Paper = styled.div`
   margin: 2.5px;
   padding: 16px;
-  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  box-shadow: 0 14px 20px 2px rgba(0, 0, 0, 0.14),
+    0 6px 26px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   position: relative;
   margin-bottom: 50px;
@@ -52,10 +55,10 @@ const FlexSpacedDiv = styled.div`
   justify-content: space-between;
 `
 
-const Navigation = ({ notes, classes, noteIndex, onPrevItem, onNextItem }) => (
+const Navigation = ({ items, classes, noteIndex, onPrevItem, onNextItem }) => (
   <FlexSpacedDiv>
     <ChevronLeftIcon className={classes.chevronIcon} onClick={onPrevItem} />
-    <FlexDiv>{`${noteIndex + 1} of ${notes.length}`}</FlexDiv>
+    <FlexDiv>{`${noteIndex + 1} of ${items.length}`}</FlexDiv>
     <ChevronRightIcon className={classes.chevronIcon} onClick={onNextItem} />
   </FlexSpacedDiv>
 )
@@ -63,7 +66,7 @@ const Navigation = ({ notes, classes, noteIndex, onPrevItem, onNextItem }) => (
 const Card = ({
   alert,
   title,
-  notes,
+  items,
   dragRef,
   onClose,
   dragging,
@@ -73,6 +76,20 @@ const Card = ({
   setNoteIndex,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
+  const [fontSize, setFontSize] = useState(100)
+  const [showMenu, setShowMenu] = useState(false)
+  const [markdownView, setMarkdownView] = useState(false)
+  const headers = [
+    'Book',
+    'Chapter',
+    'Verse',
+    'ID',
+    'Support Reference',
+    'Original Quote',
+    'Occurrence',
+    'Occurrence Note',
+  ]
+  const [filters, setFilters] = useState(headers)
   const classes = useStyles({ dragging })
 
   const onAlertClick = () => {
@@ -80,13 +97,13 @@ const Card = ({
   }
 
   const onMenuClick = () => {
-    console.log('onMenuClick')
+    setShowMenu(!showMenu)
   }
 
   const onPrevItem = () => {
     const newIndex = noteIndex - 1
     if (newIndex < 0) {
-      setNoteIndex(notes.length - 1)
+      setNoteIndex(items.length - 1)
     } else {
       setNoteIndex(newIndex)
     }
@@ -94,7 +111,7 @@ const Card = ({
 
   const onNextItem = () => {
     const newIndex = noteIndex + 1
-    if (newIndex > notes.length - 1) {
+    if (newIndex > items.length - 1) {
       setNoteIndex(0)
     } else {
       setNoteIndex(newIndex)
@@ -111,9 +128,9 @@ const Card = ({
           <div>{title}</div>
         </FlexDiv>
         <FlexDiv>
-          {notes && notes.length > 1 && (
+          {items && items.length > 1 && (
             <Navigation
-              notes={notes}
+              items={items}
               classes={classes}
               noteIndex={noteIndex}
               onPrevItem={onPrevItem}
@@ -138,6 +155,21 @@ const Card = ({
                   <AnnouncementIcon />
                 </Badge>
               </div>
+            )}
+            {showMenu && (
+              <SettingsCard
+                title={title}
+                open={showMenu}
+                headers={headers}
+                filters={filters}
+                fontSize={fontSize}
+                onClose={onMenuClick}
+                setFilters={setFilters}
+                setFontSize={setFontSize}
+                markdownView={markdownView}
+                onShowMarkdown={setMarkdownView}
+                onRemoveCard={() => console.log('onRemoveCard')}
+              />
             )}
             <MoreHorizIcon
               className={classes.pointerIcon}
@@ -178,8 +210,8 @@ Card.propTypes = {
   closeable: PropTypes.bool,
   /** Class names to modify the root, header and children */
   classes: PropTypes.object,
-  /** Array of notes (articles, tsv files) */
-  notes: PropTypes.array,
+  /** Array of items (articles, tsv files) */
+  items: PropTypes.array,
   /** JSX text for the title */
   title: PropTypes.node.isRequired,
   /** Function fired when the close (x) icon is clicked */

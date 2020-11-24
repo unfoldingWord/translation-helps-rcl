@@ -9,7 +9,7 @@ import useContent from '../../hooks/useContent.js'
 
 function Component() {
   const [noteIndex, setNoteIndex] = useState(0)
-  const { markdown, notes } = useContent({
+  const { markdown, items } = useContent({
     verse: 1,
     chapter: 1,
     projectId: 'tit',
@@ -19,12 +19,12 @@ function Component() {
     owner: 'unfoldingWord',
     server: 'https://git.door43.org',
   })
-  const note = notes ? notes[noteIndex] : null
+  const note = items ? items[noteIndex] : null
 
   if (note) {
     return (
       <Card
-        notes={notes}
+        items={items}
         noteIndex={noteIndex}
         title={<div>Notes</div>}
         setNoteIndex={setNoteIndex}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
@@ -9,6 +9,16 @@ const CardContent = ({ markdown, note }) => {
       <BlockEditable
         preview={true}
         markdown={markdown}
+        // onEdit={_markdown => {
+        //   onMarkdownChange(_markdown)
+        // }}
+      />
+    )
+  } else if (note && note.markdown) {
+    return (
+      <BlockEditable
+        preview={true}
+        markdown={note.markdown}
         // onEdit={_markdown => {
         //   onMarkdownChange(_markdown)
         // }}
