@@ -1,1 +1,1 @@
-export { deafult } from './NotesSettingsCard'
+export { default } from './NotesSettingsCard'
