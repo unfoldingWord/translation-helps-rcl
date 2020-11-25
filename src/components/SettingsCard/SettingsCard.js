@@ -8,7 +8,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 
-import DraggableCard from '../DraggableCard'
+import DraggableModalCard from '../DraggableModalCard'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
 
@@ -117,7 +117,7 @@ const SettingsCard = ({
   )
 
   return (
-    <DraggableCard open={open} title={title} handleClose={onClose}>
+    <DraggableModalCard open={open} title={title} handleClose={onClose}>
       <Card
         closeable
         title={title}
@@ -186,7 +186,7 @@ const SettingsCard = ({
           </div>
         </div>
       </Card>
-    </DraggableCard>
+    </DraggableModalCard>
   )
 }
 
