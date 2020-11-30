@@ -55,10 +55,10 @@ const FlexSpacedDiv = styled.div`
   justify-content: space-between;
 `
 
-const Navigation = ({ items, classes, noteIndex, onPrevItem, onNextItem }) => (
+const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem }) => (
   <FlexSpacedDiv>
     <ChevronLeftIcon className={classes.chevronIcon} onClick={onPrevItem} />
-    <FlexDiv>{`${noteIndex + 1} of ${items.length}`}</FlexDiv>
+    <FlexDiv>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
     <ChevronRightIcon className={classes.chevronIcon} onClick={onNextItem} />
   </FlexSpacedDiv>
 )
@@ -69,27 +69,22 @@ const Card = ({
   items,
   dragRef,
   onClose,
+  headers,
+  filters,
+  fontSize,
   dragging,
   children,
-  noteIndex,
+  itemIndex,
   closeable,
-  setNoteIndex,
+  setFilters,
+  setFontSize,
+  markdownView,
+  setItemIndex,
+  onRemoveCard,
+  setMarkdownView,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
-  const [fontSize, setFontSize] = useState(100)
   const [showMenu, setShowMenu] = useState(false)
-  const [markdownView, setMarkdownView] = useState(false)
-  const headers = [
-    'Book',
-    'Chapter',
-    'Verse',
-    'ID',
-    'Support Reference',
-    'Original Quote',
-    'Occurrence',
-    'Occurrence Note',
-  ]
-  const [filters, setFilters] = useState(headers)
   const classes = useStyles({ dragging })
 
   const onAlertClick = () => {
@@ -101,20 +96,20 @@ const Card = ({
   }
 
   const onPrevItem = () => {
-    const newIndex = noteIndex - 1
+    const newIndex = itemIndex - 1
     if (newIndex < 0) {
-      setNoteIndex(items.length - 1)
+      setItemIndex(items.length - 1)
     } else {
-      setNoteIndex(newIndex)
+      setItemIndex(newIndex)
     }
   }
 
   const onNextItem = () => {
-    const newIndex = noteIndex + 1
+    const newIndex = itemIndex + 1
     if (newIndex > items.length - 1) {
-      setNoteIndex(0)
+      setItemIndex(0)
     } else {
-      setNoteIndex(newIndex)
+      setItemIndex(newIndex)
     }
   }
 
@@ -132,7 +127,7 @@ const Card = ({
             <Navigation
               items={items}
               classes={classes}
-              noteIndex={noteIndex}
+              itemIndex={itemIndex}
               onPrevItem={onPrevItem}
               onNextItem={onNextItem}
             />
@@ -147,11 +142,7 @@ const Card = ({
                 className={`${classes.pointerIcon} ${classes.paddingRight}`}
                 onClick={onAlertClick}
               >
-                <Badge
-                  color='secondary'
-                  variant='dot'
-                  // invisible={invisible}
-                >
+                <Badge color='secondary' variant='dot'>
                   <AnnouncementIcon />
                 </Badge>
               </div>
@@ -168,7 +159,7 @@ const Card = ({
                 setFontSize={setFontSize}
                 markdownView={markdownView}
                 onShowMarkdown={setMarkdownView}
-                onRemoveCard={() => console.log('onRemoveCard')}
+                onRemoveCard={onRemoveCard}
               />
             )}
             <MoreHorizIcon
@@ -192,14 +183,21 @@ Card.defaultProps = {
     children: '',
     dragIndicator: '',
   },
+  filters: [],
+  headers: [],
   alert: false,
+  fontSize: 100,
   dragging: false,
   closeable: false,
 }
 
 Card.propTypes = {
-  /** Current note index */
-  noteIndex: PropTypes.number,
+  /** Array of items (articles, tsv files) */
+  items: PropTypes.array,
+  /** Array of TSV header labels */
+  headers: PropTypes.array.isRequired,
+  /** Current item index */
+  itemIndex: PropTypes.number,
   /** Root ref, used as reference for drag action */
   dragRef: PropTypes.node,
   /** Show alert icon */
@@ -210,14 +208,22 @@ Card.propTypes = {
   closeable: PropTypes.bool,
   /** Class names to modify the root, header and children */
   classes: PropTypes.object,
-  /** Array of items (articles, tsv files) */
-  items: PropTypes.array,
   /** JSX text for the title */
   title: PropTypes.node.isRequired,
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
+  /** Array of TSV header filters */
+  filters: PropTypes.array.isRequired,
+  /** Updates the filters list */
+  setFilters: PropTypes.func,
+  /** Text font size */
+  fontSize: PropTypes.number,
+  /** Updates the filters list */
+  setFontSize: PropTypes.func,
+  /** Event handler to Remove Card */
+  onRemoveCard: PropTypes.func,
 }
 
 export default Card

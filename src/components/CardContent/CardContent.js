@@ -1,51 +1,79 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
 
-const CardContent = ({ markdown, note }) => {
+const CardContent = ({
+  item,
+  filters,
+  markdown,
+  markdownView,
+  fontSize: _fontSize,
+}) => {
+  const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
+
   if (markdown && typeof markdown === 'string') {
     return (
       <BlockEditable
-        preview={true}
+        preview={markdownView}
         markdown={markdown}
+        style={{
+          fontSize,
+        }}
         // onEdit={_markdown => {
         //   onMarkdownChange(_markdown)
         // }}
       />
     )
-  } else if (note && note.markdown) {
+  } else if (item && item.markdown) {
     return (
       <BlockEditable
-        preview={true}
-        markdown={note.markdown}
+        preview={markdownView}
+        markdown={item.markdown}
+        style={{
+          fontSize,
+        }}
         // onEdit={_markdown => {
         //   onMarkdownChange(_markdown)
         // }}
       />
     )
-  } else if (note) {
+  } else if (item) {
     return (
       <TsvContent
-        id={note.ID}
-        book={note.Book}
-        verse={note.Verse}
-        chapter={note.Chapter}
-        glQuote={note.GLQuote}
-        occurrence={note.Occurrence}
-        originalQuote={note.OrigQuote}
-        occurrenceNote={note.OccurrenceNote}
-        supportReference={note.SupportReference}
+        id={item.ID}
+        book={item.Book}
+        filters={filters}
+        verse={item.Verse}
+        fontSize={_fontSize}
+        chapter={item.Chapter}
+        glQuote={item.GLQuote}
+        markdownView={markdownView}
+        occurrence={item.Occurrence}
+        originalQuote={item.OrigQuote}
+        occurrenceNote={item.OccurrenceNote}
+        supportReference={item.SupportReference}
       />
     )
   } else {
-    return <div></div>
+    return (
+      <div style={{ textAlign: 'center', padding: '45px' }}>
+        No Content Available.
+      </div>
+    )
   }
 }
 
+CardContent.defaultProps = {
+  fontSize: 100,
+}
+
 CardContent.propTypes = {
-  note: PropTypes.object,
+  item: PropTypes.object,
+  filters: PropTypes.array,
   markdown: PropTypes.string,
+  fontSize: PropTypes.number,
+  markdownView: PropTypes.bool,
 }
 
 export default CardContent

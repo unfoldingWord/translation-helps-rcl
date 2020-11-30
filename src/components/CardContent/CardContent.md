@@ -8,9 +8,9 @@ Card Content component. Automagically detects MD or TSV content and renders it r
 import React, { useState } from 'react'
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
+import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const [noteIndex, setNoteIndex] = useState(0)
   const languageId = 'en'
   const { markdown, items } = useContent({
     verse: 1,
@@ -22,16 +22,50 @@ const Component = () => {
     owner: 'unfoldingWord',
     server: 'https://git.door43.org',
   })
-  const note = items ? items[noteIndex] : null
+
+  const {
+    state: {
+      item,
+      headers,
+      filters,
+      fontSize,
+      itemIndex,
+      markdownView,
+    },
+    actions: {
+      setFilters,
+      setFontSize,
+      setItemIndex,
+      setMarkdownView,
+    }
+  } = useCardState({
+    items,
+  })
+
+  console.log({ fontSize })
 
   return (
     <Card
       items={items}
-      noteIndex={noteIndex}
+      headers={headers}
+      filters={filters}
+      fontSize={fontSize}
+      itemIndex={itemIndex}
+      setFilters={setFilters}
       title={<div>Notes</div>}
-      setNoteIndex={setNoteIndex}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      markdownView={markdownView}
+      setMarkdownView={setMarkdownView}
     >
-      <CardContent note={note} markdown={markdown} languageId={languageId} />
+      <CardContent
+        item={item}
+        filters={filters}
+        fontSize={fontSize}
+        markdown={markdown}
+        languageId={languageId}
+        markdownView={markdownView}
+      />
     </Card>
   )
 }
@@ -45,10 +79,10 @@ const Component = () => {
 import React, { useState } from 'react'
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
+import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const [noteIndex, setNoteIndex] = useState(0)
-  const { markdown, items } = useContent({
+  const { markdown, items, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
     projectId: 'bible',
@@ -59,16 +93,48 @@ const Component = () => {
     filePath: 'kt/jesus.md',
     server: 'https://git.door43.org',
   })
-  const note = items ? items[noteIndex] : null
+
+  const {
+    state: {
+      item,
+      headers,
+      filters,
+      fontSize,
+      itemIndex,
+      markdownView,
+    },
+    actions: {
+      setFilters,
+      setFontSize,
+      setItemIndex,
+      setMarkdownView,
+    }
+  } = useCardState({
+    items,
+  })
 
   return (
     <Card
       items={items}
-      noteIndex={noteIndex}
+      headers={headers}
+      filters={filters}
+      fontSize={fontSize}
+      itemIndex={itemIndex}
+      setFilters={setFilters}
       title={<div>Words</div>}
-      setNoteIndex={setNoteIndex}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      markdownView={markdownView}
+      setMarkdownView={setMarkdownView}
     >
-      <CardContent note={note} markdown={markdown}/>
+      <CardContent
+        item={item}
+        filters={filters}
+        fontSize={fontSize}
+        markdown={markdown}
+        languageId={languageId}
+        markdownView={markdownView}
+      />
     </Card>
   )
 }
@@ -83,10 +149,10 @@ import React, { useState } from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
+import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const [noteIndex, setNoteIndex] = useState(0)
-  const { markdown, items } = useContent({
+  const { markdown, items, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
     projectId: 'tit',
@@ -96,17 +162,49 @@ const Component = () => {
     owner: 'test_org',
     server: 'https://git.door43.org',
   })
-  const note = items ? items[noteIndex] : null
+
+  const {
+    state: {
+      item,
+      headers,
+      filters,
+      fontSize,
+      itemIndex,
+      markdownView,
+    },
+    actions: {
+      setFilters,
+      setFontSize,
+      setItemIndex,
+      setMarkdownView,
+    }
+  } = useCardState({
+    items,
+  })
 
   return (
     <Card
       items={items}
-      noteIndex={noteIndex}
+      headers={headers}
+      filters={filters}
+      fontSize={fontSize}
+      itemIndex={itemIndex}
+      setFilters={setFilters}
       title={<div>Words</div>}
-      setNoteIndex={setNoteIndex}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      markdownView={markdownView}
+      setMarkdownView={setMarkdownView}
     >
-      {note ?
-        <CardContent note={note} markdown={markdown}/>
+      {item ?
+        <CardContent
+          item={item}
+          filters={filters}
+          fontSize={fontSize}
+          markdown={markdown}
+          languageId={languageId}
+          markdownView={markdownView}
+        />
         :
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
           <CircularProgress size={180}/>

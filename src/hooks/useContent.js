@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useRsrc } from 'scripture-resources-rcl'
 import base64DecodeUnicode from '../core/base64DecodeUnicode'
 
-// TODO: #5
 function useTsvItems({
   languageId,
   projectId,
@@ -13,16 +12,6 @@ function useTsvItems({
   verse,
 }) {
   const [items, setItems] = useState([])
-  console.log({
-    languageId,
-    projectId,
-    chapter,
-    content,
-    server,
-    owner,
-    verse,
-  })
-
   useEffect(() => {
     async function getTsvItems() {
       const tsvItems = Array.isArray(content) ? content : []
@@ -130,12 +119,21 @@ const useContent = ({
     verse,
   })
 
-  console.log('items', items)
-
   return {
     items,
     resource,
     markdown: Array.isArray(content) ? null : content,
+    props: {
+      verse,
+      owner,
+      branch,
+      server,
+      chapter,
+      filePath,
+      projectId,
+      languageId,
+      resourceId,
+    },
   }
 }
 

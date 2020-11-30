@@ -145,7 +145,7 @@ const SettingsCard = ({
         <div className={classes.fontSlider}>
           <FontSizeSlider value={fontSize} onChange={setFontSize} />
         </div>
-        {headers && (
+        {headers && headers.length > 0 && (
           <Fragment>
             <Divider />
             <div className={classes.section}>

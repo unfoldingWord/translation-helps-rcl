@@ -6,9 +6,9 @@ Renders TSV data.
 import React, { useState } from 'react'
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
+import useCardState from '../../hooks/useCardState.js'
 
 function Component() {
-  const [noteIndex, setNoteIndex] = useState(0)
   const { markdown, items } = useContent({
     verse: 1,
     chapter: 1,
@@ -19,27 +19,54 @@ function Component() {
     owner: 'unfoldingWord',
     server: 'https://git.door43.org',
   })
-  const note = items ? items[noteIndex] : null
 
-  if (note) {
+  const {
+    state: {
+      item,
+      headers,
+      filters,
+      fontSize,
+      itemIndex,
+      markdownView,
+    },
+    actions: {
+      setFilters,
+      setFontSize,
+      setItemIndex,
+      setMarkdownView,
+    }
+  } = useCardState({
+    items,
+  })
+
+  if (item) {
     return (
       <Card
         items={items}
-        noteIndex={noteIndex}
+        headers={headers}
+        filters={filters}
+        fontSize={fontSize}
+        itemIndex={itemIndex}
+        setFilters={setFilters}
         title={<div>Notes</div>}
-        setNoteIndex={setNoteIndex}
-        onClose={() => console.log('closed')}
+        setFontSize={setFontSize}
+        setItemIndex={setItemIndex}
+        markdownView={markdownView}
+        setMarkdownView={setMarkdownView}
       >
         <TsvContent
-          id={note.ID}
-          book={note.Book}
-          verse={note.Verse}
-          chapter={note.Chapter}
-          glQuote={note.GLQuote}
-          occurrence={note.Occurrence}
-          originalQuote={note.OrigQuote}
-          occurrenceNote={note.OccurrenceNote}
-          supportReference={note.SupportReference}
+          id={item.ID}
+          book={item.Book}
+          filters={filters}
+          verse={item.Verse}
+          fontSize={fontSize}
+          chapter={item.Chapter}
+          glQuote={item.GLQuote}
+          markdownView={markdownView}
+          occurrence={item.Occurrence}
+          originalQuote={item.OrigQuote}
+          occurrenceNote={item.OccurrenceNote}
+          supportReference={item.SupportReference}
         />
       </Card>
     )

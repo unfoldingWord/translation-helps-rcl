@@ -18,14 +18,15 @@ export default function DraggableModalCard({ open, handleClose, children }) {
     <Dialog
       open={open}
       disableBackdropClick
+      disableEscapeKeyDown
       onClose={handleClose}
+      PaperComponent={PaperComponent}
+      aria-labelledby='draggable-dialog-title'
       BackdropProps={{
         style: {
           backgroundColor: 'transparent',
         },
       }}
-      PaperComponent={PaperComponent}
-      aria-labelledby='draggable-dialog-title'
     >
       {children}
     </Dialog>

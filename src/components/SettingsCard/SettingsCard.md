@@ -5,13 +5,26 @@ Settings Card.
 ```jsx
 import React, { useState } from 'react'
 import Button from '@material-ui/core/Button'
+import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const headers = ['Book', 'Chapter', 'Verse', 'ID', 'Support Reference', 'Original Quote', 'Occurrence', 'Occurrence Note']
-  const [filters, setFilters] = useState(headers);
   const [showMenu, setShowMenu] = useState(false)
-  const [markdownView, setMarkdownView] = useState(false);
-  const [fontSize, setFontSize] = useState(100)
+
+  const {
+    state: {
+      headers,
+      filters,
+      fontSize,
+      markdownView,
+    },
+    actions: {
+      setFilters,
+      setFontSize,
+      setMarkdownView,
+    }
+  } = useCardState({
+    items: [],
+  })
 
   const handleClickClose = () => setShowMenu(false)
   const handleClickOpen = () => setShowMenu(true)
@@ -31,7 +44,7 @@ const Component = () => {
         onClose={handleClickClose}
         markdownView={markdownView}
         onShowMarkdown={setMarkdownView}
-        title={<div>Notes Settings</div>}
+        title={'Notes'}
         onRemoveCard={() => console.log('onRemoveCard')}
       />
     </div>
