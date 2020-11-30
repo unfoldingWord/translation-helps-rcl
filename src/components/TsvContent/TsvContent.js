@@ -16,27 +16,51 @@ const TD = styled.td`
   padding-bottom: 10px;
 `
 
-const ItemContainer = styled.div`
+const Fieldset = styled.fieldset`
   display: flex;
   flex-direction: column;
+  margin: 0px;
+  padding: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  padding-inline-end: 6px;
+  padding-inline-start: 6px;
+  border-color: ${props =>
+    props.error ? '#FF1A1A' : props.warning ? '#FF8400' : 'transparent'};
 `
 
-const Label = styled.div`
+const Legend = styled.legend`
   margin-bottom: 7px;
+  padding-inline-start: ${props =>
+    props.error || props.warning ? '2px' : '0px'};
+  padding-inline-end: ${props =>
+    props.error || props.warning ? '2px' : '0px'};
   color: ${props => (props.color ? props.color : '#000000')};
   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
 `
 
-const Item = ({ label, value, fontSize }) => (
-  <ItemContainer>
-    <Label
+const Label = styled.label`
+  margin-bottom: 7px;
+  letter-spacing: 0.25px;
+  color: ${props => (props.color ? props.color : '#000000')};
+  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
+`
+
+const Item = ({ label, value, fontSize, warning, error }) => (
+  <Fieldset warning={warning} error={error}>
+    <Legend
+      error={error}
       color='#424242'
+      warning={warning}
       fontSize={fontSize === 'inherit' ? '14px' : fontSize}
     >
       {label}
-    </Label>
+    </Legend>
     <Label fontSize={fontSize}>{value}</Label>
-  </ItemContainer>
+  </Fieldset>
 )
 
 const TsvContent = ({
@@ -120,6 +144,7 @@ const TsvContent = ({
             {filters.includes('OrigQuote') && (
               <TD>
                 <Item
+                  error
                   label='Original Quote'
                   value={originalQuote}
                   fontSize={fontSize}
@@ -130,7 +155,12 @@ const TsvContent = ({
           <tr>
             {filters.includes('GLQuote') && (
               <TD>
-                <Item label='GL Quote' value={glQuote} fontSize={fontSize} />
+                <Item
+                  warning
+                  label='GL Quote'
+                  value={glQuote}
+                  fontSize={fontSize}
+                />
               </TD>
             )}
           </tr>
