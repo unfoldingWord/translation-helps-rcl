@@ -42,8 +42,6 @@ const Component = () => {
     items,
   })
 
-  console.log({ fontSize })
-
   return (
     <Card
       items={items}
