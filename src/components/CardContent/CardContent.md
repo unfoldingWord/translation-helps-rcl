@@ -256,8 +256,6 @@ const Component = () => {
     items,
   })
 
-  console.log({item, items, resource, markdown})
-
   return (
     <Card
       items={items}
