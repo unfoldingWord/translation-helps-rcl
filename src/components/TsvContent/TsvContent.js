@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
@@ -19,25 +19,26 @@ const TD = styled.td`
 const Fieldset = styled.fieldset`
   display: flex;
   flex-direction: column;
-  margin: 0px;
   padding: 0px;
+  padding-inline-end: 6px;
+  padding-inline-start: 6px;
+  margin: 0px;
+  margin-bottom: 2.5px;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   border-radius: 4px;
   border-width: 1px;
   border-style: solid;
-  padding-inline-end: 6px;
-  padding-inline-start: 6px;
   border-color: ${props =>
-    props.error ? '#FF1A1A' : props.warning ? '#FF8400' : 'transparent'};
+    props.error ? '#FF1A1A' : props.caution ? '#FF8400' : 'transparent'};
 `
 
 const Legend = styled.legend`
   margin-bottom: 7px;
   padding-inline-start: ${props =>
-    props.error || props.warning ? '2px' : '0px'};
+    props.error || props.caution ? '2px' : '0px'};
   padding-inline-end: ${props =>
-    props.error || props.warning ? '2px' : '0px'};
+    props.error || props.caution ? '2px' : '0px'};
   color: ${props => (props.color ? props.color : '#000000')};
   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
 `
@@ -49,18 +50,35 @@ const Label = styled.label`
   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
 `
 
-const Item = ({ label, value, fontSize, warning, error }) => (
-  <Fieldset warning={warning} error={error}>
-    <Legend
-      error={error}
-      color='#424242'
-      warning={warning}
-      fontSize={fontSize === 'inherit' ? '14px' : fontSize}
-    >
-      {label}
-    </Legend>
-    <Label fontSize={fontSize}>{value}</Label>
-  </Fieldset>
+const Item = ({ label, value, fontSize, caution, error }) => (
+  <Fragment>
+    <Fieldset caution={caution} error={error}>
+      <Legend
+        error={error}
+        color='#424242'
+        caution={caution}
+        fontSize={fontSize === 'inherit' ? '14px' : fontSize}
+      >
+        {label}
+      </Legend>
+      <Label fontSize={fontSize}>{value}</Label>
+    </Fieldset>
+    {error ? (
+      <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
+        <span style={{ color: '#FF1A1A', marginTop: '10px' }}>
+          Warning: Something is wrong
+        </span>
+      </Label>
+    ) : (
+      caution && (
+        <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
+          <span style={{ color: '#FF8400', marginTop: '10px' }}>
+            Caution: Something is wrong
+          </span>
+        </Label>
+      )
+    )}
+  </Fragment>
 )
 
 const TsvContent = ({
@@ -97,22 +115,46 @@ const TsvContent = ({
           <tr>
             {filters.includes('Book') && (
               <TD>
-                <Item label='Book' value={book} fontSize={fontSize} />
+                <Item
+                  label='Book'
+                  value={book}
+                  error={false}
+                  caution={false}
+                  fontSize={fontSize}
+                />
               </TD>
             )}
             {filters.includes('Chapter') && (
               <TD>
-                <Item label='Chapter' value={chapter} fontSize={fontSize} />
+                <Item
+                  error={false}
+                  caution={false}
+                  label='Chapter'
+                  value={chapter}
+                  fontSize={fontSize}
+                />
               </TD>
             )}
             {filters.includes('Verse') && (
               <TD>
-                <Item label='Verse' value={verse} fontSize={fontSize} />
+                <Item
+                  label='Verse'
+                  value={verse}
+                  error={false}
+                  caution={false}
+                  fontSize={fontSize}
+                />
               </TD>
             )}
             {filters.includes('ID') && (
               <TD>
-                <Item label='ID' value={id} fontSize={fontSize} />
+                <Item
+                  label='ID'
+                  value={id}
+                  error={false}
+                  caution={false}
+                  fontSize={fontSize}
+                />
               </TD>
             )}
           </tr>
@@ -120,6 +162,8 @@ const TsvContent = ({
             {filters.includes('SupportReference') && (
               <TD>
                 <Item
+                  error={false}
+                  caution={false}
                   label='Support Reference'
                   value={supportReference}
                   fontSize={fontSize}
@@ -129,6 +173,8 @@ const TsvContent = ({
             {filters.includes('Occurrence') && (
               <TD>
                 <Item
+                  error={false}
+                  caution={false}
                   label='Occurrence'
                   value={occurrence}
                   fontSize={fontSize}
@@ -144,7 +190,8 @@ const TsvContent = ({
             {filters.includes('OrigQuote') && (
               <TD>
                 <Item
-                  error
+                  error={false}
+                  caution={false}
                   label='Original Quote'
                   value={originalQuote}
                   fontSize={fontSize}
@@ -156,7 +203,8 @@ const TsvContent = ({
             {filters.includes('GLQuote') && (
               <TD>
                 <Item
-                  warning
+                  error={false}
+                  caution={false}
                   label='GL Quote'
                   value={glQuote}
                   fontSize={fontSize}
@@ -168,6 +216,8 @@ const TsvContent = ({
             {filters.includes('OccurrenceNote') && (
               <TD>
                 <Item
+                  error={false}
+                  caution={false}
                   label='Occurrence Note'
                   value={OccurrenceNote}
                   fontSize={fontSize}
