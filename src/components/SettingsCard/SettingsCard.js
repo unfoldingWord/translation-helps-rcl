@@ -7,8 +7,7 @@ import FormGroup from '@material-ui/core/FormGroup'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-
-import DraggableModalCard from '../DraggableModalCard'
+import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
 
@@ -117,7 +116,7 @@ const SettingsCard = ({
   )
 
   return (
-    <DraggableModalCard open={open} title={title} handleClose={onClose}>
+    <DraggableModal open={open} title={title} handleClose={onClose}>
       <Card
         closeable
         title={title}
@@ -186,7 +185,7 @@ const SettingsCard = ({
           </div>
         </div>
       </Card>
-    </DraggableModalCard>
+    </DraggableModal>
   )
 }
 
