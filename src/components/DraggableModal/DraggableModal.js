@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Dialog from '@material-ui/core/Dialog'
 import Draggable from 'react-draggable'
 
@@ -13,7 +14,7 @@ function PaperComponent(props) {
   )
 }
 
-export default function DraggableModalCard({ open, handleClose, children }) {
+export default function DraggableModal({ open, handleClose, children }) {
   return (
     <Dialog
       open={open}
@@ -31,4 +32,13 @@ export default function DraggableModalCard({ open, handleClose, children }) {
       {children}
     </Dialog>
   )
+}
+
+DraggableModal.propTypes = {
+  /** Wether the Modal is opened or not */
+  open: PropTypes.bool.isRequired,
+  /** On close event handler */
+  handleClose: PropTypes.func.isRequired,
+  /** Modal Content */
+  children: PropTypes.element.isRequired,
 }
