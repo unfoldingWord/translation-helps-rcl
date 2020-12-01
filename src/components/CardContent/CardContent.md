@@ -140,7 +140,7 @@ const Component = () => {
 <Component/>
 ```
 
-## translationWords List (TWL) Content Example
+## Translation Words List (TWL) Markdown View
 
 ```jsx
 import React, { useState } from 'react'
@@ -200,6 +200,7 @@ const Component = () => {
           filters={filters}
           fontSize={fontSize}
           markdown={markdown}
+          viewMode={'markdown'}
           languageId={languageId}
           markdownView={markdownView}
         />
@@ -215,7 +216,83 @@ const Component = () => {
 <Component/>
 ```
 
-## unfoldingWord® Translation Academy Example
+## Translation Words List (TWL) Table View
+
+```jsx
+import React, { useState } from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '../Card'
+import useContent from '../../hooks/useContent.js'
+import useCardState from '../../hooks/useCardState.js'
+
+const Component = () => {
+  const { markdown, items, props: { languageId } } = useContent({
+    verse: 1,
+    chapter: 1,
+    projectId: 'tit',
+    branch: 'master',
+    languageId: 'en',
+    resourceId: 'twl',
+    owner: 'test_org',
+    server: 'https://git.door43.org',
+  })
+
+  const {
+    state: {
+      item,
+      headers,
+      filters,
+      fontSize,
+      itemIndex,
+      markdownView,
+    },
+    actions: {
+      setFilters,
+      setFontSize,
+      setItemIndex,
+      setMarkdownView,
+    }
+  } = useCardState({
+    items,
+  })
+
+  return (
+    <Card
+      items={items}
+      headers={headers}
+      filters={filters}
+      fontSize={fontSize}
+      itemIndex={itemIndex}
+      setFilters={setFilters}
+      title={<div>Words</div>}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      markdownView={markdownView}
+      setMarkdownView={setMarkdownView}
+    >
+      {item ?
+        <CardContent
+          item={item}
+          filters={filters}
+          fontSize={fontSize}
+          markdown={markdown}
+          viewMode={'table'}
+          languageId={languageId}
+          markdownView={markdownView}
+        />
+        :
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
+          <CircularProgress size={180}/>
+        </div>
+      }
+    </Card>
+  )
+}
+
+<Component/>
+```
+
+## Translation Academy Example
 
 ```jsx
 import React, { useState } from 'react'

@@ -9,6 +9,7 @@ const CardContent = ({
   markdown,
   markdownView,
   fontSize: _fontSize,
+  viewMode,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
@@ -25,7 +26,7 @@ const CardContent = ({
         // }}
       />
     )
-  } else if (item && item.markdown) {
+  } else if (item && item.markdown && viewMode === 'markdown') {
     return (
       <BlockEditable
         preview={markdownView}
@@ -38,7 +39,10 @@ const CardContent = ({
         // }}
       />
     )
-  } else if (item) {
+  } else if (
+    (item && viewMode === 'default') ||
+    (item && viewMode === 'table')
+  ) {
     return (
       <TsvContent
         id={item.ID}
@@ -66,6 +70,7 @@ const CardContent = ({
 
 CardContent.defaultProps = {
   fontSize: 100,
+  viewMode: 'default',
 }
 
 CardContent.propTypes = {
@@ -74,6 +79,7 @@ CardContent.propTypes = {
   markdown: PropTypes.string,
   fontSize: PropTypes.number,
   markdownView: PropTypes.bool,
+  viewMode: PropTypes.oneOf(['default', 'table', 'markdown']),
 }
 
 export default CardContent
