@@ -10,6 +10,7 @@ function useTsvItems({
   server,
   owner,
   verse,
+  fetchMarkdown = true,
 }) {
   const [items, setItems] = useState([])
   useEffect(() => {
@@ -51,22 +52,24 @@ function useTsvItems({
       ) {
         const newItems = []
 
-        for (let i = 0; i < _items.length; i++) {
-          const item = _items[i]
-          const path = item.SupportReference.replace('rc://*/', '')
-          const routes = path.split('/')
-          const resource = routes[0]
-          const filePath = `${routes[routes.length - 3]}/${
-            routes[routes.length - 2]
-          }/${routes[routes.length - 1]}.md`
-          const url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
+        if (fetchMarkdown) {
+          for (let i = 0; i < _items.length; i++) {
+            const item = _items[i]
+            const path = item.SupportReference.replace('rc://*/', '')
+            const routes = path.split('/')
+            const resource = routes[0]
+            const filePath = `${routes[routes.length - 3]}/${
+              routes[routes.length - 2]
+            }/${routes[routes.length - 1]}.md`
+            const url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
 
-          const result = await fetch(url).then(data => data.json())
-          const markdown = base64DecodeUnicode(result.content)
-          newItems.push({ ...item, markdown })
-          item.markdown = markdown
+            const result = await fetch(url).then(data => data.json())
+            const markdown = base64DecodeUnicode(result.content)
+            newItems.push({ ...item, markdown })
+            item.markdown = markdown
+          }
+          _items = newItems
         }
-        _items = newItems
       }
       setItems(_items)
     }
@@ -86,6 +89,7 @@ const useContent = ({
   projectId,
   languageId,
   resourceId,
+  fetchMarkdown,
 }) => {
   const reference = {
     verse,
@@ -110,6 +114,7 @@ const useContent = ({
   })
 
   const items = useTsvItems({
+    fetchMarkdown,
     languageId,
     projectId,
     content,
@@ -142,6 +147,7 @@ useContent.defaultProps = {
   chapter: 1,
   filePath: '',
   branch: 'master',
+  fetchMarkdown: true,
 }
 
 export default useContent
