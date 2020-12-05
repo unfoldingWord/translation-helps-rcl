@@ -11,8 +11,6 @@ const Table = styled.table`
 `
 
 const TsvList = ({ items, filters, markdownView, fontSize: _fontSize }) => {
-  console.log({ items })
-
   return (
     <Container>
       <Table>
