@@ -1,0 +1,6 @@
+.yalc/
+.vscode/
+.editorconfig
+styleguide.config.js
+styleguide.styles.js
+yalc.lock
