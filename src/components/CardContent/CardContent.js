@@ -2,14 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
+import TsvList from '../TsvList'
 
 const CardContent = ({
   item,
+  items,
   filters,
   markdown,
+  viewMode,
   markdownView,
   fontSize: _fontSize,
-  viewMode,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
@@ -39,6 +41,8 @@ const CardContent = ({
         // }}
       />
     )
+  } else if (item && viewMode === 'list') {
+    return <TsvList items={items} filters={filters} fontSize={fontSize} />
   } else if (
     (item && viewMode === 'default') ||
     (item && viewMode === 'table')
@@ -75,6 +79,7 @@ CardContent.defaultProps = {
 
 CardContent.propTypes = {
   item: PropTypes.object,
+  items: PropTypes.array,
   filters: PropTypes.array,
   markdown: PropTypes.string,
   fontSize: PropTypes.number,
