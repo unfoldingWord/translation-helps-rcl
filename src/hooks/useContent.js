@@ -13,6 +13,7 @@ function useTsvItems({
   fetchMarkdown = true,
 }) {
   const [items, setItems] = useState([])
+  const [isTsvError, setIsTsvError] = useState(false)
   useEffect(() => {
     async function getTsvItems() {
       const tsvItems = Array.isArray(content) ? content : []
@@ -73,10 +74,10 @@ function useTsvItems({
       }
       setItems(_items)
     }
-    getTsvItems()
+    getTsvItems().catch(() => setIsTsvError(true))
   }, [content])
 
-  return items
+  return { items, isTsvError }
 }
 
 const useContent = ({
@@ -91,7 +92,6 @@ const useContent = ({
   resourceId,
   fetchMarkdown,
 }) => {
-  // TODO: Add isError state
   const reference = {
     verse,
     chapter,
@@ -107,14 +107,17 @@ const useContent = ({
   }
 
   const {
-    state: { resource, content },
+    state,
+    state: { resource, content, isError },
   } = useRsrc({
     resourceLink,
     reference,
     config,
   })
 
-  const items = useTsvItems({
+  console.log({ state })
+
+  const { items, isTsvError } = useTsvItems({
     fetchMarkdown,
     languageId,
     projectId,
@@ -125,9 +128,12 @@ const useContent = ({
     verse,
   })
 
+  console.log({ isUseRsrcError: isError, isTsvError })
+
   return {
     items,
     resource,
+    isError: isError || isTsvError,
     markdown: Array.isArray(content) ? null : content,
     props: {
       verse,
