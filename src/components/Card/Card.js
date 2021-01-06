@@ -25,6 +25,7 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
   },
   children: {
+    overflow: 'auto',
     textAlign: 'start',
     padding: '4px 0px 0px 4px',
   },

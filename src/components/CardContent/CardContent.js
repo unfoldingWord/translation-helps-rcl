@@ -20,7 +20,6 @@ const CardContent = ({
         markdown={markdown}
         style={{
           fontSize,
-          overflow: 'auto',
         }}
         // onEdit={_markdown => {
         //   onMarkdownChange(_markdown)
@@ -34,7 +33,6 @@ const CardContent = ({
         markdown={item.markdown}
         style={{
           fontSize,
-          overflow: 'auto',
         }}
         // onEdit={_markdown => {
         //   onMarkdownChange(_markdown)
