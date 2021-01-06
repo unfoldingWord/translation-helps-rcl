@@ -91,6 +91,7 @@ const useContent = ({
   resourceId,
   fetchMarkdown,
 }) => {
+  // TODO: Add isError state
   const reference = {
     verse,
     chapter,
