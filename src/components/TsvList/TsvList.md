@@ -48,7 +48,7 @@ const Component = () => {
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      title={<div>Words</div>}
+      title={'Words'}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}

@@ -12,6 +12,11 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import SettingsCard from '../SettingsCard'
 
 const useStyles = makeStyles(() => ({
+  title: {
+    fontSize: '1.5rem',
+    lineHeight: '2rem',
+    fontWeight: '700',
+  },
   dragIcon: {
     color: '#ECECEC',
     margin: '0px 10px 0px 0px',
@@ -121,7 +126,7 @@ const Card = ({
           <DragIndicatorIcon
             className={`${classes.dragIcon} ${dragIndicator}`}
           />
-          <div>{title}</div>
+          <div className={classes.title}>{title}</div>
         </FlexDiv>
         <FlexDiv>
           {items && items.length > 1 && (
@@ -209,8 +214,8 @@ Card.propTypes = {
   closeable: PropTypes.bool,
   /** Class names to modify the root, header and children */
   classes: PropTypes.object,
-  /** JSX text for the title */
-  title: PropTypes.node.isRequired,
+  /** The title of the card*/
+  title: PropTypes.string.isRequired,
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func,
   /** Content/jsx render in the body of the card */

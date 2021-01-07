@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
+import MuiAlert from '@material-ui/lab/Alert'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
 
@@ -23,9 +24,7 @@ const CardContent = ({
         style={{
           fontSize,
         }}
-        // onEdit={_markdown => {
-        //   onMarkdownChange(_markdown)
-        // }}
+        // onEdit={_markdown => onMarkdownChange(_markdown)}
       />
     )
   } else if (item && item.markdown && viewMode === 'markdown') {
@@ -36,9 +35,7 @@ const CardContent = ({
         style={{
           fontSize,
         }}
-        // onEdit={_markdown => {
-        //   onMarkdownChange(_markdown)
-        // }}
+        // onEdit={_markdown => onMarkdownChange(_markdown)}
       />
     )
   } else if (item && viewMode === 'list') {
@@ -65,8 +62,31 @@ const CardContent = ({
     )
   } else {
     return (
-      <div style={{ textAlign: 'center', padding: '45px' }}>
-        No Content Available.
+      <div style={{ fontSize: '1.3rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '35px 0px',
+            fontWeight: 'bold',
+            fontSize,
+          }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant='filled'
+            severity='warning'
+            style={{
+              height: '100%',
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            Something went wrong or there's no content available.
+          </MuiAlert>
+        </div>
       </div>
     )
   }

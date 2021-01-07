@@ -18,15 +18,15 @@ const TsvList = ({ items, filters, fontSize }) => {
       <Table>
         <tbody style={{ fontSize }}>
           <tr>
-            {filters.map(header => (
-              <th>{header}</th>
+            {filters.map((header, i) => (
+              <th key={header + i}>{header}</th>
             ))}
           </tr>
           {items &&
-            items.map(item => (
-              <tr>
+            items.map((item, i) => (
+              <tr key={i}>
                 {Object.keys(item).map(key => (
-                  <td>{item[key]}</td>
+                  <td key={key + i}>{item[key]}</td>
                 ))}
               </tr>
             ))}

@@ -6,20 +6,21 @@ Card Content component. Automagically detects MD or TSV content and renders it r
 
 ```jsx
 import React, { useState } from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
   const languageId = 'en'
-  const { markdown, items } = useContent({
+  const { markdown, items, isLoading } = useContent({
     verse: 1,
     chapter: 1,
     languageId,
     projectId: 'tit',
     branch: 'master',
     resourceId: 'tn',
-    owner: 'unfoldingWord',
+    owner: 'test_org',
     server: 'https://git.door43.org',
   })
 
@@ -45,25 +46,31 @@ const Component = () => {
   return (
     <Card
       items={items}
+      title={'Notes'}
       headers={headers}
       filters={filters}
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      title={<div>Notes</div>}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-      <CardContent
-        item={item}
-        filters={filters}
-        fontSize={fontSize}
-        markdown={markdown}
-        languageId={languageId}
-        markdownView={markdownView}
-      />
+       {isLoading ?
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
+            <CircularProgress size={180}/>
+          </div>
+          :
+          <CardContent
+            item={item}
+            filters={filters}
+            fontSize={fontSize}
+            markdown={markdown}
+            languageId={languageId}
+            markdownView={markdownView}
+          />
+      }
     </Card>
   )
 }
@@ -75,12 +82,13 @@ const Component = () => {
 
 ```jsx
 import React, { useState } from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const { markdown, items, props: { languageId } } = useContent({
+  const { markdown, items, isLoading, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
     projectId: 'bible',
@@ -119,20 +127,26 @@ const Component = () => {
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      title={<div>Words</div>}
+      title={'Words'}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-      <CardContent
-        item={item}
-        filters={filters}
-        fontSize={fontSize}
-        markdown={markdown}
-        languageId={languageId}
-        markdownView={markdownView}
-      />
+       {isLoading ?
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
+            <CircularProgress size={180}/>
+          </div>
+          :
+          <CardContent
+            item={item}
+            filters={filters}
+            fontSize={fontSize}
+            markdown={markdown}
+            languageId={languageId}
+            markdownView={markdownView}
+          />
+      }
     </Card>
   )
 }
@@ -150,7 +164,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const { markdown, items, props: { languageId } } = useContent({
+  const { markdown, items, isLoading, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
     projectId: 'tit',
@@ -188,13 +202,17 @@ const Component = () => {
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      title={<div>Words</div>}
+      title={'Words'}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-      {item ?
+      {isLoading ?
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
+          <CircularProgress size={180}/>
+        </div>
+        :
         <CardContent
           item={item}
           filters={filters}
@@ -204,10 +222,6 @@ const Component = () => {
           languageId={languageId}
           markdownView={markdownView}
         />
-        :
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
-          <CircularProgress size={180}/>
-        </div>
       }
     </Card>
   )
@@ -264,7 +278,7 @@ const Component = () => {
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      title={<div>Words</div>}
+      title={'Words'}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
@@ -302,7 +316,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const { markdown, items, resource, props: { languageId } } = useContent({
+  const { markdown, items, resource, isLoading, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
     projectId: 'translate',
@@ -341,13 +355,17 @@ const Component = () => {
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      title={<div>Academy</div>}
+      title={'Academy'}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-      {item || markdown ?
+      {isLoading ?
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
+          <CircularProgress size={180}/>
+        </div>
+        :
         <CardContent
           item={item}
           filters={filters}
@@ -356,10 +374,6 @@ const Component = () => {
           languageId={languageId}
           markdownView={markdownView}
         />
-        :
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
-          <CircularProgress size={180}/>
-        </div>
       }
     </Card>
   )
