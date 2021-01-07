@@ -19,11 +19,8 @@ function useTsvItems({
       const tsvItems = Array.isArray(content) ? content : []
       const tn = {}
 
-      console.log({ tsvItems })
-
       for (let index = 0; index < tsvItems.length; index++) {
         const note = tsvItems[index]
-        console.log('note', note)
         const book = note.Book.toLowerCase() || 'list'
 
         if (
@@ -98,7 +95,6 @@ const useContent = ({
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    console.log('setLoading(true)')
     setLoading(true)
   }, [
     chapter,
@@ -147,7 +143,6 @@ const useContent = ({
   })
 
   useEffect(() => {
-    console.log('setLoading(false)')
     setLoading(false)
   }, [items, resource])
 
