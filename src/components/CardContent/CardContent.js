@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
-import MuiAlert from '@material-ui/lab/Alert'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
 
@@ -73,19 +72,7 @@ const CardContent = ({
             fontSize,
           }}
         >
-          <MuiAlert
-            elevation={6}
-            variant='filled'
-            severity='warning'
-            style={{
-              height: '100%',
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            Something went wrong or there's no content available.
-          </MuiAlert>
+          Something went wrong or there's no content available.
         </div>
       </div>
     )
