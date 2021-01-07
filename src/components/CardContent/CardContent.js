@@ -2,14 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
+import TsvList from '../TsvList'
 
 const CardContent = ({
   item,
+  items,
   filters,
   markdown,
+  viewMode,
   markdownView,
   fontSize: _fontSize,
-  viewMode,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
@@ -21,9 +23,7 @@ const CardContent = ({
         style={{
           fontSize,
         }}
-        // onEdit={_markdown => {
-        //   onMarkdownChange(_markdown)
-        // }}
+        // onEdit={_markdown => onMarkdownChange(_markdown)}
       />
     )
   } else if (item && item.markdown && viewMode === 'markdown') {
@@ -34,11 +34,11 @@ const CardContent = ({
         style={{
           fontSize,
         }}
-        // onEdit={_markdown => {
-        //   onMarkdownChange(_markdown)
-        // }}
+        // onEdit={_markdown => onMarkdownChange(_markdown)}
       />
     )
+  } else if (item && viewMode === 'list') {
+    return <TsvList items={items} filters={filters} fontSize={fontSize} />
   } else if (
     (item && viewMode === 'default') ||
     (item && viewMode === 'table')
@@ -61,8 +61,19 @@ const CardContent = ({
     )
   } else {
     return (
-      <div style={{ textAlign: 'center', padding: '45px' }}>
-        No Content Available.
+      <div style={{ fontSize: '1.3rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '35px 0px',
+            fontWeight: 'bold',
+            fontSize,
+          }}
+        >
+          Something went wrong or there's no content available.
+        </div>
       </div>
     )
   }
@@ -75,6 +86,7 @@ CardContent.defaultProps = {
 
 CardContent.propTypes = {
   item: PropTypes.object,
+  items: PropTypes.array,
   filters: PropTypes.array,
   markdown: PropTypes.string,
   fontSize: PropTypes.number,

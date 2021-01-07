@@ -13,6 +13,7 @@ function useTsvItems({
   fetchMarkdown = true,
 }) {
   const [items, setItems] = useState([])
+
   useEffect(() => {
     async function getTsvItems() {
       const tsvItems = Array.isArray(content) ? content : []
@@ -91,6 +92,23 @@ const useContent = ({
   resourceId,
   fetchMarkdown,
 }) => {
+  const [isLoading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(true)
+  }, [
+    chapter,
+    verse,
+    owner,
+    branch,
+    server,
+    filePath,
+    projectId,
+    languageId,
+    resourceId,
+    fetchMarkdown,
+  ])
+
   const reference = {
     verse,
     chapter,
@@ -124,9 +142,14 @@ const useContent = ({
     verse,
   })
 
+  useEffect(() => {
+    setLoading(false)
+  }, [items, resource])
+
   return {
     items,
     resource,
+    isLoading,
     markdown: Array.isArray(content) ? null : content,
     props: {
       verse,

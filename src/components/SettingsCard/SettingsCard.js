@@ -60,7 +60,6 @@ const useStyles = makeStyles(() => ({
 
 const BlueSwitch = withStyles({
   switchBase: {
-    // color: purple[300],
     '&$checked': {
       color: '#00B0FF',
     },
@@ -109,11 +108,7 @@ const SettingsCard = ({
     setFilters(newFilters)
   }
 
-  const title = (
-    <div style={{ display: 'flex' }}>
-      {_title}&nbsp;<div>Settings</div>
-    </div>
-  )
+  const title = `${_title} Settings`
 
   return (
     <DraggableModal open={open} title={title} handleClose={onClose}>
@@ -195,6 +190,7 @@ SettingsCard.defaultProps = {
 
 SettingsCard.propTypes = {
   filters: PropTypes.array,
+  title: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   headers: PropTypes.array.isRequired,
   fontSize: PropTypes.number.isRequired,
@@ -203,7 +199,6 @@ SettingsCard.propTypes = {
   onRemoveCard: PropTypes.func.isRequired,
   markdownView: PropTypes.bool.isRequired,
   onShowMarkdown: PropTypes.func.isRequired,
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 }
 
 export default SettingsCard

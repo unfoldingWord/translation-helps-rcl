@@ -10,21 +10,23 @@ const Table = styled.table`
   width: 100%;
 `
 
-const TsvList = ({ items, filters, markdownView, fontSize: _fontSize }) => {
+const TsvList = ({ items, filters, fontSize }) => {
+  fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
+
   return (
     <Container>
       <Table>
-        <tbody style={{ fontSize: `${_fontSize}%` }}>
+        <tbody style={{ fontSize }}>
           <tr>
-            {filters.map(header => (
-              <th>{header}</th>
+            {filters.map((header, i) => (
+              <th key={header + i}>{header}</th>
             ))}
           </tr>
           {items &&
-            items.map(item => (
-              <tr>
+            items.map((item, i) => (
+              <tr key={i}>
                 {Object.keys(item).map(key => (
-                  <td>{item[key]}</td>
+                  <td key={key + i}>{item[key]}</td>
                 ))}
               </tr>
             ))}
@@ -35,13 +37,12 @@ const TsvList = ({ items, filters, markdownView, fontSize: _fontSize }) => {
 }
 
 TsvList.defaultProps = {
-  fontSize: 250,
+  fontSize: 100,
 }
 
 TsvList.propTypes = {
   items: PropTypes.array.isRequired,
   filters: PropTypes.array.isRequired,
-  markdownView: PropTypes.bool.isRequired,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 

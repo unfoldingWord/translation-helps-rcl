@@ -1,6 +1,6 @@
 {
   "name": "translation-helps-rcl",
-  "version": "0.10.8",
+  "version": "0.11.0",
   "main": "dist",
   "homepage": "https://translation-helps-rcl.netlify.app/",
   "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
@@ -43,7 +43,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-styleguidist": "^11.1.1",
-    "scripture-resources-rcl": "^2.1.0",
+    "scripture-resources-rcl": "^2.1.1",
     "webpack": "4.44.0"
   },
   "dependencies": {

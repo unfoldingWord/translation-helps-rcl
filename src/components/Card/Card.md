@@ -39,7 +39,7 @@ const Component = () => {
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
-      title={<div>Lorem Ipsum</div>}
+      title={'Lorem Ipsum'}
       setMarkdownView={setMarkdownView}
       onClose={() => console.log('closed')}
     >

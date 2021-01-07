@@ -48,7 +48,7 @@ function Component() {
         fontSize={fontSize}
         itemIndex={itemIndex}
         setFilters={setFilters}
-        title={<div>Notes</div>}
+        title={'Notes'}
         setFontSize={setFontSize}
         setItemIndex={setItemIndex}
         markdownView={markdownView}
