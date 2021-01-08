@@ -9,6 +9,10 @@ const useCardState = ({ items }) => {
   const [filters, setFilters] = useState([])
 
   useEffect(() => {
+    setItemIndex(0)
+  }, [items])
+
+  useEffect(() => {
     const initialHeaders = Object.keys(item || {})
     setHeaders(initialHeaders)
   }, [item])

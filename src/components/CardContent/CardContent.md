@@ -57,20 +57,15 @@ const Component = () => {
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-       {isLoading ?
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
-            <CircularProgress size={180}/>
-          </div>
-          :
-          <CardContent
-            item={item}
-            filters={filters}
-            fontSize={fontSize}
-            markdown={markdown}
-            languageId={languageId}
-            markdownView={markdownView}
-          />
-      }
+      <CardContent
+        item={item}
+        filters={filters}
+        fontSize={fontSize}
+        markdown={markdown}
+        isLoading={isLoading}
+        languageId={languageId}
+        markdownView={markdownView}
+      />
     </Card>
   )
 }
@@ -133,20 +128,15 @@ const Component = () => {
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-       {isLoading ?
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
-            <CircularProgress size={180}/>
-          </div>
-          :
-          <CardContent
-            item={item}
-            filters={filters}
-            fontSize={fontSize}
-            markdown={markdown}
-            languageId={languageId}
-            markdownView={markdownView}
-          />
-      }
+      <CardContent
+        item={item}
+        filters={filters}
+        fontSize={fontSize}
+        markdown={markdown}
+        isLoading={isLoading}
+        languageId={languageId}
+        markdownView={markdownView}
+      />
     </Card>
   )
 }
@@ -208,21 +198,16 @@ const Component = () => {
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-      {isLoading ?
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
-          <CircularProgress size={180}/>
-        </div>
-        :
-        <CardContent
-          item={item}
-          filters={filters}
-          fontSize={fontSize}
-          markdown={markdown}
-          viewMode={'markdown'}
-          languageId={languageId}
-          markdownView={markdownView}
-        />
-      }
+      <CardContent
+        item={item}
+        filters={filters}
+        fontSize={fontSize}
+        markdown={markdown}
+        viewMode={'markdown'}
+        isLoading={isLoading}
+        languageId={languageId}
+        markdownView={markdownView}
+      />
     </Card>
   )
 }
@@ -240,7 +225,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const { markdown, items, props: { languageId } } = useContent({
+  const { markdown, items, isLoading, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
     projectId: 'tit',
@@ -273,32 +258,27 @@ const Component = () => {
   return (
     <Card
       items={items}
+      title={'Words'}
       headers={headers}
       filters={filters}
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      title={'Words'}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-      {item ?
-        <CardContent
-          item={item}
-          filters={filters}
-          fontSize={fontSize}
-          markdown={markdown}
-          viewMode={'table'}
-          languageId={languageId}
-          markdownView={markdownView}
-        />
-        :
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
-          <CircularProgress size={180}/>
-        </div>
-      }
+      <CardContent
+        item={item}
+        viewMode='table'
+        filters={filters}
+        fontSize={fontSize}
+        markdown={markdown}
+        isLoading={isLoading}
+        languageId={languageId}
+        markdownView={markdownView}
+      />
     </Card>
   )
 }
@@ -361,20 +341,15 @@ const Component = () => {
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
     >
-      {isLoading ?
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '45px' }}>
-          <CircularProgress size={180}/>
-        </div>
-        :
-        <CardContent
-          item={item}
-          filters={filters}
-          fontSize={fontSize}
-          markdown={markdown}
-          languageId={languageId}
-          markdownView={markdownView}
-        />
-      }
+      <CardContent
+        item={item}
+        filters={filters}
+        fontSize={fontSize}
+        markdown={markdown}
+        isLoading={isLoading}
+        languageId={languageId}
+        markdownView={markdownView}
+      />
     </Card>
   )
 }

@@ -74,7 +74,10 @@ function useTsvItems({
       }
       setItems(_items)
     }
-    getTsvItems()
+
+    if (Array.isArray(content)) {
+      getTsvItems()
+    }
   }, [content])
 
   return items
@@ -92,23 +95,6 @@ const useContent = ({
   resourceId,
   fetchMarkdown,
 }) => {
-  const [isLoading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setLoading(true)
-  }, [
-    chapter,
-    verse,
-    owner,
-    branch,
-    server,
-    filePath,
-    projectId,
-    languageId,
-    resourceId,
-    fetchMarkdown,
-  ])
-
   const reference = {
     verse,
     chapter,
@@ -142,14 +128,9 @@ const useContent = ({
     verse,
   })
 
-  useEffect(() => {
-    setLoading(false)
-  }, [items, resource])
-
   return {
     items,
     resource,
-    isLoading,
     markdown: Array.isArray(content) ? null : content,
     props: {
       verse,
