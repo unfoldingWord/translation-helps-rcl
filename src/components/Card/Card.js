@@ -30,6 +30,7 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
   },
   children: {
+    height: '100%',
     overflow: 'auto',
     textAlign: 'start',
     padding: '4px 0px 0px 4px',
