@@ -4,22 +4,20 @@ import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 
 const Container = styled.div`
-  margin: 7px 0px 0px;
-`
-
-const Table = styled.table`
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
-`
-
-const TD = styled.td`
-  align-items: center;
-  padding-bottom: 10px;
+  padding: 10px 0px 0px;
+  margin: 7px 0px 0px;
 `
 
 const Fieldset = styled.fieldset`
   display: flex;
+  flex-grow: 1;
+  width: ${props => (props?.label === 'Annotation' ? '100%' : '33%')};
   flex-direction: column;
   padding: 0px;
+  padding-bottom: 10px;
   padding-inline-end: 6px;
   padding-inline-start: 6px;
   margin: 0px;
@@ -52,7 +50,7 @@ const Label = styled.label`
 
 const Item = ({ label, value, fontSize, caution, error }) => (
   <Fragment>
-    <Fieldset caution={caution} error={error}>
+    <Fieldset label={label} caution={caution} error={error}>
       <Legend
         error={error}
         color='#424242'
@@ -81,152 +79,61 @@ const Item = ({ label, value, fontSize, caution, error }) => (
   </Fragment>
 )
 
-const TsvContent = ({
-  id,
-  book,
-  verse,
-  chapter,
-  glQuote,
-  filters,
-  occurrence,
-  markdownView,
-  originalQuote,
-  occurrenceNote,
-  supportReference,
-  fontSize: _fontSize,
-}) => {
+const TsvContent = ({ item, filters, markdownView, fontSize: _fontSize }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
-  const OccurrenceNote = (
+  const { Annotation } = item
+  const AnnotationMarkdown = (
     <BlockEditable
       preview={markdownView}
-      markdown={occurrenceNote}
+      markdown={Annotation}
       style={{
         fontSize,
         padding: '0px',
-        margin: markdownView ? '-16px 0px -16px' : '5px',
+        margin: markdownView ? '-10px 0px -16px' : '5px',
       }}
     />
   )
 
+  const ordering = {
+    Book: 10,
+    Chapter: 9,
+    Verse: 8,
+    Reference: 7,
+    ID: 6,
+    Occurrence: 5,
+    SupportReference: 4,
+    Quote: 3,
+    Tags: 2,
+    Annotation: 1,
+  }
+  filters = filters
+    .sort((a, b) => {
+      if (ordering[a] < ordering[b]) {
+        return -1
+      }
+      if (ordering[a] > ordering[b]) {
+        return 1
+      }
+      // a must be equal to b
+      return ordering[a] - ordering[b]
+    })
+    .reverse()
+
   return (
     <Container>
-      <Table>
-        <tbody>
-          <tr>
-            {filters.includes('Book') && (
-              <TD>
-                <Item
-                  label='Book'
-                  value={book}
-                  error={false}
-                  caution={false}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-            {filters.includes('Chapter') && (
-              <TD>
-                <Item
-                  error={false}
-                  caution={false}
-                  label='Chapter'
-                  value={chapter}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-            {filters.includes('Verse') && (
-              <TD>
-                <Item
-                  label='Verse'
-                  value={verse}
-                  error={false}
-                  caution={false}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-            {filters.includes('ID') && (
-              <TD>
-                <Item
-                  label='ID'
-                  value={id}
-                  error={false}
-                  caution={false}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-          </tr>
-          <tr>
-            {filters.includes('SupportReference') && (
-              <TD>
-                <Item
-                  error={false}
-                  caution={false}
-                  label='Support Reference'
-                  value={supportReference}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-            {filters.includes('Occurrence') && (
-              <TD>
-                <Item
-                  error={false}
-                  caution={false}
-                  label='Occurrence'
-                  value={occurrence}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-          </tr>
-        </tbody>
-      </Table>
-      <Table>
-        <tbody>
-          <tr>
-            {filters.includes('OrigQuote') && (
-              <TD>
-                <Item
-                  error={false}
-                  caution={false}
-                  label='Original Quote'
-                  value={originalQuote}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-          </tr>
-          <tr>
-            {filters.includes('GLQuote') && (
-              <TD>
-                <Item
-                  error={false}
-                  caution={false}
-                  label='GL Quote'
-                  value={glQuote}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-          </tr>
-          <tr>
-            {filters.includes('OccurrenceNote') && (
-              <TD>
-                <Item
-                  error={false}
-                  caution={false}
-                  label='Occurrence Note'
-                  value={OccurrenceNote}
-                  fontSize={fontSize}
-                />
-              </TD>
-            )}
-          </tr>
-        </tbody>
-      </Table>
+      {filters.map(label => {
+        const value = label === 'Annotation' ? AnnotationMarkdown : item[label]
+        return (
+          <Item
+            key={label}
+            label={label}
+            value={value}
+            error={false}
+            caution={false}
+            fontSize={fontSize}
+          />
+        )
+      })}
     </Container>
   )
 }
@@ -236,17 +143,9 @@ TsvContent.defaultProps = {
 }
 
 TsvContent.propTypes = {
-  id: PropTypes.string.isRequired,
-  book: PropTypes.string.isRequired,
-  verse: PropTypes.string.isRequired,
+  item: PropTypes.object.isRequired,
   filters: PropTypes.array.isRequired,
-  chapter: PropTypes.string.isRequired,
-  glQuote: PropTypes.string.isRequired,
-  occurrence: PropTypes.string.isRequired,
   markdownView: PropTypes.bool.isRequired,
-  originalQuote: PropTypes.string.isRequired,
-  occurrenceNote: PropTypes.string.isRequired,
-  supportReference: PropTypes.string.isRequired,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 

@@ -49,18 +49,10 @@ const CardContent = ({
   ) {
     return (
       <TsvContent
-        id={item.ID}
-        book={item.Book}
+        item={item}
         filters={filters}
-        verse={item.Verse}
         fontSize={_fontSize}
-        chapter={item.Chapter}
-        glQuote={item.GLQuote}
         markdownView={markdownView}
-        occurrence={item.Occurrence}
-        originalQuote={item.OrigQuote}
-        occurrenceNote={item.OccurrenceNote}
-        supportReference={item.SupportReference}
       />
     )
   } else {
