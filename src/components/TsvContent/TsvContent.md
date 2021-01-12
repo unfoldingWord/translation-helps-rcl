@@ -16,7 +16,7 @@ function Component() {
     branch: 'master',
     languageId: 'en',
     resourceId: 'tn',
-    owner: 'unfoldingWord',
+    owner: 'test_org',
     server: 'https://git.door43.org',
   })
 
@@ -55,18 +55,10 @@ function Component() {
         setMarkdownView={setMarkdownView}
       >
         <TsvContent
-          id={item.ID}
-          book={item.Book}
+          item={item}
           filters={filters}
-          verse={item.Verse}
           fontSize={fontSize}
-          chapter={item.Chapter}
-          glQuote={item.GLQuote}
           markdownView={markdownView}
-          occurrence={item.Occurrence}
-          originalQuote={item.OrigQuote}
-          occurrenceNote={item.OccurrenceNote}
-          supportReference={item.SupportReference}
         />
       </Card>
     )
