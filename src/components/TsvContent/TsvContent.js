@@ -21,7 +21,7 @@ const Fieldset = styled.fieldset`
   padding-inline-end: 6px;
   padding-inline-start: 6px;
   margin: 0px;
-  margin-bottom: 2.5px;
+  margin-bottom: 10px;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   border-radius: 4px;
@@ -114,7 +114,7 @@ const TsvContent = ({ item, filters, markdownView, fontSize: _fontSize }) => {
       if (ordering[a] > ordering[b]) {
         return 1
       }
-      // a must be equal to b
+
       return ordering[a] - ordering[b]
     })
     .reverse()

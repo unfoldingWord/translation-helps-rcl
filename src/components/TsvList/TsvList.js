@@ -41,7 +41,7 @@ TsvList.defaultProps = {
 }
 
 TsvList.propTypes = {
-  items: PropTypes.array.isRequired,
+  items: PropTypes.array,
   filters: PropTypes.array.isRequired,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }

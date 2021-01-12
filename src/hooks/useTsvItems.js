@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react'
 import base64DecodeUnicode from '../core/base64DecodeUnicode'
 
 export default function useTsvItems({
+  fetchMarkdown = true,
   languageId,
+  resourceId,
   projectId,
   chapter,
   content,
   server,
   owner,
   verse,
-  fetchMarkdown = true,
 }) {
   const [items, setItems] = useState([])
 
@@ -64,11 +65,10 @@ export default function useTsvItems({
             const path = item.SupportReference.replace('rc://*/', '')
             const routes = path.split('/')
             const resource = routes[0]
-            const filePath = `${routes[routes.length - 3]}/${
-              routes[routes.length - 2]
-            }/${routes[routes.length - 1]}.md`
+            const newRoutes = routes.slice(2, routes.length)
+            const filename = resource === 'ta' ? '/01.md' : '.md'
+            const filePath = `${newRoutes.join('/')}${filename}`
             const url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
-
             const result = await fetch(url).then(data => data.json())
             const markdown = base64DecodeUnicode(result.content)
             newItems.push({ ...item, markdown })
@@ -80,9 +80,7 @@ export default function useTsvItems({
       setItems(_items)
     }
 
-    if (Array.isArray(content)) {
-      getTsvItems()
-    }
+    getTsvItems()
   }, [content])
 
   return items

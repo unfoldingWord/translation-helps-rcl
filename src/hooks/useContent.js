@@ -38,6 +38,7 @@ const useContent = ({
   const items = useTsvItems({
     fetchMarkdown,
     languageId,
+    resourceId,
     projectId,
     content,
     chapter,
