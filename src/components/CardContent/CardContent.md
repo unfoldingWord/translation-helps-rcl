@@ -90,7 +90,7 @@ const Component = () => {
     branch: 'master',
     languageId: 'en',
     resourceId: 'tw',
-    owner: 'unfoldingWord',
+    owner: 'test_org',
     filePath: 'kt/jesus.md',
     server: 'https://git.door43.org',
   })

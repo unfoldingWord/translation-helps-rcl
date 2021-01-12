@@ -13,7 +13,8 @@ const useCardState = ({ items }) => {
   }, [items])
 
   useEffect(() => {
-    const initialHeaders = Object.keys(item || {})
+    let initialHeaders = Object.keys(item || {})
+    initialHeaders = initialHeaders.filter(item => item !== 'markdown')
     setHeaders(initialHeaders)
   }, [item])
 
