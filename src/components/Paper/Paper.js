@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const Paper = styled.div`
@@ -12,4 +13,9 @@ const Paper = styled.div`
   transition: all 0.2s ease-in-out;
 `
 
+Paper.propTypes = {
+  children: PropTypes.node,
+}
+
+/** @component */
 export default Paper
