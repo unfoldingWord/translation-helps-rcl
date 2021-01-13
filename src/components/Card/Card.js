@@ -9,6 +9,7 @@ import AnnouncementIcon from '@material-ui/icons/Announcement'
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
 
 const useStyles = makeStyles(() => ({
@@ -39,18 +40,6 @@ const useStyles = makeStyles(() => ({
     padding: '0px 15px 0px 0px',
   },
 }))
-
-const Paper = styled.div`
-  margin: 2.5px;
-  padding: 16px;
-  background-color: #ffffff;
-  box-shadow: 0 14px 20px 2px rgba(0, 0, 0, 0.14),
-    0 6px 26px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  position: relative;
-  margin-bottom: 50px;
-  transition: all 0.2s ease-in-out;
-`
 
 const FlexDiv = styled.div`
   display: flex;
@@ -89,6 +78,7 @@ const Card = ({
   setItemIndex,
   onRemoveCard,
   setMarkdownView,
+  disableSettingsButton,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
@@ -169,10 +159,12 @@ const Card = ({
                 onRemoveCard={onRemoveCard}
               />
             )}
-            <MoreHorizIcon
-              className={classes.pointerIcon}
-              onClick={onMenuClick}
-            />
+            {!disableSettingsButton && (
+              <MoreHorizIcon
+                className={classes.pointerIcon}
+                onClick={onMenuClick}
+              />
+            )}
           </FlexDiv>
         )}
       </FlexSpacedDiv>
@@ -196,6 +188,7 @@ Card.defaultProps = {
   fontSize: 100,
   dragging: false,
   closeable: false,
+  disableSettingsButton: false,
 }
 
 Card.propTypes = {
