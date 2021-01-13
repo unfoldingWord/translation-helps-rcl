@@ -8,7 +8,7 @@ import React from 'react'
 const Component = () => {
   return (
     <Paper>
-      <p>
+      <p style={{ padding: '30px' }}>
         Hello world! I'm a Paper card.
       </p>
     </Paper>
