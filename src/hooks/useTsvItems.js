@@ -69,8 +69,13 @@ export default function useTsvItems({
             const filename = resource === 'ta' ? '/01.md' : '.md'
             const filePath = `${newRoutes.join('/')}${filename}`
             const url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
-            const result = await fetch(url).then(data => data.json())
-            const markdown = base64DecodeUnicode(result.content)
+            let markdown = null;
+            try {
+              const result = await fetch(url).then(data => data.json())
+              markdown = base64DecodeUnicode(result.content)
+            } catch (e) {
+              console.error(`useTsvItems(url) - article not found`, e);
+            }
             newItems.push({ ...item, markdown })
             item.markdown = markdown
           }
