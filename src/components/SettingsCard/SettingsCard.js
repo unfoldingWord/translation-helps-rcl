@@ -7,11 +7,15 @@ import FormGroup from '@material-ui/core/FormGroup'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
@@ -56,6 +60,10 @@ const useStyles = makeStyles(() => ({
     color: '#FF4444',
     cursor: 'pointer',
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }))
 
 const BlueSwitch = withStyles({
@@ -93,6 +101,8 @@ const SettingsCard = ({
   onRemoveCard,
   title: _title,
   onShowMarkdown,
+  hideMarkdownToggle,
+  dropDownSelections,
 }) => {
   const classes = useStyles()
 
@@ -110,6 +120,39 @@ const SettingsCard = ({
 
   const title = `${_title} Settings`
 
+  function getSelector(selections) {
+    if (Array.isArray(selections?.options)) {
+      function handleChange(event) {
+        console.log(event.target.value);
+      }
+
+      function getMenuItems() {
+        const menuItems = selections.options.map(item => (
+          <MenuItem value={item.key}>{item.label}</MenuItem>
+        ));
+        return menuItems;
+      }
+
+      const label = selections.label || '';
+      const currentKey = selections.currentKey;
+
+      return <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="settings-select-input-label">{label}</InputLabel>
+        <Select
+          labelId="settings-select-label"
+          id="settings-select"
+          value={currentKey}
+          onChange={handleChange}
+          label={label}
+        >
+          {getMenuItems()}
+        </Select>
+      </FormControl>;
+    }
+
+    return '';
+  }
+
   return (
     <DraggableModal open={open} title={title} handleClose={onClose}>
       <Card
@@ -122,18 +165,23 @@ const SettingsCard = ({
         }}
       >
         <FormGroup row classes={{ row: classes.formGroup }}>
-          <FormControlLabel
-            control={
-              <BlueSwitch
-                checked={markdownView}
-                onChange={e => onShowMarkdown(e.target.checked)}
-                name='markdownView'
-              />
-            }
-            classes={{ label: classes.switchLabel }}
-            label='Markdown View'
-            labelPlacement='bottom'
-          />
+          {!hideMarkdownToggle &&
+            <FormControlLabel
+              control={
+                <BlueSwitch
+                  checked={markdownView}
+                  onChange={e => onShowMarkdown(e.target.checked)}
+                  name='markdownView'
+                />
+              }
+              classes={{label: classes.switchLabel}}
+              label='Markdown View'
+              labelPlacement='bottom'
+            />
+          }
+          {(!!dropDownSelections) &&
+            getSelector(dropDownSelections)
+          }
         </FormGroup>
         <Divider />
         <div className={classes.fontSlider}>
@@ -189,16 +237,30 @@ SettingsCard.defaultProps = {
 }
 
 SettingsCard.propTypes = {
-  filters: PropTypes.array,
+  /** The title of the card */
   title: PropTypes.string.isRequired,
+  /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func.isRequired,
+  /** Array of labels for checkboxes */
   headers: PropTypes.array.isRequired,
-  fontSize: PropTypes.number.isRequired,
+  /** Array of headers that are currently selected */
+  filters: PropTypes.array,
+  /** Updates the filters list */
   setFilters: PropTypes.func.isRequired,
+  /** Current text font size */
+  fontSize: PropTypes.number.isRequired,
+  /** Updates the font size */
   setFontSize: PropTypes.func.isRequired,
+  /** Event handler to Remove Card */
   onRemoveCard: PropTypes.func.isRequired,
+  /** current state for markdown toggle */
   markdownView: PropTypes.bool.isRequired,
+  /** callback for markdown toggle */
   onShowMarkdown: PropTypes.func.isRequired,
+  /** when true markdown toggle is hidden (optional - default is visible) */
+  hideMarkdownToggle: PropTypes.bool,
+  /** array of choices to show in dropdown (optional) */
+  dropDownSelections: PropTypes.array,
 }
 
 export default SettingsCard

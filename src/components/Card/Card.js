@@ -79,6 +79,8 @@ const Card = ({
   onRemoveCard,
   setMarkdownView,
   disableSettingsButton,
+  hideMarkdownToggle,
+  dropDownSelections,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
@@ -157,6 +159,8 @@ const Card = ({
                 markdownView={markdownView}
                 onShowMarkdown={setMarkdownView}
                 onRemoveCard={onRemoveCard}
+                hideMarkdownToggle={hideMarkdownToggle}
+                dropDownSelections={dropDownSelections}
               />
             )}
             {!disableSettingsButton && (
@@ -214,16 +218,24 @@ Card.propTypes = {
   onClose: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
-  /** Array of TSV header filters */
+  /** Array of TSV header filters (this is array of header items that are currently selected) */
   filters: PropTypes.array.isRequired,
   /** Updates the filters list */
   setFilters: PropTypes.func,
   /** Text font size */
   fontSize: PropTypes.number,
-  /** Updates the filters list */
+  /** Updates the font size */
   setFontSize: PropTypes.func,
   /** Event handler to Remove Card */
   onRemoveCard: PropTypes.func,
+  /** current state for markdown toggle in settings */
+  markdownView: PropTypes.bool,
+  /** updates state for markdown toggle in settings */
+  setMarkdownView: PropTypes.func,
+  /** when true markdown toggle is hidden in settings (optional - default is visible) */
+  hideMarkdownToggle: PropTypes.bool,
+  /** array of choices to show in dropdown in settings (optional) */
+  dropDownSelections: PropTypes.array,
 }
 
 export default Card
