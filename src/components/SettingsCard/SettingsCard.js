@@ -7,10 +7,8 @@ import FormGroup from '@material-ui/core/FormGroup'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import ComboBox from '../ComboBox'
+
 import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
@@ -102,7 +100,7 @@ const SettingsCard = ({
   title: _title,
   onShowMarkdown,
   hideMarkdownToggle,
-  dropDownSelections,
+  dropDownConfig,
 }) => {
   const classes = useStyles()
 
@@ -119,39 +117,6 @@ const SettingsCard = ({
   }
 
   const title = `${_title} Settings`
-
-  function getSelector(selections) {
-    if (Array.isArray(selections?.options)) {
-      function handleChange(event) {
-        console.log(event.target.value);
-      }
-
-      function getMenuItems() {
-        const menuItems = selections.options.map(item => (
-          <MenuItem value={item.key}>{item.label}</MenuItem>
-        ));
-        return menuItems;
-      }
-
-      const label = selections.label || '';
-      const currentKey = selections.currentKey;
-
-      return <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="settings-select-input-label">{label}</InputLabel>
-        <Select
-          labelId="settings-select-label"
-          id="settings-select"
-          value={currentKey}
-          onChange={handleChange}
-          label={label}
-        >
-          {getMenuItems()}
-        </Select>
-      </FormControl>;
-    }
-
-    return '';
-  }
 
   return (
     <DraggableModal open={open} title={title} handleClose={onClose}>
@@ -179,8 +144,8 @@ const SettingsCard = ({
               labelPlacement='bottom'
             />
           }
-          {(!!dropDownSelections) &&
-            getSelector(dropDownSelections)
+          {(!!dropDownConfig) &&
+            <ComboBox {...dropDownConfig} />
           }
         </FormGroup>
         <Divider />
@@ -259,8 +224,8 @@ SettingsCard.propTypes = {
   onShowMarkdown: PropTypes.func.isRequired,
   /** when true markdown toggle is hidden (optional - default is visible) */
   hideMarkdownToggle: PropTypes.bool,
-  /** array of choices to show in dropdown (optional) */
-  dropDownSelections: PropTypes.array,
+  /** configuration to show dropdown on settings card (optional, see properties of ComboBox for details of configuration) */
+  dropDownConfig: PropTypes.object,
 }
 
 export default SettingsCard
