@@ -80,7 +80,7 @@ const Card = ({
   setMarkdownView,
   disableSettingsButton,
   hideMarkdownToggle,
-  dropDownConfig,
+  getDropDownConfig,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
@@ -160,7 +160,7 @@ const Card = ({
                 onShowMarkdown={setMarkdownView}
                 onRemoveCard={onRemoveCard}
                 hideMarkdownToggle={hideMarkdownToggle}
-                dropDownConfig={dropDownConfig}
+                getDropDownConfig={getDropDownConfig}
               />
             )}
             {!disableSettingsButton && (
@@ -234,8 +234,8 @@ Card.propTypes = {
   setMarkdownView: PropTypes.func,
   /** when true markdown toggle is hidden in settings (optional - default is visible) */
   hideMarkdownToggle: PropTypes.bool,
-  /** configuration to show dropdown on settings card (optional, see properties of ComboBox for details of configuration) */
-  dropDownConfig: PropTypes.object,
+  /** function to get dropdown configuration on settings card (optional, see properties of ComboBox for details of configuration returned) */
+  getDropDownConfig: PropTypes.func,
 }
 
 export default Card

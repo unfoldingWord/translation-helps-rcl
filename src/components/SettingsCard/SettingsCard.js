@@ -100,7 +100,7 @@ const SettingsCard = ({
   title: _title,
   onShowMarkdown,
   hideMarkdownToggle,
-  dropDownConfig,
+  getDropDownConfig,
 }) => {
   const classes = useStyles()
 
@@ -144,8 +144,8 @@ const SettingsCard = ({
               labelPlacement='bottom'
             />
           }
-          {(!!dropDownConfig) &&
-            <ComboBox {...dropDownConfig} />
+          {(!!getDropDownConfig) &&
+            <ComboBox {...getDropDownConfig()} />
           }
         </FormGroup>
         <Divider />
@@ -224,8 +224,8 @@ SettingsCard.propTypes = {
   onShowMarkdown: PropTypes.func.isRequired,
   /** when true markdown toggle is hidden (optional - default is visible) */
   hideMarkdownToggle: PropTypes.bool,
-  /** configuration to show dropdown on settings card (optional, see properties of ComboBox for details of configuration) */
-  dropDownConfig: PropTypes.object,
+  /** function to get dropdown configuration on settings card (optional, see properties of ComboBox for details of configuration returned) */
+  getDropDownConfig: PropTypes.func,
 }
 
 export default SettingsCard
