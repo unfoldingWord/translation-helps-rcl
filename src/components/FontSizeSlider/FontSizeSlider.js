@@ -55,7 +55,7 @@ function FontSizeSlider({ min, max, step, marks, value, onChange }) {
   return (
     <Grid container spacing={2} alignItems='center'>
       <Grid item onClick={handleDecrease} classes={{ root: classes.gridItem }}>
-        <TextFieldsIcon fontSize='small' htmlColor='#00B0FF' />
+        <TextFieldsIcon fontSize='small' htmlColor='#38ADDF' />
       </Grid>
       <Grid item style={{ display: 'flex', flex: 1 }}>
         <Slider
@@ -75,7 +75,7 @@ function FontSizeSlider({ min, max, step, marks, value, onChange }) {
         />
       </Grid>
       <Grid item onClick={handleIncrease} classes={{ root: classes.gridItem }}>
-        <TextFieldsIcon fontSize='large' htmlColor='#00B0FF' />
+        <TextFieldsIcon fontSize='large' htmlColor='#38ADDF' />
       </Grid>
     </Grid>
   )

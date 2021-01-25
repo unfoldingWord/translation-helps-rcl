@@ -8,11 +8,11 @@ const Container = styled.div`
 
 const Table = styled.table`
   border-spacing: 0.5rem;
-  padding: 0.5rem 0.2rem 1rem;
+  padding: 0.3rem 0.2rem 1rem;
   width: 100%;
 `
 
-const TsvList = ({ items, filters, fontSize, onSelectRow, selectedQuote }) => {
+const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
   fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
 
   if (items) {
@@ -57,17 +57,22 @@ const TsvList = ({ items, filters, fontSize, onSelectRow, selectedQuote }) => {
                 style.fontWeight = 'bold'
               }
 
+              if (setQuote) {
+                style.cursor = 'pointer'
+              }
+
               return (
                 <tr
                   key={i}
-                  onClick={() => onSelectRow(item.Quote)}
+                  onClick={() => {
+                    if (setQuote) setQuote(item.Quote)
+                  }}
                   style={style}
                 >
                   {Object.keys(item).map(key => (
                     <td
                       key={key + i}
                       style={{
-                        cursor: 'pointer',
                         padding: '0.5rem 0rem',
                         borderBottom: '1px solid lightgrey',
                       }}
@@ -86,12 +91,12 @@ const TsvList = ({ items, filters, fontSize, onSelectRow, selectedQuote }) => {
 
 TsvList.defaultProps = {
   fontSize: 100,
-  onSelectRow: () => {},
 }
 
 TsvList.propTypes = {
   items: PropTypes.array,
-  onSelectRow: PropTypes.func,
+  setQuote: PropTypes.func,
+  selectedQuote: PropTypes.string,
   filters: PropTypes.array.isRequired,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }

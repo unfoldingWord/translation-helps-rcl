@@ -12,7 +12,9 @@ const CardContent = ({
   markdown,
   viewMode,
   isLoading,
+  setQuote,
   markdownView,
+  selectedQuote,
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
@@ -42,7 +44,15 @@ const CardContent = ({
       />
     )
   } else if (item && viewMode === 'list') {
-    return <TsvList items={items} filters={filters} fontSize={fontSize} />
+    return (
+      <TsvList
+        items={items}
+        filters={filters}
+        fontSize={fontSize}
+        setQuote={setQuote}
+        selectedQuote={selectedQuote}
+      />
+    )
   } else if (
     (item && viewMode === 'default') ||
     (item && viewMode === 'table')
@@ -89,7 +99,9 @@ CardContent.propTypes = {
   isLoading: PropTypes.bool,
   markdown: PropTypes.string,
   fontSize: PropTypes.number,
+  setQuote: PropTypes.func,
   markdownView: PropTypes.bool,
+  selectedQuote: PropTypes.string,
   viewMode: PropTypes.oneOf(['default', 'table', 'list', 'markdown']),
 }
 

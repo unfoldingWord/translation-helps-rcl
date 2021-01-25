@@ -61,10 +61,10 @@ const useStyles = makeStyles(() => ({
 const BlueSwitch = withStyles({
   switchBase: {
     '&$checked': {
-      color: '#00B0FF',
+      color: '#38ADDF',
     },
     '&$checked + $track': {
-      backgroundColor: '#00B0FF',
+      backgroundColor: '#38ADDF',
     },
   },
   checked: {},
@@ -75,7 +75,7 @@ const BlueCheckbox = withStyles({
   root: {
     color: '#000000',
     '&$checked': {
-      color: '#00B0FF',
+      color: '#38ADDF',
     },
   },
   checked: {},
