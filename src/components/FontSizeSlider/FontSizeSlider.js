@@ -17,8 +17,8 @@ const useStyles = makeStyles({
     cursor: 'pointer',
     fontSize: '22px',
   },
-  sliderRoot: { color: '#00B0FF' },
-  sliderMark: { backgroundColor: '#00B0FF' },
+  sliderRoot: { color: '#38ADDF' },
+  sliderMark: { backgroundColor: '#38ADDF' },
   valueLabel: {
     top: -14,
     fontSize: '10px',
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     userSelect: 'none',
     '& *': {
       background: 'transparent',
-      color: '#00B0FF',
+      color: '#38ADDF',
     },
   },
 })

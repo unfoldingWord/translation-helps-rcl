@@ -9,6 +9,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
+  const [selectedQuote, setQuote] = useState('')
   const { markdown, items } = useContent({
     verse: 1,
     chapter: 1,
@@ -43,23 +44,27 @@ const Component = () => {
   return (
     <Card
       items={items}
+      title={'Words'}
       headers={headers}
       filters={filters}
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      title={'Words'}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      disableFilters
+      disableNavigation
+      disableMarkdownToggle
     >
       <TsvList
         items={items}
-        // headers={headers}
         filters={filters}
         fontSize={fontSize}
         markdownView={markdownView}
+        selectedQuote={selectedQuote}
+        onSelectRow={setQuote}
       />
     </Card>
   )

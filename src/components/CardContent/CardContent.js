@@ -90,7 +90,7 @@ CardContent.propTypes = {
   markdown: PropTypes.string,
   fontSize: PropTypes.number,
   markdownView: PropTypes.bool,
-  viewMode: PropTypes.oneOf(['default', 'table', 'markdown']),
+  viewMode: PropTypes.oneOf(['default', 'table', 'list', 'markdown']),
 }
 
 export default CardContent

@@ -93,6 +93,8 @@ const SettingsCard = ({
   onRemoveCard,
   title: _title,
   onShowMarkdown,
+  disableFilters,
+  disableMarkdownToggle,
 }) => {
   const classes = useStyles()
 
@@ -121,25 +123,27 @@ const SettingsCard = ({
           dragIndicator: 'draggable-dialog-title',
         }}
       >
-        <FormGroup row classes={{ row: classes.formGroup }}>
-          <FormControlLabel
-            control={
-              <BlueSwitch
-                checked={markdownView}
-                onChange={e => onShowMarkdown(e.target.checked)}
-                name='markdownView'
-              />
-            }
-            classes={{ label: classes.switchLabel }}
-            label='Markdown View'
-            labelPlacement='bottom'
-          />
-        </FormGroup>
+        {!disableMarkdownToggle && (
+          <FormGroup row classes={{ row: classes.formGroup }}>
+            <FormControlLabel
+              control={
+                <BlueSwitch
+                  checked={markdownView}
+                  onChange={e => onShowMarkdown(e.target.checked)}
+                  name='markdownView'
+                />
+              }
+              classes={{ label: classes.switchLabel }}
+              label='Markdown View'
+              labelPlacement='bottom'
+            />
+          </FormGroup>
+        )}
         <Divider />
         <div className={classes.fontSlider}>
           <FontSizeSlider value={fontSize} onChange={setFontSize} />
         </div>
-        {headers && headers.length > 0 && (
+        {!disableFilters && headers && headers.length > 0 && (
           <Fragment>
             <Divider />
             <div className={classes.section}>
@@ -186,6 +190,8 @@ const SettingsCard = ({
 
 SettingsCard.defaultProps = {
   filters: [],
+  disableFilters: false,
+  disableMarkdownToggle: false,
 }
 
 SettingsCard.propTypes = {
@@ -199,6 +205,10 @@ SettingsCard.propTypes = {
   onRemoveCard: PropTypes.func.isRequired,
   markdownView: PropTypes.bool.isRequired,
   onShowMarkdown: PropTypes.func.isRequired,
+  /** Disables the filters checkboxes. */
+  disableFilters: PropTypes.bool,
+  /** Disables the Markdown Toggle. */
+  disableMarkdownToggle: PropTypes.bool,
 }
 
 export default SettingsCard
