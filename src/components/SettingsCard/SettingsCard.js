@@ -7,7 +7,6 @@ import FormGroup from '@material-ui/core/FormGroup'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import ComboBox from '../ComboBox'
 
 import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
@@ -100,7 +99,7 @@ const SettingsCard = ({
   title: _title,
   onShowMarkdown,
   hideMarkdownToggle,
-  getDropDownConfig,
+  getCustomComponent,
 }) => {
   const classes = useStyles()
 
@@ -144,8 +143,8 @@ const SettingsCard = ({
               labelPlacement='bottom'
             />
           }
-          {(!!getDropDownConfig) &&
-            <ComboBox {...getDropDownConfig()} />
+          {(!!getCustomComponent) &&
+            getCustomComponent()
           }
         </FormGroup>
         <Divider />
@@ -224,8 +223,8 @@ SettingsCard.propTypes = {
   onShowMarkdown: PropTypes.func.isRequired,
   /** when true markdown toggle is hidden (optional - default is visible) */
   hideMarkdownToggle: PropTypes.bool,
-  /** function to get dropdown configuration on settings card (optional, see properties of ComboBox for details of configuration returned) */
-  getDropDownConfig: PropTypes.func,
+  /** function to get a custom component to add to settings card (optional) */
+  getCustomComponent: PropTypes.func,
 }
 
 export default SettingsCard
