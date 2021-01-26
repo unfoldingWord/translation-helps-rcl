@@ -9,7 +9,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const [selectedQuote, setQuote] = useState('')
+  const [selectedQuote, setQuote] = useState(null)
   const { markdown, items } = useContent({
     verse: 1,
     chapter: 1,
@@ -64,7 +64,7 @@ const Component = () => {
         fontSize={fontSize}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
-        onSelectRow={setQuote}
+        setQuote={setQuote}
       />
     </Card>
   )

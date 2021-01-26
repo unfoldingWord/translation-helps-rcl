@@ -16,13 +16,15 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
   fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
 
   if (items) {
-    filters = ['Translation Word', 'Original Quote']
-    items = items.map(({ SupportReference, Quote }) => {
+    filters = ['Translation Word', 'Occurrence', 'Original Quote']
+    items = items.map(({ SupportReference, Quote, Occurrence }) => {
       const directories = SupportReference.split('/')
       const value = directories[directories.length - 1]
 
       return {
         SupportReference: value,
+        // Occurrences,
+        Occurrence,
         Quote,
       }
     })
@@ -50,22 +52,33 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
         <tbody style={{ fontSize }}>
           {items &&
             items.map((item, i) => {
-              const style = {}
+              let selected = false
+              const { Quote, Occurrence, Occurrences } = item
+              const style = { cursor: setQuote ? 'pointer' : '' }
 
-              if (selectedQuote && selectedQuote === item.Quote) {
+              if (
+                selectedQuote?.text === Quote &&
+                selectedQuote?.Occurrence === Occurrence &&
+                selectedQuote?.Occurrences === Occurrences
+              ) {
+                selected = true
                 style.color = '#38ADDF'
                 style.fontWeight = 'bold'
-              }
-
-              if (setQuote) {
-                style.cursor = 'pointer'
               }
 
               return (
                 <tr
                   key={i}
                   onClick={() => {
-                    if (setQuote) setQuote(item.Quote)
+                    if (setQuote && !selected) {
+                      setQuote({
+                        text: Quote,
+                        Occurrence,
+                        Occurrences,
+                      })
+                    } else if (setQuote && selected) {
+                      setQuote({})
+                    }
                   }}
                   style={style}
                 >
@@ -96,7 +109,7 @@ TsvList.defaultProps = {
 TsvList.propTypes = {
   items: PropTypes.array,
   setQuote: PropTypes.func,
-  selectedQuote: PropTypes.string,
+  selectedQuote: PropTypes.object,
   filters: PropTypes.array.isRequired,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
