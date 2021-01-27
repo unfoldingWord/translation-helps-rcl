@@ -11,7 +11,7 @@ import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
@@ -56,6 +56,10 @@ const useStyles = makeStyles(() => ({
     color: '#FF4444',
     cursor: 'pointer',
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }))
 
 const BlueSwitch = withStyles({
@@ -95,6 +99,7 @@ const SettingsCard = ({
   onShowMarkdown,
   disableFilters,
   hideMarkdownToggle,
+  getCustomComponent,
 }) => {
   const classes = useStyles()
 
@@ -123,8 +128,8 @@ const SettingsCard = ({
           dragIndicator: 'draggable-dialog-title',
         }}
       >
-        {!hideMarkdownToggle && (
-          <FormGroup row classes={{ row: classes.formGroup }}>
+        <FormGroup row classes={{ row: classes.formGroup }}>
+          {!hideMarkdownToggle &&
             <FormControlLabel
               control={
                 <BlueSwitch
@@ -137,8 +142,11 @@ const SettingsCard = ({
               label='Markdown View'
               labelPlacement='bottom'
             />
-          </FormGroup>
-        )}
+          }
+          {(!!getCustomComponent) &&
+            getCustomComponent()
+          }
+        </FormGroup>
         <Divider />
         <div className={classes.fontSlider}>
           <FontSizeSlider value={fontSize} onChange={setFontSize} />
@@ -195,20 +203,32 @@ SettingsCard.defaultProps = {
 }
 
 SettingsCard.propTypes = {
-  filters: PropTypes.array,
+  /** The title of the card */
   title: PropTypes.string.isRequired,
+  /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func.isRequired,
+  /** Array of labels for checkboxes */
   headers: PropTypes.array.isRequired,
-  fontSize: PropTypes.number.isRequired,
+  /** Array of headers that are currently selected */
+  filters: PropTypes.array,
+  /** Updates the filters list */
   setFilters: PropTypes.func.isRequired,
+  /** Current text font size */
+  fontSize: PropTypes.number.isRequired,
+  /** Updates the font size */
   setFontSize: PropTypes.func.isRequired,
+  /** Event handler to Remove Card */
   onRemoveCard: PropTypes.func.isRequired,
+  /** current state for markdown toggle */
   markdownView: PropTypes.bool.isRequired,
+  /** callback for markdown toggle */
   onShowMarkdown: PropTypes.func.isRequired,
   /** Disables the filters checkboxes. */
   disableFilters: PropTypes.bool,
-  /** Disables the Markdown Toggle. */
+  /** when true markdown toggle is hidden (optional - default is visible) */
   hideMarkdownToggle: PropTypes.bool,
+  /** function to get a custom component to add to settings card (optional) */
+  getCustomComponent: PropTypes.func,
 }
 
 export default SettingsCard

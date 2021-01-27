@@ -82,6 +82,7 @@ const Card = ({
   disableNavigation,
   disableSettingsButton,
   hideMarkdownToggle,
+  getCustomComponent,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
@@ -162,6 +163,7 @@ const Card = ({
                 disableFilters={disableFilters}
                 onShowMarkdown={setMarkdownView}
                 hideMarkdownToggle={hideMarkdownToggle}
+                getCustomComponent={getCustomComponent}
               />
             )}
             {!disableSettingsButton && (
@@ -222,13 +224,13 @@ Card.propTypes = {
   onClose: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
-  /** Array of TSV header filters */
+  /** Array of TSV header filters (this is array of header items that are currently selected) */
   filters: PropTypes.array.isRequired,
   /** Updates the filters list */
   setFilters: PropTypes.func,
   /** Text font size */
   fontSize: PropTypes.number,
-  /** Updates the filters list */
+  /** Updates the font size */
   setFontSize: PropTypes.func,
   /** Event handler to Remove Card */
   onRemoveCard: PropTypes.func,
@@ -238,8 +240,14 @@ Card.propTypes = {
   disableNavigation: PropTypes.bool,
   /** Disables the settings button */
   disableSettingsButton: PropTypes.bool,
-  /** Disables the Markdown Toggle button from the settings card*/
+  /** when true markdown toggle is hidden in settings (optional - default is visible) */
   hideMarkdownToggle: PropTypes.bool,
+  /** current state for markdown toggle in settings */
+  markdownView: PropTypes.bool,
+  /** updates state for markdown toggle in settings */
+  setMarkdownView: PropTypes.func,
+  /** function to get a custom component to add to settings card (optional) */
+  getCustomComponent: PropTypes.func,
 }
 
 export default Card
