@@ -81,7 +81,7 @@ const Card = ({
   setMarkdownView,
   disableNavigation,
   disableSettingsButton,
-  disableMarkdownToggle,
+  hideMarkdownToggle,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
@@ -161,7 +161,7 @@ const Card = ({
                 onRemoveCard={onRemoveCard}
                 disableFilters={disableFilters}
                 onShowMarkdown={setMarkdownView}
-                disableMarkdownToggle={disableMarkdownToggle}
+                hideMarkdownToggle={hideMarkdownToggle}
               />
             )}
             {!disableSettingsButton && (
@@ -196,7 +196,7 @@ Card.defaultProps = {
   disableFilters: false,
   disableNavigation: false,
   disableSettingsButton: false,
-  disableMarkdownToggle: false,
+  hideMarkdownToggle: false,
 }
 
 Card.propTypes = {
@@ -239,7 +239,7 @@ Card.propTypes = {
   /** Disables the settings button */
   disableSettingsButton: PropTypes.bool,
   /** Disables the Markdown Toggle button from the settings card*/
-  disableMarkdownToggle: PropTypes.bool,
+  hideMarkdownToggle: PropTypes.bool,
 }
 
 export default Card

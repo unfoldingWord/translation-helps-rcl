@@ -56,7 +56,7 @@ const Component = () => {
       setMarkdownView={setMarkdownView}
       disableFilters
       disableNavigation
-      disableMarkdownToggle
+      hideMarkdownToggle
     >
       <TsvList
         items={items}

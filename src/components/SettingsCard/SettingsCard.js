@@ -94,7 +94,7 @@ const SettingsCard = ({
   title: _title,
   onShowMarkdown,
   disableFilters,
-  disableMarkdownToggle,
+  hideMarkdownToggle,
 }) => {
   const classes = useStyles()
 
@@ -123,7 +123,7 @@ const SettingsCard = ({
           dragIndicator: 'draggable-dialog-title',
         }}
       >
-        {!disableMarkdownToggle && (
+        {!hideMarkdownToggle && (
           <FormGroup row classes={{ row: classes.formGroup }}>
             <FormControlLabel
               control={
@@ -191,7 +191,7 @@ const SettingsCard = ({
 SettingsCard.defaultProps = {
   filters: [],
   disableFilters: false,
-  disableMarkdownToggle: false,
+  hideMarkdownToggle: false,
 }
 
 SettingsCard.propTypes = {
@@ -208,7 +208,7 @@ SettingsCard.propTypes = {
   /** Disables the filters checkboxes. */
   disableFilters: PropTypes.bool,
   /** Disables the Markdown Toggle. */
-  disableMarkdownToggle: PropTypes.bool,
+  hideMarkdownToggle: PropTypes.bool,
 }
 
 export default SettingsCard
