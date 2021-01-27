@@ -23,7 +23,6 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
 
       return {
         SupportReference: value,
-        // Occurrences,
         Occurrence,
         Quote,
       }
@@ -53,13 +52,12 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
           {items &&
             items.map((item, i) => {
               let selected = false
-              const { Quote, Occurrence, Occurrences } = item
+              const { Quote, Occurrence } = item
               const style = { cursor: setQuote ? 'pointer' : '' }
 
               if (
                 selectedQuote?.text === Quote &&
-                selectedQuote?.Occurrence === Occurrence &&
-                selectedQuote?.Occurrences === Occurrences
+                selectedQuote?.Occurrence === Occurrence
               ) {
                 selected = true
                 style.color = '#38ADDF'
@@ -74,7 +72,6 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
                       setQuote({
                         text: Quote,
                         Occurrence,
-                        Occurrences,
                       })
                     } else if (setQuote && selected) {
                       setQuote({})
