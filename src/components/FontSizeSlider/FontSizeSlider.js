@@ -17,8 +17,8 @@ const useStyles = makeStyles({
     cursor: 'pointer',
     fontSize: '22px',
   },
-  sliderRoot: { color: '#00B0FF' },
-  sliderMark: { backgroundColor: '#00B0FF' },
+  sliderRoot: { color: '#38ADDF' },
+  sliderMark: { backgroundColor: '#38ADDF' },
   valueLabel: {
     top: -14,
     fontSize: '10px',
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     userSelect: 'none',
     '& *': {
       background: 'transparent',
-      color: '#00B0FF',
+      color: '#38ADDF',
     },
   },
 })
@@ -55,7 +55,7 @@ function FontSizeSlider({ min, max, step, marks, value, onChange }) {
   return (
     <Grid container spacing={2} alignItems='center'>
       <Grid item onClick={handleDecrease} classes={{ root: classes.gridItem }}>
-        <TextFieldsIcon fontSize='small' htmlColor='#00B0FF' />
+        <TextFieldsIcon fontSize='small' htmlColor='#38ADDF' />
       </Grid>
       <Grid item style={{ display: 'flex', flex: 1 }}>
         <Slider
@@ -75,7 +75,7 @@ function FontSizeSlider({ min, max, step, marks, value, onChange }) {
         />
       </Grid>
       <Grid item onClick={handleIncrease} classes={{ root: classes.gridItem }}>
-        <TextFieldsIcon fontSize='large' htmlColor='#00B0FF' />
+        <TextFieldsIcon fontSize='large' htmlColor='#38ADDF' />
       </Grid>
     </Grid>
   )

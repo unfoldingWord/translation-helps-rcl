@@ -7,7 +7,6 @@ import FormGroup from '@material-ui/core/FormGroup'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-
 import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
@@ -66,10 +65,10 @@ const useStyles = makeStyles((theme) => ({
 const BlueSwitch = withStyles({
   switchBase: {
     '&$checked': {
-      color: '#00B0FF',
+      color: '#38ADDF',
     },
     '&$checked + $track': {
-      backgroundColor: '#00B0FF',
+      backgroundColor: '#38ADDF',
     },
   },
   checked: {},
@@ -80,7 +79,7 @@ const BlueCheckbox = withStyles({
   root: {
     color: '#000000',
     '&$checked': {
-      color: '#00B0FF',
+      color: '#38ADDF',
     },
   },
   checked: {},
@@ -98,6 +97,7 @@ const SettingsCard = ({
   onRemoveCard,
   title: _title,
   onShowMarkdown,
+  disableFilters,
   hideMarkdownToggle,
   getCustomComponent,
 }) => {
@@ -138,7 +138,7 @@ const SettingsCard = ({
                   name='markdownView'
                 />
               }
-              classes={{label: classes.switchLabel}}
+              classes={{ label: classes.switchLabel }}
               label='Markdown View'
               labelPlacement='bottom'
             />
@@ -151,7 +151,7 @@ const SettingsCard = ({
         <div className={classes.fontSlider}>
           <FontSizeSlider value={fontSize} onChange={setFontSize} />
         </div>
-        {headers && headers.length > 0 && (
+        {!disableFilters && headers && headers.length > 0 && (
           <Fragment>
             <Divider />
             <div className={classes.section}>
@@ -198,6 +198,8 @@ const SettingsCard = ({
 
 SettingsCard.defaultProps = {
   filters: [],
+  disableFilters: false,
+  hideMarkdownToggle: false,
 }
 
 SettingsCard.propTypes = {
@@ -221,6 +223,8 @@ SettingsCard.propTypes = {
   markdownView: PropTypes.bool.isRequired,
   /** callback for markdown toggle */
   onShowMarkdown: PropTypes.func.isRequired,
+  /** Disables the filters checkboxes. */
+  disableFilters: PropTypes.bool,
   /** when true markdown toggle is hidden (optional - default is visible) */
   hideMarkdownToggle: PropTypes.bool,
   /** function to get a custom component to add to settings card (optional) */

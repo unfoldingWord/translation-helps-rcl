@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Badge from '@material-ui/core/Badge'
 import CloseIcon from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AnnouncementIcon from '@material-ui/icons/Announcement'
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
@@ -77,7 +77,9 @@ const Card = ({
   markdownView,
   setItemIndex,
   onRemoveCard,
+  disableFilters,
   setMarkdownView,
+  disableNavigation,
   disableSettingsButton,
   hideMarkdownToggle,
   getCustomComponent,
@@ -122,7 +124,7 @@ const Card = ({
           <div className={classes.title}>{title}</div>
         </FlexDiv>
         <FlexDiv>
-          {items && items.length > 1 && (
+          {!disableNavigation && items && items.length > 1 && (
             <Navigation
               items={items}
               classes={classes}
@@ -157,14 +159,15 @@ const Card = ({
                 setFilters={setFilters}
                 setFontSize={setFontSize}
                 markdownView={markdownView}
-                onShowMarkdown={setMarkdownView}
                 onRemoveCard={onRemoveCard}
+                disableFilters={disableFilters}
+                onShowMarkdown={setMarkdownView}
                 hideMarkdownToggle={hideMarkdownToggle}
                 getCustomComponent={getCustomComponent}
               />
             )}
             {!disableSettingsButton && (
-              <MoreHorizIcon
+              <MoreVertIcon
                 className={classes.pointerIcon}
                 onClick={onMenuClick}
               />
@@ -192,7 +195,10 @@ Card.defaultProps = {
   fontSize: 100,
   dragging: false,
   closeable: false,
+  disableFilters: false,
+  disableNavigation: false,
   disableSettingsButton: false,
+  hideMarkdownToggle: false,
 }
 
 Card.propTypes = {
@@ -228,12 +234,18 @@ Card.propTypes = {
   setFontSize: PropTypes.func,
   /** Event handler to Remove Card */
   onRemoveCard: PropTypes.func,
+  /** Disables the filters checkboxes in the settings card. */
+  disableFilters: PropTypes.bool,
+  /** Disables the item navigation. */
+  disableNavigation: PropTypes.bool,
+  /** Disables the settings button */
+  disableSettingsButton: PropTypes.bool,
+  /** when true markdown toggle is hidden in settings (optional - default is visible) */
+  hideMarkdownToggle: PropTypes.bool,
   /** current state for markdown toggle in settings */
   markdownView: PropTypes.bool,
   /** updates state for markdown toggle in settings */
   setMarkdownView: PropTypes.func,
-  /** when true markdown toggle is hidden in settings (optional - default is visible) */
-  hideMarkdownToggle: PropTypes.bool,
   /** function to get a custom component to add to settings card (optional) */
   getCustomComponent: PropTypes.func,
 }
