@@ -56,8 +56,8 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
               const style = { cursor: setQuote ? 'pointer' : '' }
 
               if (
-                selectedQuote?.text === Quote &&
-                selectedQuote?.Occurrence === Occurrence
+                selectedQuote?.quote === Quote &&
+                selectedQuote?.occurrence === Occurrence
               ) {
                 selected = true
                 style.color = '#38ADDF'
@@ -70,8 +70,8 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
                   onClick={() => {
                     if (setQuote && !selected) {
                       setQuote({
-                        text: Quote,
-                        Occurrence,
+                        quote: Quote,
+                        occurrence: Occurrence,
                       })
                     } else if (setQuote && selected) {
                       setQuote({})
