@@ -46,42 +46,83 @@ const Label = styled.label`
   letter-spacing: 0.25px;
   color: ${props => (props.color ? props.color : '#000000')};
   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
+  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
+  cursor: ${props => (props.clickable ? 'pointer' : 'inherit')};
 `
 
-const Item = ({ label, value, fontSize, caution, error }) => (
-  <Fragment>
-    <Fieldset label={label} caution={caution} error={error}>
-      <Legend
-        error={error}
-        color='#424242'
+const Item = ({
+  label,
+  value,
+  fontSize,
+  caution,
+  error,
+  setQuote,
+  Occurrence,
+  selectedQuote,
+}) => {
+  const selected = selectedQuote?.quote === value
+
+  return (
+    <Fragment>
+      <Fieldset
+        label={label}
         caution={caution}
-        fontSize={fontSize === 'inherit' ? '14px' : fontSize}
+        error={error}
+        onClick={() => {
+          if (setQuote && label === 'Quote' && !selected)
+            setQuote({
+              quote: value,
+              occurrence: Occurrence,
+            })
+          else if (setQuote && selected) setQuote({})
+        }}
       >
-        {label}
-      </Legend>
-      <Label fontSize={fontSize}>{value}</Label>
-    </Fieldset>
-    {error ? (
-      <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
-        <span style={{ color: '#FF1A1A', marginTop: '10px' }}>
-          Warning: Something is wrong
-        </span>
-      </Label>
-    ) : (
-      caution && (
+        <Legend
+          error={error}
+          color='#424242'
+          caution={caution}
+          fontSize={fontSize === 'inherit' ? '14px' : fontSize}
+        >
+          {label}
+        </Legend>
+        <Label
+          color={selected ? '#38ADDF' : null}
+          bold={selected}
+          fontSize={fontSize}
+          clickable={!!setQuote}
+        >
+          {value}
+        </Label>
+      </Fieldset>
+      {error ? (
         <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
-          <span style={{ color: '#FF8400', marginTop: '10px' }}>
-            Caution: Something is wrong
+          <span style={{ color: '#FF1A1A', marginTop: '10px' }}>
+            Warning: Something is wrong
           </span>
         </Label>
-      )
-    )}
-  </Fragment>
-)
+      ) : (
+        caution && (
+          <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
+            <span style={{ color: '#FF8400', marginTop: '10px' }}>
+              Caution: Something is wrong
+            </span>
+          </Label>
+        )
+      )}
+    </Fragment>
+  )
+}
 
-const TsvContent = ({ item, filters, markdownView, fontSize: _fontSize }) => {
+const TsvContent = ({
+  item,
+  filters,
+  markdownView,
+  fontSize: _fontSize,
+  setQuote,
+  selectedQuote,
+}) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
-  const { Annotation } = item
+  const { Annotation, Occurrence } = item
   const AnnotationMarkdown = (
     <BlockEditable
       preview={markdownView}
@@ -131,6 +172,9 @@ const TsvContent = ({ item, filters, markdownView, fontSize: _fontSize }) => {
             error={false}
             caution={false}
             fontSize={fontSize}
+            setQuote={setQuote}
+            Occurrence={Occurrence}
+            selectedQuote={selectedQuote}
           />
         )
       })}

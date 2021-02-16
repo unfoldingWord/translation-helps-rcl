@@ -63,6 +63,8 @@ const CardContent = ({
         filters={filters}
         fontSize={_fontSize}
         markdownView={markdownView}
+        setQuote={setQuote}
+        selectedQuote={selectedQuote}
       />
     )
   } else {
@@ -79,7 +81,7 @@ const CardContent = ({
             fontSize,
           }}
         >
-          Something went wrong or there's no content available.
+          No content available.
         </div>
       </div>
     )
@@ -101,7 +103,7 @@ CardContent.propTypes = {
   fontSize: PropTypes.number,
   setQuote: PropTypes.func,
   markdownView: PropTypes.bool,
-  selectedQuote: PropTypes.string,
+  selectedQuote: PropTypes.object,
   viewMode: PropTypes.oneOf(['default', 'table', 'list', 'markdown']),
 }
 

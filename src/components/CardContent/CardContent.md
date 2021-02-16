@@ -12,6 +12,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
+  const [selectedQuote, setQuote] = useState({})
   const languageId = 'en'
   const { markdown, items, isLoading } = useContent({
     verse: 1,
@@ -65,6 +66,8 @@ const Component = () => {
         isLoading={isLoading}
         languageId={languageId}
         markdownView={markdownView}
+        selectedQuote={selectedQuote}
+        setQuote={setQuote}
       />
     </Card>
   )
@@ -225,6 +228,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
+  const [selectedQuote, setQuote] = useState({})
   const { markdown, items, isLoading, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
@@ -278,6 +282,8 @@ const Component = () => {
         isLoading={isLoading}
         languageId={languageId}
         markdownView={markdownView}
+        selectedQuote={selectedQuote}
+        setQuote={setQuote}
       />
     </Card>
   )
