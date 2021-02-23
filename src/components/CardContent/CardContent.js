@@ -66,6 +66,7 @@ const CardContent = ({
         markdown={markdown}
         editable={false}
         style={{
+          display: 'block',
           fontSize,
         }}
       />
