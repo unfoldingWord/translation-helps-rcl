@@ -83,10 +83,20 @@ const Card = ({
   disableSettingsButton,
   hideMarkdownToggle,
   getCustomComponent,
+  settingsTitle: settingsTitle_,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
   const classes = useStyles({ dragging })
+
+  let settingsTitle = settingsTitle_
+  if (!settingsTitle) { // if settingsTitle not given, generate from title
+    if (typeof title === 'string') { // handle the easy case where title is a string
+      settingsTitle = `${title} Settings`
+    } else { // Fall back to basic prompt
+      settingsTitle = 'Settings'
+    }
+  }
 
   const onAlertClick = () => {
     console.log('onAlertClick')
@@ -150,7 +160,7 @@ const Card = ({
             )}
             {showMenu && (
               <SettingsCard
-                title={title}
+                title={settingsTitle}
                 open={showMenu}
                 headers={headers}
                 filters={filters}
@@ -220,6 +230,8 @@ Card.propTypes = {
   classes: PropTypes.object,
   /** The title of the card*/
   title: PropTypes.string.isRequired,
+  /** The title settings popup.  Optional, if not given, it will be created from title */
+  settingsTitle: PropTypes.string,
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func,
   /** Content/jsx render in the body of the card */
