@@ -404,8 +404,6 @@ const Component = () => {
     items,
   })
 
-  console.log({items})
-
   return (
     <Card
       items={items}
