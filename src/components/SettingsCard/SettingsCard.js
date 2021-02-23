@@ -95,7 +95,7 @@ const SettingsCard = ({
   setFontSize,
   markdownView,
   onRemoveCard,
-  title: _title,
+  title,
   onShowMarkdown,
   disableFilters,
   hideMarkdownToggle,
@@ -113,16 +113,6 @@ const SettingsCard = ({
     }
 
     setFilters(newFilters)
-  }
-
-  let title = `${_title} Settings`
-  if (typeof _title !== 'string') {
-    const TitleStyle = {
-      fontFamily: 'Noto Sans',
-      fontSize: '16px',
-      fontWeight: 'bold',
-    }
-    title = <div>{_title}<div style={TitleStyle}>Settings</div></div>
   }
 
   return (

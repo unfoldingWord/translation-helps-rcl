@@ -16,9 +16,10 @@ const TitleStyle = {
   lineHeight: '14px'
 }
 
-// uncomment one of these titles for testing
-// const title = 'Lorem Ipsum'
-const title = <div style={TitleStyle}>unfoldingWord English UST v99.1</div>
+const title = 'Lorem Ipsum'
+
+// set this to null to test settings title fallback
+const settingsTitle = 'Cool card Settings'
 
 const Component = () => {
   const items = [];
@@ -54,6 +55,7 @@ const Component = () => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       title={title}
+      settingsTitle={settingsTitle}
       setMarkdownView={setMarkdownView}
       onClose={() => console.log('closed')}
       hideMarkdownToggle={hideMarkdownToggle}
