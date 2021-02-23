@@ -115,7 +115,15 @@ const SettingsCard = ({
     setFilters(newFilters)
   }
 
-  const title = `${_title} Settings`
+  let title = `${_title} Settings`
+  if (typeof _title !== 'string') {
+    const TitleStyle = {
+      fontFamily: 'Noto Sans',
+      fontSize: '16px',
+      fontWeight: 'bold',
+    }
+    title = <div>{_title}<div style={TitleStyle}>Settings</div></div>
+  }
 
   return (
     <DraggableModal open={open} title={title} handleClose={onClose}>

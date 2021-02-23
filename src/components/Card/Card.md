@@ -7,6 +7,18 @@ import React, { useState } from 'react'
 import useCardState from '../../hooks/useCardState.js'
 
 const hideMarkdownToggle = false;
+const TitleStyle = {
+  fontFamily: 'Noto Sans',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  color: '#424242',
+  letterSpacing: '0ch',
+  lineHeight: '14px'
+}
+
+// uncomment one of these titles for testing
+// const title = 'Lorem Ipsum'
+const title = <div style={TitleStyle}>unfoldingWord English UST v99.1</div>
 
 const Component = () => {
   const items = [];
@@ -41,7 +53,7 @@ const Component = () => {
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
-      title={'Lorem Ipsum'}
+      title={title}
       setMarkdownView={setMarkdownView}
       onClose={() => console.log('closed')}
       hideMarkdownToggle={hideMarkdownToggle}
