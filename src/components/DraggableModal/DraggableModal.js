@@ -18,8 +18,6 @@ export default function DraggableModal({ open, handleClose, children }) {
   return (
     <Dialog
       open={open}
-      disableBackdropClick
-      disableEscapeKeyDown
       onClose={handleClose}
       PaperComponent={PaperComponent}
       aria-labelledby='draggable-dialog-title'

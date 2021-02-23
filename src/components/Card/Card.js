@@ -90,10 +90,13 @@ const Card = ({
   const classes = useStyles({ dragging })
 
   let settingsTitle = settingsTitle_
-  if (!settingsTitle) { // if settingsTitle not given, generate from title
-    if (typeof title === 'string') { // handle the easy case where title is a string
+  if (!settingsTitle) {
+    // if settingsTitle not given, generate from title
+    if (typeof title === 'string') {
+      // handle the easy case where title is a string
       settingsTitle = `${title} Settings`
-    } else { // Fall back to basic prompt
+    } else {
+      // Fall back to basic prompt
       settingsTitle = 'Settings'
     }
   }

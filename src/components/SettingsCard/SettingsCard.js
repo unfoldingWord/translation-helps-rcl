@@ -11,7 +11,7 @@ import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
   },
@@ -87,6 +87,7 @@ const BlueCheckbox = withStyles({
 
 const SettingsCard = ({
   open,
+  title,
   onClose,
   headers,
   filters,
@@ -95,7 +96,6 @@ const SettingsCard = ({
   setFontSize,
   markdownView,
   onRemoveCard,
-  title,
   onShowMarkdown,
   disableFilters,
   hideMarkdownToggle,
@@ -127,7 +127,7 @@ const SettingsCard = ({
         }}
       >
         <FormGroup row classes={{ row: classes.formGroup }}>
-          {!hideMarkdownToggle &&
+          {!hideMarkdownToggle && (
             <FormControlLabel
               control={
                 <BlueSwitch
@@ -140,10 +140,8 @@ const SettingsCard = ({
               label='Markdown View'
               labelPlacement='bottom'
             />
-          }
-          {(!!getCustomComponent) &&
-            getCustomComponent()
-          }
+          )}
+          {!!getCustomComponent && getCustomComponent()}
         </FormGroup>
         <Divider />
         <div className={classes.fontSlider}>
