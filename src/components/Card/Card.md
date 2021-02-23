@@ -7,6 +7,19 @@ import React, { useState } from 'react'
 import useCardState from '../../hooks/useCardState.js'
 
 const hideMarkdownToggle = false;
+const TitleStyle = {
+  fontFamily: 'Noto Sans',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  color: '#424242',
+  letterSpacing: '0ch',
+  lineHeight: '14px'
+}
+
+const title = 'Lorem Ipsum'
+
+// set this to null to test settings title fallback
+const settingsTitle = 'Cool card Settings'
 
 const Component = () => {
   const items = [];
@@ -41,7 +54,8 @@ const Component = () => {
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
-      title={'Lorem Ipsum'}
+      title={title}
+      settingsTitle={settingsTitle}
       setMarkdownView={setMarkdownView}
       onClose={() => console.log('closed')}
       hideMarkdownToggle={hideMarkdownToggle}

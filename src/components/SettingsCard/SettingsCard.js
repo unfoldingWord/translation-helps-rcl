@@ -95,7 +95,7 @@ const SettingsCard = ({
   setFontSize,
   markdownView,
   onRemoveCard,
-  title: _title,
+  title,
   onShowMarkdown,
   disableFilters,
   hideMarkdownToggle,
@@ -114,8 +114,6 @@ const SettingsCard = ({
 
     setFilters(newFilters)
   }
-
-  const title = `${_title} Settings`
 
   return (
     <DraggableModal open={open} title={title} handleClose={onClose}>
