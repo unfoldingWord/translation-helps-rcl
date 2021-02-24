@@ -26,10 +26,10 @@ const CardContent = ({
       <BlockEditable
         preview={markdownView}
         markdown={markdown}
+        editable={false}
         style={{
           fontSize,
         }}
-        // onEdit={_markdown => onMarkdownChange(_markdown)}
       />
     )
   } else if (item && item.markdown && viewMode === 'markdown') {
@@ -37,10 +37,10 @@ const CardContent = ({
       <BlockEditable
         preview={markdownView}
         markdown={item.markdown}
+        editable={false}
         style={{
           fontSize,
         }}
-        // onEdit={_markdown => onMarkdownChange(_markdown)}
       />
     )
   } else if (item && viewMode === 'list') {
@@ -51,6 +51,24 @@ const CardContent = ({
         fontSize={fontSize}
         setQuote={setQuote}
         selectedQuote={selectedQuote}
+      />
+    )
+  } else if (item && viewMode === 'question') {
+    const text = item?.Annotation.replace('', '')
+    const chunks = text.split('?')
+    const question = chunks[0]
+    const answer = chunks[1].split('> ')[1]
+    const markdown = `# ${question}? \n\n${answer.trim()}`
+
+    return (
+      <BlockEditable
+        preview={markdownView}
+        markdown={markdown}
+        editable={false}
+        style={{
+          display: 'block',
+          fontSize,
+        }}
       />
     )
   } else if (
@@ -104,7 +122,13 @@ CardContent.propTypes = {
   setQuote: PropTypes.func,
   markdownView: PropTypes.bool,
   selectedQuote: PropTypes.object,
-  viewMode: PropTypes.oneOf(['default', 'table', 'list', 'markdown']),
+  viewMode: PropTypes.oneOf([
+    'default',
+    'table',
+    'list',
+    'markdown',
+    'question',
+  ]),
 }
 
 export default CardContent

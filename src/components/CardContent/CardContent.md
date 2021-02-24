@@ -362,3 +362,77 @@ const Component = () => {
 
 <Component/>
 ```
+
+## Translation Questions Example
+
+```jsx
+import React, { useState } from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '../Card'
+import useContent from '../../hooks/useContent.js'
+import useCardState from '../../hooks/useCardState.js'
+
+const Component = () => {
+   const { markdown, items, resource, isLoading, props: { languageId } } = useContent({
+    verse: 1,
+    chapter: 1,
+    projectId: 'tit',
+    branch: 'master',
+    languageId: 'en',
+    resourceId: 'tq',
+    filePath: null,
+    owner: 'test_org',
+    server: 'https://git.door43.org',
+  })
+
+  const {
+    state: {
+      item,
+      headers,
+      filters,
+      fontSize,
+      itemIndex,
+      markdownView,
+    },
+    actions: {
+      setFilters,
+      setFontSize,
+      setItemIndex,
+      setMarkdownView,
+    }
+  } = useCardState({
+    items,
+  })
+
+  console.log({items})
+
+  return (
+    <Card
+      items={items}
+      title={'translationQuestions'}
+      headers={headers}
+      filters={filters}
+      fontSize={fontSize}
+      itemIndex={itemIndex}
+      setFilters={setFilters}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      markdownView={markdownView}
+      setMarkdownView={setMarkdownView}
+    >
+      <CardContent
+        item={item}
+        filters={filters}
+        fontSize={fontSize}
+        markdown={markdown}
+        viewMode='question'
+        isLoading={isLoading}
+        languageId={languageId}
+        markdownView={markdownView}
+      />
+    </Card>
+  )
+}
+
+<Component/>
+```

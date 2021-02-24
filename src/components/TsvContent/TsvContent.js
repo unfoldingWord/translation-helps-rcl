@@ -53,9 +53,9 @@ const Label = styled.label`
 const Item = ({
   label,
   value,
+  error,
   fontSize,
   caution,
-  error,
   setQuote,
   Occurrence,
   selectedQuote,
@@ -116,10 +116,10 @@ const Item = ({
 const TsvContent = ({
   item,
   filters,
-  markdownView,
-  fontSize: _fontSize,
   setQuote,
+  markdownView,
   selectedQuote,
+  fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
   const { Annotation, Occurrence } = item
@@ -127,6 +127,7 @@ const TsvContent = ({
     <BlockEditable
       preview={markdownView}
       markdown={Annotation}
+      editable={false}
       style={{
         fontSize,
         padding: '0px',
