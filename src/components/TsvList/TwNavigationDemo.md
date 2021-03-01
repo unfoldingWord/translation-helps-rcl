@@ -1,5 +1,5 @@
 
-# Translation Words List and Translation Words Articles
+# Translation Words List and Translation Words Article
 
 ```jsx
 <TwNavigationDemo/>
