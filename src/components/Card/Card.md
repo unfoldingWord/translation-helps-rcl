@@ -21,7 +21,7 @@ const title = 'Lorem Ipsum'
 // set this to null to test settings title fallback
 const settingsTitle = 'Cool card Settings'
 
-// set this to none to disable remove card option
+// set this to null to disable remove card option
 const onRemoveCard = () => {
   console.log(`Clicked card removal`);
 }
