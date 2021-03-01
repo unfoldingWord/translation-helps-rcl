@@ -14,9 +14,13 @@ import SettingsCard from '../SettingsCard'
 
 const useStyles = makeStyles(() => ({
   title: {
-    fontSize: '1.5rem',
+    fontSize: '16px',
     lineHeight: '2rem',
-    fontWeight: '700',
+    fontWeight: 'bold',
+    fontFamily: `Noto Sans`,
+    maxWidth: '100%',
+    color: '#424242',
+    lineHeight: '14px',
   },
   dragIcon: {
     color: '#ECECEC',
