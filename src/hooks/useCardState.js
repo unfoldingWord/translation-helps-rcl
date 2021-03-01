@@ -27,7 +27,7 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
     } else {
       setItemIndex(0)
     }
-  }, [items, SupportReference])
+  }, [items, SupportReference, quote, occurrence])
 
   useEffect(() => {
     let initialHeaders = Object.keys(item || {})

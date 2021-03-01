@@ -10,9 +10,9 @@ const Card1 = ({ selectedQuote, setQuote }) => {
     markdown,
     props: { languageId },
   } = useContent({
-    verse: 1,
+    verse: 2,
     chapter: 1,
-    projectId: 'tit',
+    projectId: 'mat',
     branch: 'master',
     languageId: 'en',
     resourceId: 'twl',
@@ -67,9 +67,9 @@ const Card2 = ({ selectedQuote, setQuote }) => {
     markdown,
     props: { languageId },
   } = useContent({
-    verse: 1,
+    verse: 2,
     chapter: 1,
-    projectId: 'tit',
+    projectId: 'mat',
     branch: 'master',
     languageId: 'en',
     resourceId: 'twl',
