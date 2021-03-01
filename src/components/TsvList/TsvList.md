@@ -5,13 +5,12 @@ TSV List view.
 ```jsx
 import React, { useState } from 'react'
 import Card from '../../components/Card'
-import CardContent from '../../components/CardContent'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
   const [selectedQuote, setQuote] = useState({})
-  const { markdown, items, props: { languageId } } = useContent({
+  const { markdown, items } = useContent({
     verse: 1,
     chapter: 1,
     projectId: 'tit',
