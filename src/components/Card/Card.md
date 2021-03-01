@@ -21,6 +21,11 @@ const title = 'Lorem Ipsum'
 // set this to null to test settings title fallback
 const settingsTitle = 'Cool card Settings'
 
+// set this to null to disable remove card option
+const onRemoveCard = () => {
+  console.log(`Clicked card removal`);
+}
+
 const Component = () => {
   const items = [];
   const {
@@ -58,6 +63,7 @@ const Component = () => {
       settingsTitle={settingsTitle}
       setMarkdownView={setMarkdownView}
       onClose={() => console.log('closed')}
+      onRemoveCard={onRemoveCard}
       hideMarkdownToggle={hideMarkdownToggle}
     >
       <p style={{ fontSize: fontSize ? `${fontSize}%` : 'inherit' }}>
