@@ -44,7 +44,12 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
 
     if (items) {
       const { Quote, Occurrence, SupportReference } = items[index] || {}
-      if (Quote && Occurrence && typeof SupportReference === 'string') {
+      if (
+        setQuote &&
+        Quote &&
+        Occurrence &&
+        typeof SupportReference === 'string'
+      ) {
         setQuote({
           quote: Quote,
           occurrence: Occurrence,

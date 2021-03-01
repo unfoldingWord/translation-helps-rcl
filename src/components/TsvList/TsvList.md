@@ -42,62 +42,32 @@ const Component = () => {
     items,
   })
 
-  console.log({item, items})
-
   return (
-    <div style={{ display: 'flex' }}>
-      <Card
+    <Card
+      items={items}
+      title={'Words'}
+      headers={headers}
+      filters={filters}
+      fontSize={fontSize}
+      itemIndex={itemIndex}
+      setFilters={setFilters}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      markdownView={markdownView}
+      setMarkdownView={setMarkdownView}
+      disableFilters
+      disableNavigation
+      hideMarkdownToggle
+    >
+      <TsvList
         items={items}
-        title={'Words'}
-        headers={headers}
         filters={filters}
         fontSize={fontSize}
-        itemIndex={itemIndex}
-        setFilters={setFilters}
-        setFontSize={setFontSize}
-        setItemIndex={setItemIndex}
         markdownView={markdownView}
-        setMarkdownView={setMarkdownView}
-        disableFilters
-        disableNavigation
-        hideMarkdownToggle
-      >
-        <TsvList
-          items={items}
-          filters={filters}
-          fontSize={fontSize}
-          markdownView={markdownView}
-          selectedQuote={selectedQuote}
-          setQuote={setQuote}
-        />
-      </Card>
-      <Card
-        items={items}
-        title={'Words'}
-        headers={headers}
-        filters={filters}
-        fontSize={fontSize}
-        itemIndex={itemIndex}
-        setFilters={setFilters}
-        setFontSize={setFontSize}
-        setItemIndex={setItemIndex}
-        markdownView={markdownView}
-        setMarkdownView={setMarkdownView}
-        disableFilters
-        disableNavigation
-        hideMarkdownToggle
-      >
-        <CardContent
-          item={item}
-          filters={filters}
-          fontSize={fontSize}
-          markdown={markdown}
-          viewMode={'markdown'}
-          languageId={languageId}
-          markdownView={markdownView}
-        />
-      </Card>
-    </div>
+        selectedQuote={selectedQuote}
+        setQuote={setQuote}
+      />
+    </Card>
   )
 }
 
