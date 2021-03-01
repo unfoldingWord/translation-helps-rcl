@@ -217,7 +217,7 @@ SettingsCard.propTypes = {
   fontSize: PropTypes.number.isRequired,
   /** Updates the font size */
   setFontSize: PropTypes.func.isRequired,
-  /** Event handler to Remove Card, if not set then remove card is not shown */
+  /** Event handler to Remove Card. (optional - if not defined then remove card is not shown) */
   onRemoveCard: PropTypes.func,
   /** current state for markdown toggle */
   markdownView: PropTypes.bool.isRequired,
