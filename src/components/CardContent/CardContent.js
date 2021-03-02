@@ -11,9 +11,10 @@ const CardContent = ({
   filters,
   markdown,
   viewMode,
-  isLoading,
   setQuote,
+  isLoading,
   markdownView,
+  errorMessage,
   selectedQuote,
   fontSize: _fontSize,
 }) => {
@@ -21,6 +22,24 @@ const CardContent = ({
 
   if (isLoading) {
     return <CircularProgress size={200} />
+  } else if (errorMessage) {
+    return (
+      <div style={{ fontSize: '1.3rem', height: '100%' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '35px 0px',
+            fontWeight: 'bold',
+            height: '100%',
+            fontSize,
+          }}
+        >
+          {errorMessage}
+        </div>
+      </div>
+    )
   } else if (markdown && typeof markdown === 'string') {
     return (
       <BlockEditable
@@ -116,11 +135,12 @@ CardContent.propTypes = {
   item: PropTypes.object,
   items: PropTypes.array,
   filters: PropTypes.array,
+  setQuote: PropTypes.func,
   isLoading: PropTypes.bool,
   markdown: PropTypes.string,
   fontSize: PropTypes.number,
-  setQuote: PropTypes.func,
   markdownView: PropTypes.bool,
+  errorMessage: PropTypes.string,
   selectedQuote: PropTypes.object,
   viewMode: PropTypes.oneOf([
     'default',
