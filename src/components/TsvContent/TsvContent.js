@@ -127,7 +127,7 @@ const TsvContent = ({
   const { Annotation, Occurrence, SupportReference } = item
   const AnnotationMarkdown = (
     <BlockEditable
-      preview={markdownView}
+      preview={!markdownView}
       markdown={Annotation}
       editable={false}
       style={{

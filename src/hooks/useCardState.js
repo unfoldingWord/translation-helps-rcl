@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
   const [itemIndex, setItemIndex] = useState(0)
   const item = items ? items[itemIndex] : null
-  const [markdownView, setMarkdownView] = useState(true)
+  const [markdownView, setMarkdownView] = useState(false)
   const [fontSize, setFontSize] = useState(100)
   const [headers, setHeaders] = useState([])
   const [filters, setFilters] = useState([])
