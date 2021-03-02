@@ -52,7 +52,7 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
           {items &&
             items.map((item, i) => {
               let selected = false
-              const { Quote, Occurrence } = item
+              const { Quote, Occurrence, SupportReference } = item
               const style = { cursor: setQuote ? 'pointer' : '' }
 
               if (
@@ -72,6 +72,7 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
                       setQuote({
                         quote: Quote,
                         occurrence: Occurrence,
+                        SupportReference,
                       })
                     } else if (setQuote && selected) {
                       setQuote({})

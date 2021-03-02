@@ -59,6 +59,7 @@ const Item = ({
   setQuote,
   Occurrence,
   selectedQuote,
+  SupportReference,
 }) => {
   const selected = selectedQuote?.quote === value
 
@@ -73,6 +74,7 @@ const Item = ({
             setQuote({
               quote: value,
               occurrence: Occurrence,
+              SupportReference,
             })
           else if (setQuote && selected) setQuote({})
         }}
@@ -122,7 +124,7 @@ const TsvContent = ({
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
-  const { Annotation, Occurrence } = item
+  const { Annotation, Occurrence, SupportReference } = item
   const AnnotationMarkdown = (
     <BlockEditable
       preview={!markdownView}
@@ -148,6 +150,7 @@ const TsvContent = ({
     Tags: 2,
     Annotation: 1,
   }
+
   filters = filters
     .sort((a, b) => {
       if (ordering[a] < ordering[b]) {
@@ -176,6 +179,7 @@ const TsvContent = ({
             setQuote={setQuote}
             Occurrence={Occurrence}
             selectedQuote={selectedQuote}
+            SupportReference={SupportReference}
           />
         )
       })}
