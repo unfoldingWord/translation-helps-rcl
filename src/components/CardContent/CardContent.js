@@ -24,7 +24,7 @@ const CardContent = ({
   } else if (markdown && typeof markdown === 'string') {
     return (
       <BlockEditable
-        preview={markdownView}
+        preview={!markdownView}
         markdown={markdown}
         editable={false}
         style={{
@@ -35,7 +35,7 @@ const CardContent = ({
   } else if (item && item.markdown && viewMode === 'markdown') {
     return (
       <BlockEditable
-        preview={markdownView}
+        preview={!markdownView}
         markdown={item.markdown}
         editable={false}
         style={{
@@ -62,7 +62,7 @@ const CardContent = ({
 
     return (
       <BlockEditable
-        preview={markdownView}
+        preview={!markdownView}
         markdown={markdown}
         editable={false}
         style={{
