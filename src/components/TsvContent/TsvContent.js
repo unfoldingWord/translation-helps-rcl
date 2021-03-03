@@ -70,7 +70,11 @@ const Item = ({
         caution={caution}
         error={error}
         onClick={() => {
-          if (setQuote && label === 'Quote' && !selected)
+          if (
+            setQuote &&
+            (label === 'Quote' || label === 'OrigQuote') &&
+            !selected
+          )
             setQuote({
               quote: value,
               occurrence: Occurrence,
@@ -124,11 +128,11 @@ const TsvContent = ({
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
-  const { Annotation, Occurrence, SupportReference } = item
-  const AnnotationMarkdown = (
+  const { Annotation, Occurrence, SupportReference, OccurrenceNote } = item
+  const markdown = (
     <BlockEditable
       preview={!markdownView}
-      markdown={Annotation}
+      markdown={Annotation || OccurrenceNote}
       editable={false}
       style={{
         fontSize,
@@ -139,16 +143,22 @@ const TsvContent = ({
   )
 
   const ordering = {
-    Book: 10,
-    Chapter: 9,
-    Verse: 8,
-    Reference: 7,
-    ID: 6,
-    Occurrence: 5,
-    SupportReference: 4,
-    Quote: 3,
-    Tags: 2,
-    Annotation: 1,
+    Book: 14,
+    Chapter: 13,
+    Verse: 12,
+    Reference: 11,
+    ID: 10,
+    Occurrence: 9,
+    SupportReference: 8,
+    Quote: 7,
+    Tags: 6,
+    Annotation: 5,
+    Question: 5,
+    Annotation2: 4,
+    Response: 4,
+    OrigQuote: 3,
+    GLQuote: 2,
+    OccurrenceNote: 0,
   }
 
   filters = filters
@@ -167,7 +177,10 @@ const TsvContent = ({
   return (
     <Container>
       {filters.map(label => {
-        const value = label === 'Annotation' ? AnnotationMarkdown : item[label]
+        const value =
+          label === 'Annotation' || label === 'OccurrenceNote'
+            ? markdown
+            : item[label]
         return (
           <Item
             key={label}
