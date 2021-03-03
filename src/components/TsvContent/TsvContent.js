@@ -143,18 +143,21 @@ const TsvContent = ({
   )
 
   const ordering = {
-    Book: 12,
-    Chapter: 11,
-    Verse: 10,
-    Reference: 9,
-    ID: 8,
-    Occurrence: 7,
-    SupportReference: 6,
-    Quote: 5,
-    Tags: 4,
-    Annotation: 3,
-    OrigQuote: 2,
-    GLQuote: 1,
+    Book: 14,
+    Chapter: 13,
+    Verse: 12,
+    Reference: 11,
+    ID: 10,
+    Occurrence: 9,
+    SupportReference: 8,
+    Quote: 7,
+    Tags: 6,
+    Annotation: 5,
+    Question: 5,
+    Annotation2: 4,
+    Response: 4,
+    OrigQuote: 3,
+    GLQuote: 2,
     OccurrenceNote: 0,
   }
 
