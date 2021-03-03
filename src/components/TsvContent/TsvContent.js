@@ -70,7 +70,11 @@ const Item = ({
         caution={caution}
         error={error}
         onClick={() => {
-          if (setQuote && label === 'Quote' && !selected)
+          if (
+            setQuote &&
+            (label === 'Quote' || label === 'OrigQuote') &&
+            !selected
+          )
             setQuote({
               quote: value,
               occurrence: Occurrence,
@@ -139,16 +143,19 @@ const TsvContent = ({
   )
 
   const ordering = {
-    Book: 10,
-    Chapter: 9,
-    Verse: 8,
-    Reference: 7,
-    ID: 6,
-    Occurrence: 5,
-    SupportReference: 4,
-    Quote: 3,
-    Tags: 2,
-    Annotation: 1,
+    Book: 12,
+    Chapter: 11,
+    Verse: 10,
+    Reference: 9,
+    ID: 8,
+    Occurrence: 7,
+    SupportReference: 6,
+    Quote: 5,
+    Tags: 4,
+    Annotation: 3,
+    OrigQuote: 2,
+    GLQuote: 1,
+    OccurrenceNote: 0,
   }
 
   filters = filters

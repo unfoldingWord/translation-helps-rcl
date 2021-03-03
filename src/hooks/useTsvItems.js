@@ -25,9 +25,12 @@ export default function useTsvItems({
         const Chapter = referenceChunks ? referenceChunks[0] : null
         const Verse = referenceChunks ? referenceChunks[1] : null
         const book = projectId.toLowerCase() || 'list'
-        note.Chapter = Chapter
-        note.Verse = Verse
-        note.Book = book
+
+        if (Chapter && Verse && book) {
+          note.Chapter = Chapter
+          note.Verse = Verse
+          note.Book = book
+        }
 
         if (
           tn[book] &&
@@ -69,12 +72,12 @@ export default function useTsvItems({
             const filename = resource === 'ta' ? '/01.md' : '.md'
             const filePath = `${newRoutes.join('/')}${filename}`
             const url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
-            let markdown = '';
+            let markdown = ''
             try {
               const result = await fetch(url).then(data => data.json())
               markdown = base64DecodeUnicode(result.content)
             } catch (e) {
-              console.warn(`useTsvItems(url) - article not found`, e);
+              console.warn(`useTsvItems(url) - article not found`, e)
             }
             newItems.push({ ...item, markdown })
             item.markdown = markdown
