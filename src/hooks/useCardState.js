@@ -12,7 +12,12 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
   useEffect(() => {
     if (items && typeof SupportReference === 'string') {
       const index = items.findIndex(
-        ({ SupportReference: itemSupportReference, Quote, Occurrence }) => {
+        ({
+          SupportReference: itemSupportReference,
+          Quote,
+          OrigQuote,
+          Occurrence,
+        }) => {
           return (
             itemSupportReference.includes(SupportReference) &&
             quote === Quote &&
@@ -43,15 +48,18 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
     setItemIndex(index)
 
     if (items) {
-      const { Quote, Occurrence, SupportReference } = items[index] || {}
+      const { Quote, OrigQuote, Occurrence, SupportReference } =
+        items[index] || {}
+
       if (
         setQuote &&
-        Quote &&
+        (Quote || OrigQuote) &&
         Occurrence &&
         typeof SupportReference === 'string'
       ) {
+        console.log('setQuote')
         setQuote({
-          quote: Quote,
+          quote: Quote || OrigQuote,
           occurrence: Occurrence,
           SupportReference,
         })
