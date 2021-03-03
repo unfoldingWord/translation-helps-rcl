@@ -57,7 +57,6 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
         Occurrence &&
         typeof SupportReference === 'string'
       ) {
-        console.log('setQuote')
         setQuote({
           quote: Quote || OrigQuote,
           occurrence: Occurrence,

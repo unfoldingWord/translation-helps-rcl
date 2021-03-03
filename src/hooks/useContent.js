@@ -35,8 +35,6 @@ const useContent = ({
     config,
   })
 
-  console.log('useContent', { resource, content })
-
   const items = useTsvItems({
     fetchMarkdown,
     languageId,
