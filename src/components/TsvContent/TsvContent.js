@@ -128,11 +128,11 @@ const TsvContent = ({
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
-  const { Annotation, Occurrence, SupportReference } = item
-  const AnnotationMarkdown = (
+  const { Annotation, Occurrence, SupportReference, OccurrenceNote } = item
+  const markdown = (
     <BlockEditable
       preview={!markdownView}
-      markdown={Annotation}
+      markdown={Annotation || OccurrenceNote}
       editable={false}
       style={{
         fontSize,
@@ -177,7 +177,10 @@ const TsvContent = ({
   return (
     <Container>
       {filters.map(label => {
-        const value = label === 'Annotation' ? AnnotationMarkdown : item[label]
+        const value =
+          label === 'Annotation' || label === 'OccurrenceNote'
+            ? markdown
+            : item[label]
         return (
           <Item
             key={label}
