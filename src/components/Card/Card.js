@@ -15,7 +15,6 @@ import SettingsCard from '../SettingsCard'
 const useStyles = makeStyles(() => ({
   title: {
     fontSize: '16px',
-    lineHeight: '2rem',
     fontWeight: 'bold',
     fontFamily: `Noto Sans`,
     maxWidth: '100%',
@@ -81,6 +80,7 @@ const Card = ({
   markdownView,
   setItemIndex,
   onRemoveCard,
+  onMenuClose,
   disableFilters,
   setMarkdownView,
   disableNavigation,
@@ -111,6 +111,7 @@ const Card = ({
 
   const onMenuClick = () => {
     setShowMenu(!showMenu)
+    onMenuClose && onMenuClose()
   }
 
   const onPrevItem = () => {
@@ -241,6 +242,8 @@ Card.propTypes = {
   settingsTitle: PropTypes.string,
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func,
+  /** Function called when menu is closed */
+  onMenuClose: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
   /** Array of TSV header filters (this is array of header items that are currently selected) */
