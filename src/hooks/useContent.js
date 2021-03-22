@@ -28,14 +28,22 @@ const useContent = ({
   }
 
   const {
-    state: { resource, content },
+    state: {
+      resource,
+      content,
+      loadingResource,
+      loadingContent,
+    },
   } = useRsrc({
     resourceLink,
     reference,
     config,
   })
 
-  const items = useTsvItems({
+  const {
+    items,
+    loading: loadingTSV,
+  } = useTsvItems({
     fetchMarkdown,
     languageId,
     resourceId,
@@ -47,10 +55,17 @@ const useContent = ({
     verse,
   })
 
+  const resourceStatus = {
+    loading: loadingResource || loadingContent || loadingTSV,
+    contentNotFoundError: !content,
+    manifestNotFoundError: !resource?.manifest,
+  }
+
   return {
     items,
     resource,
     markdown: Array.isArray(content) ? null : content,
+    resourceStatus,
     props: {
       verse,
       owner,
