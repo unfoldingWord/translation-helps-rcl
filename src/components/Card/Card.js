@@ -54,11 +54,11 @@ const FlexSpacedDiv = styled.div`
   justify-content: space-between;
 `
 
-const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem }) => (
+const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem, baseId }) => (
   <FlexSpacedDiv>
-    <ChevronLeftIcon className={classes.chevronIcon} onClick={onPrevItem} />
+    <ChevronLeftIcon className={classes.chevronIcon} id={`${baseId}_prev`} onClick={onPrevItem} />
     <FlexDiv>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
-    <ChevronRightIcon className={classes.chevronIcon} onClick={onNextItem} />
+    <ChevronRightIcon className={classes.chevronIcon} id={`${baseId}_next`} onClick={onNextItem} />
   </FlexSpacedDiv>
 )
 
@@ -145,6 +145,7 @@ const Card = ({
         <FlexDiv>
           {!disableNavigation && items && items.length > 1 && (
             <Navigation
+              baseId={id}
               items={items}
               classes={classes}
               itemIndex={itemIndex}
