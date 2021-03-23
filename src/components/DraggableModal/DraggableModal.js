@@ -14,12 +14,13 @@ function PaperComponent(props) {
   )
 }
 
-export default function DraggableModal({ open, handleClose, children }) {
+export default function DraggableModal({ open, handleClose, children, id }) {
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       PaperComponent={PaperComponent}
+      aria-describedby={id}
       aria-labelledby='draggable-dialog-title'
       BackdropProps={{
         style: {

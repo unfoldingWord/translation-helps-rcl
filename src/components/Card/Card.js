@@ -64,6 +64,7 @@ const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem }) => (
 
 const Card = ({
   alert,
+  id,
   title,
   items,
   dragRef,
@@ -133,7 +134,7 @@ const Card = ({
   }
 
   return (
-    <Paper ref={dragRef} className={root}>
+    <Paper id={id} ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
         <FlexDiv>
           <DragIndicatorIcon
@@ -153,7 +154,11 @@ const Card = ({
           )}
         </FlexDiv>
         {closeable ? (
-          <CloseIcon id='settings_card_close' className={classes.pointerIcon} onClick={onClose} />
+          <CloseIcon
+            id='settings_card_close'
+            className={classes.pointerIcon}
+            onClick={onClose}
+          />
         ) : (
           <FlexDiv>
             {alert && (
@@ -186,6 +191,7 @@ const Card = ({
             )}
             {!disableSettingsButton && (
               <MoreVertIcon
+                id='card_menu'
                 className={classes.pointerIcon}
                 onClick={onMenuClick}
               />
@@ -222,6 +228,8 @@ Card.defaultProps = {
 Card.propTypes = {
   /** Array of items (articles, tsv files) */
   items: PropTypes.array,
+  /** identifier to use for card */
+  id: PropTypes.string,
   /** Array of TSV header labels */
   headers: PropTypes.array.isRequired,
   /** Current item index */
