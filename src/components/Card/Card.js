@@ -153,7 +153,7 @@ const Card = ({
           )}
         </FlexDiv>
         {closeable ? (
-          <CloseIcon className={classes.pointerIcon} onClick={onClose} />
+          <CloseIcon id='settings_card_close' className={classes.pointerIcon} onClick={onClose} />
         ) : (
           <FlexDiv>
             {alert && (
