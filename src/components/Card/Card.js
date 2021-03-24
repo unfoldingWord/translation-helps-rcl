@@ -133,6 +133,8 @@ const Card = ({
     }
   }
 
+  const cardMenuId = id ? `${id}_card_menu` : 'card_menu';
+
   return (
     <Paper id={id} ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
@@ -192,7 +194,7 @@ const Card = ({
             )}
             {!disableSettingsButton && (
               <MoreVertIcon
-                id='card_menu'
+                id={cardMenuId}
                 className={classes.pointerIcon}
                 onClick={onMenuClick}
               />
