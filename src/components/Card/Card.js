@@ -54,16 +54,17 @@ const FlexSpacedDiv = styled.div`
   justify-content: space-between;
 `
 
-const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem }) => (
+const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem, baseId }) => (
   <FlexSpacedDiv>
-    <ChevronLeftIcon className={classes.chevronIcon} onClick={onPrevItem} />
-    <FlexDiv>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
-    <ChevronRightIcon className={classes.chevronIcon} onClick={onNextItem} />
+    <ChevronLeftIcon className={classes.chevronIcon} id={`${baseId}_prev`} onClick={onPrevItem} />
+    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
+    <ChevronRightIcon className={classes.chevronIcon} id={`${baseId}_next`} onClick={onNextItem} />
   </FlexSpacedDiv>
 )
 
 const Card = ({
   alert,
+  id,
   title,
   items,
   dragRef,
@@ -132,8 +133,10 @@ const Card = ({
     }
   }
 
+  const cardMenuId = id ? `${id}_card_menu` : 'card_menu';
+
   return (
-    <Paper ref={dragRef} className={root}>
+    <Paper id={id} ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
         <FlexDiv>
           <DragIndicatorIcon
@@ -144,6 +147,7 @@ const Card = ({
         <FlexDiv>
           {!disableNavigation && items && items.length > 1 && (
             <Navigation
+              baseId={id}
               items={items}
               classes={classes}
               itemIndex={itemIndex}
@@ -153,7 +157,11 @@ const Card = ({
           )}
         </FlexDiv>
         {closeable ? (
-          <CloseIcon className={classes.pointerIcon} onClick={onClose} />
+          <CloseIcon
+            id='settings_card_close'
+            className={classes.pointerIcon}
+            onClick={onClose}
+          />
         ) : (
           <FlexDiv>
             {alert && (
@@ -186,6 +194,7 @@ const Card = ({
             )}
             {!disableSettingsButton && (
               <MoreVertIcon
+                id={cardMenuId}
                 className={classes.pointerIcon}
                 onClick={onMenuClick}
               />
@@ -222,6 +231,8 @@ Card.defaultProps = {
 Card.propTypes = {
   /** Array of items (articles, tsv files) */
   items: PropTypes.array,
+  /** identifier to use for card */
+  id: PropTypes.string,
   /** Array of TSV header labels */
   headers: PropTypes.array.isRequired,
   /** Current item index */
