@@ -57,7 +57,7 @@ const FlexSpacedDiv = styled.div`
 const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem, baseId }) => (
   <FlexSpacedDiv>
     <ChevronLeftIcon className={classes.chevronIcon} id={`${baseId}_prev`} onClick={onPrevItem} />
-    <FlexDiv>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
+    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
     <ChevronRightIcon className={classes.chevronIcon} id={`${baseId}_next`} onClick={onNextItem} />
   </FlexSpacedDiv>
 )
