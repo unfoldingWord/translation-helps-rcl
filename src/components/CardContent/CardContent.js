@@ -72,11 +72,20 @@ const CardContent = ({
         selectedQuote={selectedQuote}
       />
     )
-  } else if (item && (viewMode === 'question') && item.Annotation) {
-    const text = item.Annotation.replace('', '')
-    const chunks = text.split('?')
-    const question = chunks[0]
-    const answer = chunks[1].split('> ')[1]
+  } else if (item && (viewMode === 'question') &&
+    (item.Annotation || item.Question)) {
+    let question, answer
+
+    if (item.Annotation) {
+      const text = item.Annotation.replace('', '')
+      const chunks = text.split('?')
+      question = chunks[0]
+      answer = chunks[1].split('> ')[1]
+    } else {
+      question = item.Question
+      answer = item.Response || ''
+    }
+
     const markdown = `# ${question}? \n\n${answer.trim()}`
 
     return (
