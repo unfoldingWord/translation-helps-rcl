@@ -13,6 +13,7 @@ export default function useTsvItems({
   verse,
 }) {
   const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     async function getTsvItems() {
@@ -63,6 +64,7 @@ export default function useTsvItems({
         const newItems = []
 
         if (fetchMarkdown) {
+          setLoading(true)
           for (let i = 0; i < _items.length; i++) {
             const item = _items[i]
             const path = item.SupportReference.replace('rc://*/', '')
@@ -83,6 +85,7 @@ export default function useTsvItems({
             item.markdown = markdown
           }
           _items = newItems
+          setLoading(false)
         }
       }
       setItems(_items)
@@ -91,5 +94,5 @@ export default function useTsvItems({
     getTsvItems()
   }, [content])
 
-  return items
+  return { items, loading }
 }

@@ -63,6 +63,7 @@ const Component = () => {
       settingsTitle={settingsTitle}
       setMarkdownView={setMarkdownView}
       onClose={() => console.log('closed')}
+      onMenuClose={() => console.log('menu closed')}
       onRemoveCard={onRemoveCard}
       hideMarkdownToggle={hideMarkdownToggle}
     >

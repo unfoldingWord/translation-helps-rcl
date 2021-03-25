@@ -116,7 +116,7 @@ const SettingsCard = ({
   }
 
   return (
-    <DraggableModal open={open} title={title} handleClose={onClose}>
+    <DraggableModal id='settings_card' open={open} title={title} handleClose={onClose}>
       <Card
         closeable
         title={title}

@@ -15,7 +15,6 @@ import SettingsCard from '../SettingsCard'
 const useStyles = makeStyles(() => ({
   title: {
     fontSize: '16px',
-    lineHeight: '2rem',
     fontWeight: 'bold',
     fontFamily: `Noto Sans`,
     maxWidth: '100%',
@@ -55,16 +54,17 @@ const FlexSpacedDiv = styled.div`
   justify-content: space-between;
 `
 
-const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem }) => (
+const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem, baseId }) => (
   <FlexSpacedDiv>
-    <ChevronLeftIcon className={classes.chevronIcon} onClick={onPrevItem} />
-    <FlexDiv>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
-    <ChevronRightIcon className={classes.chevronIcon} onClick={onNextItem} />
+    <ChevronLeftIcon className={classes.chevronIcon} id={`${baseId}_prev`} onClick={onPrevItem} />
+    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
+    <ChevronRightIcon className={classes.chevronIcon} id={`${baseId}_next`} onClick={onNextItem} />
   </FlexSpacedDiv>
 )
 
 const Card = ({
   alert,
+  id,
   title,
   items,
   dragRef,
@@ -81,6 +81,7 @@ const Card = ({
   markdownView,
   setItemIndex,
   onRemoveCard,
+  onMenuClose,
   disableFilters,
   setMarkdownView,
   disableNavigation,
@@ -111,6 +112,7 @@ const Card = ({
 
   const onMenuClick = () => {
     setShowMenu(!showMenu)
+    onMenuClose && onMenuClose()
   }
 
   const onPrevItem = () => {
@@ -131,8 +133,10 @@ const Card = ({
     }
   }
 
+  const cardMenuId = id ? `${id}_card_menu` : 'card_menu';
+
   return (
-    <Paper ref={dragRef} className={root}>
+    <Paper id={id} ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
         <FlexDiv>
           <DragIndicatorIcon
@@ -143,6 +147,7 @@ const Card = ({
         <FlexDiv>
           {!disableNavigation && items && items.length > 1 && (
             <Navigation
+              baseId={id}
               items={items}
               classes={classes}
               itemIndex={itemIndex}
@@ -152,7 +157,11 @@ const Card = ({
           )}
         </FlexDiv>
         {closeable ? (
-          <CloseIcon className={classes.pointerIcon} onClick={onClose} />
+          <CloseIcon
+            id='settings_card_close'
+            className={classes.pointerIcon}
+            onClick={onClose}
+          />
         ) : (
           <FlexDiv>
             {alert && (
@@ -185,6 +194,7 @@ const Card = ({
             )}
             {!disableSettingsButton && (
               <MoreVertIcon
+                id={cardMenuId}
                 className={classes.pointerIcon}
                 onClick={onMenuClick}
               />
@@ -216,11 +226,14 @@ Card.defaultProps = {
   disableNavigation: false,
   disableSettingsButton: false,
   hideMarkdownToggle: false,
+  title: '',
 }
 
 Card.propTypes = {
   /** Array of items (articles, tsv files) */
   items: PropTypes.array,
+  /** identifier to use for card */
+  id: PropTypes.string,
   /** Array of TSV header labels */
   headers: PropTypes.array.isRequired,
   /** Current item index */
@@ -236,11 +249,13 @@ Card.propTypes = {
   /** Class names to modify the root, header and children */
   classes: PropTypes.object,
   /** The title of the card*/
-  title: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   /** The title settings popup.  Optional, if not given, it will be created from title */
   settingsTitle: PropTypes.string,
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func,
+  /** Function called when menu is closed */
+  onMenuClose: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
   /** Array of TSV header filters (this is array of header items that are currently selected) */
