@@ -72,8 +72,8 @@ const CardContent = ({
         selectedQuote={selectedQuote}
       />
     )
-  } else if (item && viewMode === 'question') {
-    const text = item?.Annotation.replace('', '')
+  } else if (item && (viewMode === 'question') && item.Annotation) {
+    const text = item.Annotation.replace('', '')
     const chunks = text.split('?')
     const question = chunks[0]
     const answer = chunks[1].split('> ')[1]
