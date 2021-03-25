@@ -226,6 +226,7 @@ Card.defaultProps = {
   disableNavigation: false,
   disableSettingsButton: false,
   hideMarkdownToggle: false,
+  title: '',
 }
 
 Card.propTypes = {
@@ -248,7 +249,7 @@ Card.propTypes = {
   /** Class names to modify the root, header and children */
   classes: PropTypes.object,
   /** The title of the card*/
-  title: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   /** The title settings popup.  Optional, if not given, it will be created from title */
   settingsTitle: PropTypes.string,
   /** Function fired when the close (x) icon is clicked */
