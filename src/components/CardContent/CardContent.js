@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
 import CircularProgress from '../CircularProgress'
+import useEventListener from '../../hooks/useEventListener'
 
 const CardContent = ({
   item,
@@ -19,6 +20,19 @@ const CardContent = ({
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
+
+  const handler = useCallback(
+    e => {
+      if (e?.target?.href) {
+        e.preventDefault()
+        console.log('e.target.href', e.target.href)
+      }
+      return
+    }
+    // [setCoords]
+  )
+
+  useEventListener('click', handler)
 
   if (isLoading) {
     return <CircularProgress size={200} />
