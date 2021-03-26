@@ -6,6 +6,7 @@ import TsvList from '../TsvList'
 import CircularProgress from '../CircularProgress'
 
 const CardContent = ({
+  id,
   item,
   items,
   filters,
@@ -105,6 +106,7 @@ const CardContent = ({
   ) {
     return (
       <TsvContent
+        id={id}
         item={item}
         filters={filters}
         fontSize={_fontSize}
@@ -141,6 +143,7 @@ CardContent.defaultProps = {
 }
 
 CardContent.propTypes = {
+  id: PropTypes.string,
   item: PropTypes.object,
   items: PropTypes.array,
   filters: PropTypes.array,
