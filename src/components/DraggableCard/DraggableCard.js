@@ -38,17 +38,39 @@ export default function DraggableCard({
           dragIndicator: 'draggable-dialog-title',
         }}
       >
-        <BlockEditable
-          preview
-          markdown={content}
-          editable={false}
-          style={{
-            fontSize,
-          }}
-        />
+        {content ? (
+          <BlockEditable
+            preview
+            markdown={content}
+            editable={false}
+            style={{
+              fontSize,
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '35px 0px',
+              fontWeight: 'bold',
+              height: '100%',
+              fontSize,
+            }}
+          >
+            No content available.
+          </div>
+        )}
       </Card>
     </DraggableModal>
   )
+}
+
+DraggableCard.defaultProps = {
+  title: '',
+  content: '',
+  fontSize: '100%',
 }
 
 DraggableCard.propTypes = {
@@ -64,6 +86,10 @@ DraggableCard.propTypes = {
   ]).isRequired,
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func.isRequired,
-  /** Current text font size */
-  fontSize: PropTypes.number.isRequired,
+  /** Current text font size prettier-ignore */
+  fontSize: PropTypes.oneOfType([
+    // prettier-ignore
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
 }
