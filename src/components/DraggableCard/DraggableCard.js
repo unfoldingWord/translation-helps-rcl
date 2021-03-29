@@ -39,7 +39,7 @@ export default function DraggableCard({
         }}
       >
         <BlockEditable
-          preview={false}
+          preview
           markdown={content}
           editable={false}
           style={{
