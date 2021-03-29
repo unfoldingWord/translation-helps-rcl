@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
+import BlockEditable from 'markdown-translatable/dist/components/block-editable'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
 
@@ -23,7 +24,7 @@ export default function DraggableCard({
 
   return (
     <DraggableModal
-      id='settings_card'
+      id='draggable_article_card'
       open={open}
       title={title}
       handleClose={onClose}
@@ -37,7 +38,14 @@ export default function DraggableCard({
           dragIndicator: 'draggable-dialog-title',
         }}
       >
-        {content}
+        <BlockEditable
+          preview={false}
+          markdown={content}
+          editable={false}
+          style={{
+            fontSize,
+          }}
+        />
       </Card>
     </DraggableModal>
   )
