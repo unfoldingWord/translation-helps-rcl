@@ -20,6 +20,8 @@ const CardContent = ({
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
+  console.log({ markdown })
+
   if (isLoading) {
     return <CircularProgress size={200} />
   } else if (errorMessage) {
