@@ -4,21 +4,7 @@ import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
 import CircularProgress from '../CircularProgress'
-
-function removeBibleReferenceLinks(src) {
-  if (!src) {
-    return src
-  }
-  // OBS tN: Convert all [<Title>](rc://<lang>/tn/help/obs/*) links to just show "Open Bible Stories - <Title>"
-  src = src.replace(
-    /\[([^\]]+)\]\(rc:\/\/[^/]+\/tn\/help\/obs[^)]+\)/g,
-    'Open Bible Stories - $1'
-  )
-  // tN: Convert all [<Bible Ref>](rc://<lang>/tn/*) links to just show the <Bible ref> (no link)
-  src = src.replace(/\[([^\]]+)\]\(rc:\/\/[^/]+\/tn\/[^)]+\)/g, '$1')
-
-  return src
-}
+import stripReferenceLinksFromMarkdown from '../../core/removeReferenceLinksFromMarkdown'
 
 const CardContent = ({
   item,
@@ -35,9 +21,7 @@ const CardContent = ({
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
-  console.log({ markdown })
-
-  markdown = removeBibleReferenceLinks(markdown)
+  markdown = stripReferenceLinksFromMarkdown(markdown)
 
   if (isLoading) {
     return <CircularProgress size={200} />
@@ -71,12 +55,10 @@ const CardContent = ({
       />
     )
   } else if (item && item.markdown && viewMode === 'markdown') {
-    console.log({ markdown: removeBibleReferenceLinks(item.markdown) })
-
     return (
       <BlockEditable
         preview={!markdownView}
-        markdown={removeBibleReferenceLinks(item.markdown)}
+        markdown={stripReferenceLinksFromMarkdown(item.markdown)}
         editable={false}
         style={{
           fontSize,

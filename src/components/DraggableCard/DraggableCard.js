@@ -5,6 +5,7 @@ import BlockEditable from 'markdown-translatable/dist/components/block-editable'
 import styled from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
+import stripReferenceLinksFromMarkdown from '../../core/removeReferenceLinksFromMarkdown'
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -55,7 +56,7 @@ export default function DraggableCard({
         ) : content ? (
           <BlockEditable
             preview
-            markdown={content}
+            markdown={stripReferenceLinksFromMarkdown(content)}
             editable={false}
             style={{
               fontSize,
