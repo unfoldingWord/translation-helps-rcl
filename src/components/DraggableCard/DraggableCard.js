@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import BlockEditable from 'markdown-translatable/dist/components/block-editable'
+import styled from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
 
@@ -13,11 +14,22 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
+const Message = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 35px 0px;
+  font-weight: bold;
+  height: 100%;
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : '100%')};
+`
+
 export default function DraggableCard({
   open,
   title,
   content,
   onClose,
+  loading,
   fontSize,
 }) {
   const classes = useStyles()
@@ -38,7 +50,9 @@ export default function DraggableCard({
           dragIndicator: 'draggable-dialog-title',
         }}
       >
-        {content ? (
+        {loading ? (
+          <Message fontSize={fontSize}>Loading...</Message>
+        ) : content ? (
           <BlockEditable
             preview
             markdown={content}
@@ -48,19 +62,7 @@ export default function DraggableCard({
             }}
           />
         ) : (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: '35px 0px',
-              fontWeight: 'bold',
-              height: '100%',
-              fontSize,
-            }}
-          >
-            No content available.
-          </div>
+          <Message fontSize={fontSize}>No content available.</Message>
         )}
       </Card>
     </DraggableModal>

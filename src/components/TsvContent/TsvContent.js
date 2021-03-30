@@ -129,6 +129,7 @@ const TsvContent = ({
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
   const { Annotation, Occurrence, SupportReference, OccurrenceNote } = item
+  // TODO:
   const markdown = (
     <BlockEditable
       preview={!markdownView}

@@ -6,6 +6,9 @@ import TsvList from '../TsvList'
 import CircularProgress from '../CircularProgress'
 
 function removeBibleReferenceLinks(src) {
+  if (!src) {
+    return src
+  }
   // OBS tN: Convert all [<Title>](rc://<lang>/tn/help/obs/*) links to just show "Open Bible Stories - <Title>"
   src = src.replace(
     /\[([^\]]+)\]\(rc:\/\/[^/]+\/tn\/help\/obs[^)]+\)/g,
