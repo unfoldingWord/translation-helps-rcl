@@ -19,7 +19,7 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
           Occurrence,
         }) => {
           return (
-            itemSupportReference.includes(SupportReference) &&
+            itemSupportReference?.includes(SupportReference) &&
             quote === Quote &&
             occurrence === Occurrence
           )
