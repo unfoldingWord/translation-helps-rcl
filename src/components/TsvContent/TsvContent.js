@@ -2,8 +2,7 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
-
-stripReferenceLinksFromMarkdown
+import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
 
 const Container = styled.div`
   display: flex;
