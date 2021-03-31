@@ -14,6 +14,7 @@ import useEventListener from './useEventListener'
  * }
  * @returns {Array} [
  *  {
+ *    error,
  *    title,
  *    content,
  *    loading,
@@ -33,6 +34,7 @@ export default function useResourceClickListener({
   const [title, setTitle] = useState('')
   const [content, setContent] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
 
   const handler = useCallback(
     e => {
@@ -82,7 +84,7 @@ export default function useResourceClickListener({
           } else if (slug.includes('01.md')) {
             _languageId = languageId
             resourceId = 'ta'
-            filePath = `${taArticle.projectId || 'translate'}/${slugs[1]}`
+            filePath = `${taArticle?.projectId || 'translate'}/${slugs[1]}`
             url = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/${filePath}/01.md`
             titleUrl = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/${filePath}/title.md`
           } else if (tw.find(slugItem => slug.includes(slugItem))) {
@@ -111,6 +113,7 @@ export default function useResourceClickListener({
           setLoading(false)
         } catch (error) {
           clearContent()
+          setError(true)
           console.error(error)
         }
       }
@@ -131,10 +134,12 @@ export default function useResourceClickListener({
     setTitle(null)
     setContent(null)
     setLoading(false)
+    setError(false)
   }
 
   return [
     {
+      error,
       title,
       content,
       loading,

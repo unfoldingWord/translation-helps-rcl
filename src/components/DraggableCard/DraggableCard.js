@@ -27,6 +27,7 @@ const Message = styled.div`
 
 export default function DraggableCard({
   open,
+  error,
   title,
   content,
   onClose,
@@ -35,36 +36,49 @@ export default function DraggableCard({
 }) {
   const classes = useStyles()
 
+  function getCardContent() {
+    if (error) {
+      return (
+        <Message fontSize={fontSize}>
+          Sorry, there was a problem loading the content.
+        </Message>
+      )
+    } else if (loading) {
+      return <Message fontSize={fontSize}>Loading...</Message>
+    } else if (content) {
+      return (
+        <BlockEditable
+          preview
+          markdown={stripReferenceLinksFromMarkdown(content)}
+          editable={false}
+          style={{
+            fontSize,
+          }}
+        />
+      )
+    } else {
+      return <Message fontSize={fontSize}>No content available.</Message>
+    }
+  }
+  title = error ? 'Error' : title
+
   return (
     <DraggableModal
       id='draggable_article_card'
       open={open}
-      title={title}
+      title={title || ''}
       handleClose={onClose}
     >
       <Card
         closeable
-        title={title}
+        title={title || ''}
         onClose={onClose}
         classes={{
           root: classes.card,
           dragIndicator: 'draggable-dialog-title',
         }}
       >
-        {loading ? (
-          <Message fontSize={fontSize}>Loading...</Message>
-        ) : content ? (
-          <BlockEditable
-            preview
-            markdown={stripReferenceLinksFromMarkdown(content)}
-            editable={false}
-            style={{
-              fontSize,
-            }}
-          />
-        ) : (
-          <Message fontSize={fontSize}>No content available.</Message>
-        )}
+        {getCardContent()}
       </Card>
     </DraggableModal>
   )
@@ -80,13 +94,13 @@ DraggableCard.propTypes = {
   /** Determines whether the DraggableCard is opened or not */
   open: PropTypes.bool.isRequired,
   /** The title of the card */
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   /** DraggableCard content */
   content: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
     PropTypes.node,
-  ]).isRequired,
+  ]),
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func.isRequired,
   /** Current text font size prettier-ignore */
@@ -94,5 +108,5 @@ DraggableCard.propTypes = {
     // prettier-ignore
     PropTypes.string,
     PropTypes.number,
-  ]).isRequired,
+  ]),
 }
