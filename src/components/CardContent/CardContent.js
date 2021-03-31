@@ -7,6 +7,7 @@ import CircularProgress from '../CircularProgress'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
 
 const CardContent = ({
+  id,
   item,
   items,
   filters,
@@ -111,6 +112,7 @@ const CardContent = ({
   ) {
     return (
       <TsvContent
+        id={id}
         item={item}
         filters={filters}
         fontSize={_fontSize}
@@ -147,6 +149,7 @@ CardContent.defaultProps = {
 }
 
 CardContent.propTypes = {
+  id: PropTypes.string,
   item: PropTypes.object,
   items: PropTypes.array,
   filters: PropTypes.array,

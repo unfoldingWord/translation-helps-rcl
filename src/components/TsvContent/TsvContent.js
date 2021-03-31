@@ -52,6 +52,7 @@ const Label = styled.label`
 `
 
 const Item = ({
+  valueId,
   label,
   value,
   error,
@@ -93,6 +94,7 @@ const Item = ({
           {label}
         </Legend>
         <Label
+          id={valueId}
           color={selected ? '#38ADDF' : null}
           bold={selected}
           fontSize={fontSize}
@@ -121,6 +123,7 @@ const Item = ({
 }
 
 const TsvContent = ({
+  id,
   item,
   filters,
   setQuote,
@@ -189,6 +192,7 @@ const TsvContent = ({
           <Item
             key={label}
             label={label}
+            valueId={`${id}_${label}`}
             value={value}
             error={false}
             caution={false}
@@ -206,9 +210,11 @@ const TsvContent = ({
 
 TsvContent.defaultProps = {
   fontSize: 100,
+  id: '',
 }
 
 TsvContent.propTypes = {
+  id: PropTypes.string,
   item: PropTypes.object.isRequired,
   filters: PropTypes.array.isRequired,
   markdownView: PropTypes.bool.isRequired,
