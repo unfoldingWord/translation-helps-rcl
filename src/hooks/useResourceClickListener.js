@@ -110,7 +110,7 @@ export default function useResourceClickListener({
           setTitle(title)
           setLoading(false)
         } catch (error) {
-          setLoading(false)
+          clearContent()
           console.error(error)
         }
       }
