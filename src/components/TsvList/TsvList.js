@@ -18,7 +18,7 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
   if (items) {
     filters = ['Translation Word', 'Occurrence', 'Original Quote']
     items = items.map(({ SupportReference, Quote, Occurrence }) => {
-      const directories = SupportReference.split('/')
+      const directories = (SupportReference || '').split('/')
       const value = directories[directories.length - 1]
 
       return {
