@@ -47,6 +47,7 @@
     "webpack": "4.44.0"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "react-draggable": "^4.4.3",
     "styled-components": "^5.2.1"
   }
