@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 
+stripReferenceLinksFromMarkdown
+
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -129,11 +131,13 @@ const TsvContent = ({
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
   const { Annotation, Occurrence, SupportReference, OccurrenceNote } = item
-  // TODO:
+  const rawMarkdown = stripReferenceLinksFromMarkdown(
+    Annotation || OccurrenceNote
+  )
   const markdown = (
     <BlockEditable
       preview={!markdownView}
-      markdown={Annotation || OccurrenceNote}
+      markdown={rawMarkdown}
       editable={false}
       style={{
         fontSize,

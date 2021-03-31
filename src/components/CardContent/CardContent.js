@@ -4,7 +4,7 @@ import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
 import CircularProgress from '../CircularProgress'
-import stripReferenceLinksFromMarkdown from '../../core/removeReferenceLinksFromMarkdown'
+import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
 
 const CardContent = ({
   item,

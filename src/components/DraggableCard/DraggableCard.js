@@ -5,7 +5,7 @@ import BlockEditable from 'markdown-translatable/dist/components/block-editable'
 import styled from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
-import stripReferenceLinksFromMarkdown from '../../core/removeReferenceLinksFromMarkdown'
+import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
 
 const useStyles = makeStyles(() => ({
   card: {
