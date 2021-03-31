@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Badge from '@material-ui/core/Badge'
@@ -61,6 +61,29 @@ const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem, baseId 
     <ChevronRightIcon className={classes.chevronIcon} id={`${baseId}_next`} onClick={onNextItem} />
   </FlexSpacedDiv>
 )
+
+const Scrollable = ({ className, children, itemIndex }) => {
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      scrollRef.current?.scrollTo(0, 0);
+    }, 100)
+  }, [itemIndex]);
+
+  return <div ref={scrollRef} className={className}>
+    {children}
+  </div>
+}
+
+Scrollable.propTypes = {
+  /** Current item index */
+  itemIndex: PropTypes.number,
+  /** Function called when menu is closed */
+  className: PropTypes.string.isRequired,
+  /** Content/jsx render in the body of the card */
+  children: PropTypes.node.isRequired,
+}
 
 const Card = ({
   alert,
@@ -202,9 +225,11 @@ const Card = ({
           </FlexDiv>
         )}
       </FlexSpacedDiv>
-      <div className={`${classes.children} ${childrenClassName}`}>
-        {children}
-      </div>
+      <Scrollable
+        className={`${classes.children} ${childrenClassName}`}
+        children={children}
+        itemIndex={itemIndex}
+      />
     </Paper>
   )
 }
