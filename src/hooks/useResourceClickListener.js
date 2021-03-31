@@ -82,7 +82,7 @@ export default function useResourceClickListener({
           } else if (slug.includes('01.md')) {
             _languageId = languageId
             resourceId = 'ta'
-            filePath = `${taArticle.projectId}/${slugs[1]}`
+            filePath = `${taArticle.projectId || 'translate'}/${slugs[1]}`
             url = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/${filePath}/01.md`
             titleUrl = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/${filePath}/title.md`
           } else if (tw.find(slugItem => slug.includes(slugItem))) {
