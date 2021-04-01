@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Badge from '@material-ui/core/Badge'
@@ -11,6 +11,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
+import Scrollable from "../Scrollable"
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -78,29 +79,6 @@ const Navigation = ({
     />
   </FlexSpacedDiv>
 )
-
-const Scrollable = ({ className, children, itemIndex }) => {
-  const scrollRef = useRef(null);
-
-  useEffect(() => {
-    setTimeout(() => {
-      scrollRef.current?.scrollTo(0, 0);
-    }, 100)
-  }, [itemIndex]);
-
-  return <div ref={scrollRef} className={className}>
-    {children}
-  </div>
-}
-
-Scrollable.propTypes = {
-  /** Current item index */
-  itemIndex: PropTypes.number,
-  /** Function called when menu is closed */
-  className: PropTypes.string.isRequired,
-  /** Content/jsx render in the body of the card */
-  children: PropTypes.node.isRequired,
-}
 
 const Card = ({
   id,
