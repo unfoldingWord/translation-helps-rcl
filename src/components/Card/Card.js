@@ -54,17 +54,34 @@ const FlexSpacedDiv = styled.div`
   justify-content: space-between;
 `
 
-const Navigation = ({ items, classes, itemIndex, onPrevItem, onNextItem, baseId }) => (
+const Navigation = ({
+  items,
+  classes,
+  itemIndex,
+  onPrevItem,
+  onNextItem,
+  baseId,
+}) => (
   <FlexSpacedDiv>
-    <ChevronLeftIcon className={classes.chevronIcon} id={`${baseId}_prev`} onClick={onPrevItem} />
-    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${items.length}`}</FlexDiv>
-    <ChevronRightIcon className={classes.chevronIcon} id={`${baseId}_next`} onClick={onNextItem} />
+    <ChevronLeftIcon
+      className={classes.chevronIcon}
+      id={`${baseId}_prev`}
+      onClick={onPrevItem}
+    />
+    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${
+      items.length
+    }`}</FlexDiv>
+    <ChevronRightIcon
+      className={classes.chevronIcon}
+      id={`${baseId}_next`}
+      onClick={onNextItem}
+    />
   </FlexSpacedDiv>
 )
 
 const Card = ({
-  alert,
   id,
+  alert,
   title,
   items,
   dragRef,
@@ -107,7 +124,7 @@ const Card = ({
   }
 
   const onAlertClick = () => {
-    console.log('onAlertClick')
+    console.info('onAlertClick')
   }
 
   const onMenuClick = () => {
@@ -133,7 +150,7 @@ const Card = ({
     }
   }
 
-  const cardMenuId = id ? `${id}_card_menu` : 'card_menu';
+  const cardMenuId = id ? `${id}_card_menu` : 'card_menu'
 
   return (
     <Paper id={id} ref={dragRef} className={root}>

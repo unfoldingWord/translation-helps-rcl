@@ -4,6 +4,7 @@ import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
 import CircularProgress from '../CircularProgress'
+import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
 
 const CardContent = ({
   id,
@@ -20,6 +21,8 @@ const CardContent = ({
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
+
+  markdown = stripReferenceLinksFromMarkdown(markdown)
 
   if (isLoading) {
     return <CircularProgress size={200} />
@@ -56,7 +59,7 @@ const CardContent = ({
     return (
       <BlockEditable
         preview={!markdownView}
-        markdown={item.markdown}
+        markdown={stripReferenceLinksFromMarkdown(item.markdown)}
         editable={false}
         style={{
           fontSize,
@@ -73,8 +76,11 @@ const CardContent = ({
         selectedQuote={selectedQuote}
       />
     )
-  } else if (item && (viewMode === 'question') &&
-    (item.Annotation || item.Question)) {
+  } else if (
+    item &&
+    viewMode === 'question' &&
+    (item.Annotation || item.Question)
+  ) {
     let question, answer
 
     if (item.Annotation) {

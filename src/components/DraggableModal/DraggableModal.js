@@ -34,7 +34,7 @@ export default function DraggableModal({ open, handleClose, children, id }) {
 }
 
 DraggableModal.propTypes = {
-  /** Wether the Modal is opened or not */
+  /** Determines whether the DraggableModal is opened or not */
   open: PropTypes.bool.isRequired,
   /** On close event handler */
   handleClose: PropTypes.func.isRequired,
