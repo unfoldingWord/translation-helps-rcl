@@ -11,6 +11,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
+import Scrollable from "../Scrollable"
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -219,9 +220,11 @@ const Card = ({
           </FlexDiv>
         )}
       </FlexSpacedDiv>
-      <div className={`${classes.children} ${childrenClassName}`}>
-        {children}
-      </div>
+      <Scrollable
+        className={`${classes.children} ${childrenClassName}`}
+        children={children}
+        itemIndex={itemIndex}
+      />
     </Paper>
   )
 }
