@@ -31,13 +31,14 @@ const CardContent = ({
       <div style={{ fontSize: '1.3rem', height: '100%' }}>
         <div
           style={{
+            fontSize,
+            height: '100%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             padding: '35px 0px',
             fontWeight: 'bold',
-            height: '100%',
-            fontSize,
+            wordBreak: 'break-word',
           }}
         >
           {errorMessage}
