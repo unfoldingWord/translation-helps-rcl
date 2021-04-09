@@ -16,12 +16,13 @@ const useStyles = makeStyles(() => ({
 }))
 
 const Message = styled.div`
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 35px 0px;
   font-weight: bold;
-  height: 100%;
+  word-break: break-word;
   font-size: ${({ fontSize }) => (fontSize ? fontSize : '100%')};
 `
 
