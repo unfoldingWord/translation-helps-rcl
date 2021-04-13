@@ -7,7 +7,8 @@ import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromM
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.25rem;
+  row-gap: 1.5rem;
+  column-gap: 1rem;
   width: 100%;
   padding: 10px 0px 0px;
   margin: 7px 0px 0px;
@@ -15,19 +16,20 @@ const Container = styled.div`
 
 const Fieldset = styled.fieldset`
   display: flex;
-  flex-grow: 1;
+  word-break: break-word;
   width: 100%;
   grid-column: ${({ label }) =>
     label === 'Annotation' || label === 'OccurrenceNote'
       ? 'span 3 / span 3'
+      : label === 'GLQuote'
+      ? 'span 2 / span 2'
       : 'span 1 / span 1'};
   flex-direction: column;
   padding: 0px;
-  padding-bottom: 10px;
-  padding-inline-end: 6px;
-  padding-inline-start: 6px;
+  padding-inline-end: 0px;
+  padding-inline-start: 0px;
   margin: 0px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   border-radius: 4px;
@@ -38,7 +40,8 @@ const Fieldset = styled.fieldset`
 `
 
 const Legend = styled.legend`
-  margin-bottom: 7px;
+  margin-bottom: ${({ label }) =>
+    label === 'Annotation' || label === 'OccurrenceNote' ? '0px' : '7px'};
   padding-inline-start: ${props =>
     props.error || props.caution ? '2px' : '0px'};
   padding-inline-end: ${props =>
@@ -48,7 +51,6 @@ const Legend = styled.legend`
 `
 
 const Label = styled.label`
-  margin-bottom: 7px;
   letter-spacing: 0.25px;
   color: ${props => (props.color ? props.color : '#000000')};
   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
@@ -92,6 +94,7 @@ const Item = ({
       >
         <Legend
           error={error}
+          label={label}
           color='#424242'
           caution={caution}
           fontSize={fontSize === 'inherit' ? '14px' : fontSize}
@@ -149,7 +152,7 @@ const TsvContent = ({
       style={{
         fontSize,
         padding: '0px',
-        margin: markdownView ? '-10px 0px -16px' : '5px',
+        margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
       }}
     />
   )
