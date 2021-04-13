@@ -5,8 +5,9 @@ import { BlockEditable } from 'markdown-translatable'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
 
 const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
   width: 100%;
   padding: 10px 0px 0px;
   margin: 7px 0px 0px;
@@ -15,7 +16,11 @@ const Container = styled.div`
 const Fieldset = styled.fieldset`
   display: flex;
   flex-grow: 1;
-  width: ${props => (props?.label === 'Annotation' ? '100%' : '33%')};
+  width: 100%;
+  grid-column: ${({ label }) =>
+    label === 'Annotation' || label === 'OccurrenceNote'
+      ? 'span 3 / span 3'
+      : 'span 1 / span 1'};
   flex-direction: column;
   padding: 0px;
   padding-bottom: 10px;
