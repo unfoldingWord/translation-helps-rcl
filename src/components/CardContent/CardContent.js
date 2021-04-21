@@ -36,7 +36,6 @@ const CardContent = ({
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            paddingTop: '34px',
             fontWeight: 'bold',
             wordBreak: 'break-word',
           }}

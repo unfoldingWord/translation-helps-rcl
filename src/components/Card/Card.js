@@ -11,7 +11,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
-import Scrollable from "../Scrollable"
+import Scrollable from '../Scrollable'
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -53,6 +53,14 @@ const FlexDiv = styled.div`
 const FlexSpacedDiv = styled.div`
   display: flex;
   justify-content: space-between;
+`
+
+const FlexCenter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 `
 
 const Navigation = ({
@@ -220,11 +228,13 @@ const Card = ({
           </FlexDiv>
         )}
       </FlexSpacedDiv>
-      <Scrollable
-        className={`${classes.children} ${childrenClassName}`}
-        children={children}
-        itemIndex={itemIndex}
-      />
+      <FlexCenter>
+        <Scrollable
+          className={`${classes.children} ${childrenClassName}`}
+          children={children}
+          itemIndex={itemIndex}
+        />
+      </FlexCenter>
     </Paper>
   )
 }
