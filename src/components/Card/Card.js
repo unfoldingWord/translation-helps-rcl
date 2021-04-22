@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Badge from '@material-ui/core/Badge'
@@ -153,12 +153,8 @@ const Card = ({
 
   const cardMenuId = id ? `${id}_card_menu` : 'card_menu'
 
-  useEffect(() => {
-    console.log(`Card - ${id} - new index ${itemIndex}, viewMode ${children?.props?.viewMode}`)
-  }, [itemIndex])
-
-  // TODO: in future we might want to add scroll into view support, but for now we don't want
-  //    list views scrolling to top each time the itemIndex changes
+  // TODO: in future we might want to add scroll into view support for list view, but for now
+  //    we don't want list views scrolling to top each time the itemIndex changes
   const enableAutoScrollToTop = (children?.props?.viewMode !== 'list')
 
   return (
@@ -232,7 +228,6 @@ const Card = ({
         className={`${classes.children} ${childrenClassName}`}
         children={children}
         itemIndex={itemIndex}
-        items={items}
         enableAutoScrollToTop={enableAutoScrollToTop}
       />
     </Paper>

@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 
-export const Scrollable = ({ className, children, itemIndex, items, enableAutoScrollToTop = false }) => {
+export const Scrollable = ({ className, children, itemIndex, enableAutoScrollToTop = false }) => {
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    if (enableAutoScrollToTop && items?.length > 1) { // no need to scroll if we don't have multiple items
+    if (enableAutoScrollToTop) {
       setTimeout(() => {
-        console.log(`Scrollable - auto scroll to top, itemIndex: ${itemIndex}`)
         scrollRef.current?.scrollTo(0, 0);
       }, 100)
     }
@@ -20,8 +19,6 @@ export const Scrollable = ({ className, children, itemIndex, items, enableAutoSc
 }
 
 Scrollable.propTypes = {
-  /** Array of items (articles, tsv files) */
-  items: PropTypes.array,
   /** Current item index, used as trigger to scroll to top */
   itemIndex: PropTypes.number,
   /** Function called when menu is closed */
