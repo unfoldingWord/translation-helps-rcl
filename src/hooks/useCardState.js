@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
+const useCardState = ({ items, selectedQuote = {}, setQuote, id='' }) => {
   const [itemIndex, setItemIndex] = useState(0)
   const item = items ? items[itemIndex] : null
   const [markdownView, setMarkdownView] = useState(false)
@@ -27,9 +27,11 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
       )
 
       if (index >= 0) {
+        console.log(`useCardState - ${id} - found match at index: ${index}: item: ${JSON.stringify({SupportReference, quote, occurrence})}`)
         setItemIndex(index)
       }
     } else {
+      console.log(`useCardState - ${id} - indexing not supported, set index to 0`)
       setItemIndex(0)
     }
   }, [items, SupportReference, quote, occurrence])
