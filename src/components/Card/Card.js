@@ -153,6 +153,10 @@ const Card = ({
 
   const cardMenuId = id ? `${id}_card_menu` : 'card_menu'
 
+  // TODO: in future we might want to add scroll into view support for list view, but for now
+  //    we don't want list views scrolling to top each time the itemIndex changes
+  const enableAutoScrollToTop = (children?.props?.viewMode !== 'list')
+
   return (
     <Paper id={id} ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
@@ -224,6 +228,7 @@ const Card = ({
         className={`${classes.children} ${childrenClassName}`}
         children={children}
         itemIndex={itemIndex}
+        enableAutoScrollToTop={enableAutoScrollToTop}
       />
     </Paper>
   )
