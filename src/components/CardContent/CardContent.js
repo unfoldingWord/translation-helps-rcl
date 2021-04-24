@@ -28,21 +28,20 @@ const CardContent = ({
     return <CircularProgress size={200} />
   } else if (errorMessage) {
     return (
-      <div style={{ fontSize: '1.3rem', height: '100%' }}>
-        <div
+      <div style={{ fontSize: '1.3rem', height: '100%', width: '100%' }}>
+        <p
           style={{
             fontSize,
             height: '100%',
-            display: 'flex',
+            display: 'grid',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: '35px 0px',
             fontWeight: 'bold',
             wordBreak: 'break-word',
           }}
         >
           {errorMessage}
-        </div>
+        </p>
       </div>
     )
   } else if (markdown && typeof markdown === 'string') {
