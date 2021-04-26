@@ -228,7 +228,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const [selectedQuote, setQuote] = useState({})
+  const [selectedQuote, setQuote] = useState(null)
   const { markdown, items, isLoading, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
