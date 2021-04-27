@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 
-const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
+const useCardState = ({
+  items,
+  verse,
+  chapter,
+  setQuote,
+  projectId,
+  selectedQuote = {},
+}) => {
   const [itemIndex, setItemIndex] = useState(0)
   const item = items ? items[itemIndex] : null
   const [markdownView, setMarkdownView] = useState(false)
@@ -8,6 +15,10 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
   const [headers, setHeaders] = useState([])
   const [filters, setFilters] = useState([])
   const { SupportReference, quote, occurrence } = selectedQuote || {}
+
+  useEffect(() => {
+    setItemIndex(0)
+  }, [verse, chapter, projectId])
 
   useEffect(() => {
     if (items && typeof SupportReference === 'string') {
@@ -26,11 +37,9 @@ const useCardState = ({ items, selectedQuote = {}, setQuote }) => {
         }
       )
 
-      if (index >= 0) {
+      if (index >= 0 && index !== itemIndex) {
         setItemIndex(index)
       }
-    } else {
-      setItemIndex(0)
     }
   }, [items, SupportReference, quote, occurrence])
 

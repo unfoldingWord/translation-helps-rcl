@@ -89,7 +89,7 @@ const Item = ({
               occurrence: Occurrence,
               SupportReference,
             })
-          else if (setQuote && selected) setQuote({})
+          else if (setQuote && selected) setQuote(null)
         }}
       >
         <Legend
