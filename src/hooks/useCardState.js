@@ -7,13 +7,16 @@ const useCardState = ({
   setQuote,
   projectId,
   selectedQuote = {},
+  useUserLocalStorage,
 }) => {
   const [itemIndex, setItemIndex] = useState(0)
   const item = items ? items[itemIndex] : null
-  const [markdownView, setMarkdownView] = useState(false)
-  const [fontSize, setFontSize] = useState(100)
   const [headers, setHeaders] = useState([])
   const [filters, setFilters] = useState([])
+  const [markdownView, setMarkdownView] = useState(false)
+  const [fontSize, setFontSize] = useUserLocalStorage
+    ? useUserLocalStorage('fontSize', 100)
+    : useState(100)
   const { SupportReference, quote, occurrence } = selectedQuote || {}
 
   useEffect(() => {
