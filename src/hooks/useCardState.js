@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const useCardState = ({
+  id,
   items,
   verse,
   chapter,
@@ -15,7 +16,7 @@ const useCardState = ({
   const [filters, setFilters] = useState([])
   const [markdownView, setMarkdownView] = useState(false)
   const [fontSize, setFontSize] = useUserLocalStorage
-    ? useUserLocalStorage('fontSize', 100)
+    ? useUserLocalStorage(`fontSize_${id}`, 100)
     : useState(100)
   const { SupportReference, quote, occurrence } = selectedQuote || {}
 
