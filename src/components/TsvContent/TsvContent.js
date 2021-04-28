@@ -149,8 +149,8 @@ const TsvContent = ({
       preview={!markdownView}
       markdown={rawMarkdown}
       editable={false}
+      fontSize={fontSize}
       style={{
-        fontSize,
         padding: '0px',
         margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
       }}
