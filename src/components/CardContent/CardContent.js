@@ -56,10 +56,10 @@ const CardContent = ({
   } else if (item && item.markdown && viewMode === 'markdown') {
     return (
       <BlockEditable
-        editable={false}
-        fontSize={fontSize}
         preview={!markdownView}
         markdown={stripReferenceLinksFromMarkdown(item.markdown)}
+        editable={false}
+        fontSize={fontSize}
       />
     )
   } else if (item && viewMode === 'list') {
@@ -93,10 +93,10 @@ const CardContent = ({
 
     return (
       <BlockEditable
-        editable={false}
-        markdown={markdown}
-        fontSize={fontSize}
         preview={!markdownView}
+        markdown={markdown}
+        editable={false}
+        fontSize={fontSize}
         style={{
           display: 'block',
         }}
