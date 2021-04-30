@@ -61,7 +61,7 @@ const useCardState = ({
     setItemIndex(index)
 
     if (items) {
-      const {
+      let {
         Quote,
         OrigQuote,
         OrigWords,
