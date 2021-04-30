@@ -29,7 +29,6 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
         }
       }
     )
-    console.log({ items })
   }
 
   return (
