@@ -72,6 +72,7 @@ const useCardState = ({
       // Support new TWL column headers (OrigWords & TWLink)
       Quote = Quote || OrigWords
       SupportReference = SupportReference || TWLink
+
       if (
         setQuote &&
         (Quote || OrigQuote) &&
