@@ -61,9 +61,17 @@ const useCardState = ({
     setItemIndex(index)
 
     if (items) {
-      const { Quote, OrigQuote, Occurrence, SupportReference } =
-        items[index] || {}
-
+      const {
+        Quote,
+        OrigQuote,
+        OrigWords,
+        Occurrence,
+        SupportReference,
+        TWLink,
+      } = items[index] || {}
+      // Support new TWL column headers (OrigWords & TWLink)
+      Quote = Quote || OrigWords
+      SupportReference = SupportReference || TWLink
       if (
         setQuote &&
         (Quote || OrigQuote) &&
