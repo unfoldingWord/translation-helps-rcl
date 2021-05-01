@@ -59,7 +59,8 @@ export default function useTsvItems({
       if (
         _items &&
         Array.isArray(_items) &&
-        _items[0].SupportReference?.includes('rc://*/')
+        (_items[0].SupportReference?.includes('rc://*/') ||
+          _items[0].TWLink?.includes('rc://*/'))
       ) {
         const newItems = []
 
@@ -67,7 +68,9 @@ export default function useTsvItems({
           setLoading(true)
           for (let i = 0; i < _items.length; i++) {
             const item = _items[i]
-            const path = item.SupportReference.replace('rc://*/', '')
+            const path = item.SupportReference
+              ? item.SupportReference.replace('rc://*/', '')
+              : item.TWLink.replace('rc://*/', '')
             const routes = path.split('/')
             const resource = routes[0]
             const newRoutes = routes.slice(2, routes.length)

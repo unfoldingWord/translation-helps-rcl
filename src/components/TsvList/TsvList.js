@@ -16,17 +16,19 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
   fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
 
   if (items) {
-    filters = ['Translation Word', 'Occurrence', 'Original Quote']
-    items = items.map(({ SupportReference, Quote, Occurrence }) => {
-      const directories = (SupportReference || '').split('/')
-      const value = directories[directories.length - 1]
+    filters = ['Translation Word', 'Original Quote', 'Occurrence']
+    items = items.map(
+      ({ SupportReference, TWLink, Quote, OrigWords, Occurrence }) => {
+        const directories = (SupportReference || TWLink || '').split('/')
+        const value = directories[directories.length - 1]
 
-      return {
-        SupportReference: value,
-        Occurrence,
-        Quote,
+        return {
+          SupportReference: value,
+          Quote: Quote || OrigWords,
+          Occurrence,
+        }
       }
-    })
+    )
   }
 
   return (
@@ -52,7 +54,15 @@ const TsvList = ({ items, filters, fontSize, setQuote, selectedQuote }) => {
           {items &&
             items.map((item, i) => {
               let selected = false
-              const { Quote, Occurrence, SupportReference } = item
+              let {
+                Quote,
+                TWLink,
+                OrigWords,
+                Occurrence,
+                SupportReference,
+              } = item
+              Quote = Quote || OrigWords
+              SupportReference = SupportReference || TWLink
               const style = { cursor: setQuote ? 'pointer' : '' }
 
               if (
