@@ -75,8 +75,9 @@ const useCardState = ({
         TWLink,
       } = items[index] || {}
       // Support new TWL column headers (OrigWords & TWLink)
-      Quote = Quote || OrigWords
-      SupportReference = SupportReference || TWLink
+      Quote = !Quote && OrigWords ? OrigWords : Quote
+      SupportReference = !SupportReference && TWLink ? TWLink : SupportReference
+      Quote = !Quote && OrigQuote ? OrigQuote : Quote
 
       if (
         setQuote &&
@@ -89,6 +90,8 @@ const useCardState = ({
           occurrence: Occurrence,
           SupportReference,
         })
+      } else if (setQuote) {
+        setQuote(null)
       }
     }
   }
