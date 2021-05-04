@@ -13,7 +13,9 @@ const useCardState = ({
   const [itemIndex, setItemIndex] = useState(0)
   const item = items ? items[itemIndex] : null
   const [headers, setHeaders] = useState([])
-  const [filters, setFilters] = useState([])
+  const [filters, setFilters] = useUserLocalStorage
+    ? useUserLocalStorage(`filters_${id}`, [...headers])
+    : useState([])
   const [markdownView, setMarkdownView] = useState(false)
   const [fontSize, setFontSize] = useUserLocalStorage
     ? useUserLocalStorage(`fontSize_${id}`, 100)
@@ -57,10 +59,6 @@ const useCardState = ({
     initialHeaders = initialHeaders.filter(item => item !== 'markdown')
     setHeaders(initialHeaders)
   }, [item])
-
-  useEffect(() => {
-    setFilters(headers)
-  }, [headers])
 
   function setItem(index) {
     setItemIndex(index)

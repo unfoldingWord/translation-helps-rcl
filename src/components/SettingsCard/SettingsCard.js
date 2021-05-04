@@ -179,25 +179,21 @@ const SettingsCard = ({
                   Show Columns
                 </Typography>
                 <div className={classes.checkboxes}>
-                  {headers.map((header, i) => {
-                    const checked = filters.includes(header)
-                    console.log({ header, checked })
-                    return (
-                      <FormControlLabel
-                        key={`${i}-${header}`}
-                        label={header}
-                        classes={{ root: classes.label }}
-                        control={
-                          <BlueCheckbox
-                            name={header}
-                            color='primary'
-                            onClick={handleCheckboxClick}
-                            checked={checked}
-                          />
-                        }
-                      />
-                    )
-                  })}
+                  {headers.map((header, i) => (
+                    <FormControlLabel
+                      key={`${i}-${header}`}
+                      label={header}
+                      classes={{ root: classes.label }}
+                      control={
+                        <BlueCheckbox
+                          name={header}
+                          color='primary'
+                          onClick={handleCheckboxClick}
+                          checked={filters.includes(header)}
+                        />
+                      }
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -219,6 +215,7 @@ const SettingsCard = ({
 }
 
 SettingsCard.defaultProps = {
+  filters: [],
   disableFilters: false,
   hideMarkdownToggle: false,
 }
