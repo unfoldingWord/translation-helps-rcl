@@ -103,7 +103,14 @@ const SettingsCard = ({
 }) => {
   const classes = useStyles()
 
+  console.log({
+    headers,
+    filters,
+  })
+
   const handleCheckboxClick = event => {
+    event.preventDefault()
+    console.log('event', event)
     console.log('handleCheckboxClick')
     let newFilters = []
 
@@ -142,9 +149,9 @@ const SettingsCard = ({
             <FormControlLabel
               control={
                 <BlueSwitch
+                  name='markdownView'
                   checked={markdownView}
                   onChange={e => onShowMarkdown(e.target.checked)}
-                  name='markdownView'
                 />
               }
               classes={{ label: classes.switchLabel }}
@@ -172,21 +179,25 @@ const SettingsCard = ({
                   Show Columns
                 </Typography>
                 <div className={classes.checkboxes}>
-                  {headers.map(header => (
-                    <FormControlLabel
-                      key={header}
-                      label={header}
-                      classes={{ root: classes.label }}
-                      control={
-                        <BlueCheckbox
-                          checked={filters.includes(header)}
-                          onChange={handleCheckboxClick}
-                          name={header}
-                          color='primary'
-                        />
-                      }
-                    />
-                  ))}
+                  {headers.map((header, i) => {
+                    const checked = filters.includes(header)
+                    console.log({ header, checked })
+                    return (
+                      <FormControlLabel
+                        key={`${i}-${header}`}
+                        label={header}
+                        classes={{ root: classes.label }}
+                        control={
+                          <BlueCheckbox
+                            name={header}
+                            color='primary'
+                            onClick={handleCheckboxClick}
+                            checked={checked}
+                          />
+                        }
+                      />
+                    )
+                  })}
                 </div>
               </div>
             </div>
@@ -208,7 +219,6 @@ const SettingsCard = ({
 }
 
 SettingsCard.defaultProps = {
-  filters: [],
   disableFilters: false,
   hideMarkdownToggle: false,
 }
