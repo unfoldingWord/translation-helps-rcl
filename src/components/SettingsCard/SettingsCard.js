@@ -104,19 +104,30 @@ const SettingsCard = ({
   const classes = useStyles()
 
   const handleCheckboxClick = event => {
+    console.log('handleCheckboxClick')
     let newFilters = []
 
     if (filters.includes(event.target.name)) {
+      console.log('filters.includes')
       newFilters = filters.filter(item => item !== event.target.name)
     } else {
+      console.log('else')
       newFilters = [...filters, event.target.name]
     }
+
+    console.log('filters', filters)
+    console.log('newFilters', newFilters)
 
     setFilters(newFilters)
   }
 
   return (
-    <DraggableModal id='settings_card' open={open} title={title} handleClose={onClose}>
+    <DraggableModal
+      id='settings_card'
+      open={open}
+      title={title}
+      handleClose={onClose}
+    >
       <Card
         closeable
         title={title}
@@ -181,7 +192,7 @@ const SettingsCard = ({
             </div>
           </Fragment>
         )}
-        { !!onRemoveCard && (
+        {!!onRemoveCard && (
           <>
             <Divider />
             <div className={classes.cardRemovalSection}>
