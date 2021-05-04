@@ -103,27 +103,15 @@ const SettingsCard = ({
 }) => {
   const classes = useStyles()
 
-  console.log({
-    headers,
-    filters,
-  })
-
   const handleCheckboxClick = event => {
     event.preventDefault()
-    console.log('event', event)
-    console.log('handleCheckboxClick')
     let newFilters = []
 
     if (filters.includes(event.target.name)) {
-      console.log('filters.includes')
       newFilters = filters.filter(item => item !== event.target.name)
     } else {
-      console.log('else')
       newFilters = [...filters, event.target.name]
     }
-
-    console.log('filters', filters)
-    console.log('newFilters', newFilters)
 
     setFilters(newFilters)
   }
