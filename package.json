@@ -1,6 +1,6 @@
 {
   "name": "translation-helps-rcl",
-  "version": "1.46.14-rc14",
+  "version": "1.46.14-rc15",
   "main": "dist",
   "homepage": "https://translation-helps-rcl.netlify.app/",
   "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
@@ -49,6 +49,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "react-draggable": "^4.4.3",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.1",
+    "use-deep-compare-effect": "^1.6.1"
   }
 }
