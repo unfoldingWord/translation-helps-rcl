@@ -104,6 +104,7 @@ const SettingsCard = ({
   const classes = useStyles()
 
   const handleCheckboxClick = event => {
+    event.preventDefault()
     let newFilters = []
 
     if (filters.includes(event.target.name)) {
@@ -116,7 +117,12 @@ const SettingsCard = ({
   }
 
   return (
-    <DraggableModal id='settings_card' open={open} title={title} handleClose={onClose}>
+    <DraggableModal
+      id='settings_card'
+      open={open}
+      title={title}
+      handleClose={onClose}
+    >
       <Card
         closeable
         title={title}
@@ -131,9 +137,9 @@ const SettingsCard = ({
             <FormControlLabel
               control={
                 <BlueSwitch
+                  name='markdownView'
                   checked={markdownView}
                   onChange={e => onShowMarkdown(e.target.checked)}
-                  name='markdownView'
                 />
               }
               classes={{ label: classes.switchLabel }}
@@ -161,17 +167,17 @@ const SettingsCard = ({
                   Show Columns
                 </Typography>
                 <div className={classes.checkboxes}>
-                  {headers.map(header => (
+                  {headers.map((header, i) => (
                     <FormControlLabel
-                      key={header}
+                      key={`${i}-${header}`}
                       label={header}
                       classes={{ root: classes.label }}
                       control={
                         <BlueCheckbox
-                          checked={filters.includes(header)}
-                          onChange={handleCheckboxClick}
                           name={header}
                           color='primary'
+                          onClick={handleCheckboxClick}
+                          checked={filters.includes(header)}
                         />
                       }
                     />
@@ -181,7 +187,7 @@ const SettingsCard = ({
             </div>
           </Fragment>
         )}
-        { !!onRemoveCard && (
+        {!!onRemoveCard && (
           <>
             <Divider />
             <div className={classes.cardRemovalSection}>
