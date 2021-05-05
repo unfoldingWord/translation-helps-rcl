@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import useDeepCompareEffect from 'use-deep-compare-effect'
 
 const useCardState = ({
   id,
@@ -14,8 +15,8 @@ const useCardState = ({
   const item = items ? items[itemIndex] : null
   const [headers, setHeaders] = useState([])
   const [filters, setFilters] = useUserLocalStorage
-    ? useUserLocalStorage(`filters_${id}`, [...headers])
-    : useState([])
+    ? useUserLocalStorage(`filters_${id}`, null)
+    : useState([...headers])
   const [markdownView, setMarkdownView] = useState(false)
   const [fontSize, setFontSize] = useUserLocalStorage
     ? useUserLocalStorage(`fontSize_${id}`, 100)
@@ -60,6 +61,12 @@ const useCardState = ({
     setHeaders(initialHeaders)
   }, [item])
 
+  useDeepCompareEffect(() => {
+    if (!filters && headers.length) {
+      setFilters(headers)
+    }
+  }, [headers])
+
   function setItem(index) {
     setItemIndex(index)
 
@@ -98,10 +105,10 @@ const useCardState = ({
     state: {
       item,
       headers,
-      filters,
       fontSize,
       itemIndex,
       markdownView,
+      filters: filters || [],
     },
     actions: {
       setFilters,

@@ -112,6 +112,11 @@ const Card = ({
   const [showMenu, setShowMenu] = useState(false)
   const classes = useStyles({ dragging })
 
+  console.log('Card', {
+    headers,
+    filters,
+  })
+
   let settingsTitle = settingsTitle_
   if (!settingsTitle) {
     // if settingsTitle not given, generate from title
