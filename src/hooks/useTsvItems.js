@@ -68,9 +68,10 @@ export default function useTsvItems({
           setLoading(true)
           for (let i = 0; i < _items.length; i++) {
             const item = _items[i]
-            const path = item.SupportReference
-              ? item.SupportReference.replace('rc://*/', '')
-              : item.TWLink.replace('rc://*/', '')
+            const path =
+              item.SupportReference || typeof item.SupportReference === 'string'
+                ? item.SupportReference.replace('rc://*/', '')
+                : item.TWLink.replace('rc://*/', '')
             const routes = path.split('/')
             const resource = routes[0]
             const newRoutes = routes.slice(2, routes.length)
