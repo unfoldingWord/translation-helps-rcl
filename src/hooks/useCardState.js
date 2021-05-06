@@ -17,7 +17,9 @@ const useCardState = ({
   const [filters, setFilters] = useUserLocalStorage
     ? useUserLocalStorage(`filters_${id}`, null)
     : useState(null)
-  const [markdownView, setMarkdownView] = useState(false)
+  const [markdownView, setMarkdownView] = useUserLocalStorage
+    ? useUserLocalStorage(`markdownView${id}`, false)
+    : useState(false)
   const [fontSize, setFontSize] = useUserLocalStorage
     ? useUserLocalStorage(`fontSize_${id}`, 100)
     : useState(100)
