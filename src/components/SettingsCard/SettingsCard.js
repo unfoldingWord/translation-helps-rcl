@@ -139,7 +139,7 @@ const SettingsCard = ({
                 <BlueSwitch
                   name='markdownView'
                   checked={markdownView}
-                  onChange={e => onShowMarkdown(e.target.checked)}
+                  onClick={() => onShowMarkdown(!markdownView)}
                 />
               }
               classes={{ label: classes.switchLabel }}
