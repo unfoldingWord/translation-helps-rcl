@@ -1,19 +1,28 @@
 import { useState, useEffect } from 'react'
+import useDeepCompareEffect from 'use-deep-compare-effect'
 
 const useCardState = ({
+  id,
   items,
   verse,
   chapter,
   setQuote,
   projectId,
   selectedQuote = {},
+  useUserLocalStorage,
 }) => {
   const [itemIndex, setItemIndex] = useState(0)
   const item = items ? items[itemIndex] : null
-  const [markdownView, setMarkdownView] = useState(false)
-  const [fontSize, setFontSize] = useState(100)
   const [headers, setHeaders] = useState([])
-  const [filters, setFilters] = useState([])
+  const [filters, setFilters] = useUserLocalStorage
+    ? useUserLocalStorage(`filters_${id}`, null)
+    : useState(null)
+  const [markdownView, setMarkdownView] = useUserLocalStorage
+    ? useUserLocalStorage(`markdownView${id}`, false)
+    : useState(false)
+  const [fontSize, setFontSize] = useUserLocalStorage
+    ? useUserLocalStorage(`fontSize_${id}`, 100)
+    : useState(100)
   const { SupportReference, quote, occurrence } = selectedQuote || {}
 
   useEffect(() => {
@@ -24,11 +33,16 @@ const useCardState = ({
     if (items && typeof SupportReference === 'string') {
       const index = items.findIndex(
         ({
-          SupportReference: itemSupportReference,
           Quote,
-          OrigQuote,
+          TWLink,
+          OrigWords,
           Occurrence,
+          SupportReference: itemSupportReference,
         }) => {
+          // Support new TWL column headers (OrigWords & TWLink)
+          itemSupportReference = itemSupportReference || TWLink
+          Quote = Quote || OrigWords
+
           return (
             itemSupportReference?.includes(SupportReference) &&
             quote === Quote &&
@@ -49,16 +63,28 @@ const useCardState = ({
     setHeaders(initialHeaders)
   }, [item])
 
-  useEffect(() => {
-    setFilters(headers)
+  useDeepCompareEffect(() => {
+    if (!filters && headers.length) {
+      setFilters(headers)
+    }
   }, [headers])
 
   function setItem(index) {
     setItemIndex(index)
 
     if (items) {
-      const { Quote, OrigQuote, Occurrence, SupportReference } =
-        items[index] || {}
+      let {
+        Quote,
+        OrigQuote,
+        OrigWords,
+        Occurrence,
+        SupportReference,
+        TWLink,
+      } = items[index] || {}
+      // Support new TWL column headers (OrigWords & TWLink)
+      Quote = !Quote && OrigWords ? OrigWords : Quote
+      SupportReference = !SupportReference && TWLink ? TWLink : SupportReference
+      Quote = !Quote && OrigQuote ? OrigQuote : Quote
 
       if (
         setQuote &&
@@ -71,6 +97,8 @@ const useCardState = ({
           occurrence: Occurrence,
           SupportReference,
         })
+      } else if (setQuote) {
+        setQuote(null)
       }
     }
   }
@@ -79,10 +107,10 @@ const useCardState = ({
     state: {
       item,
       headers,
-      filters,
       fontSize,
       itemIndex,
       markdownView,
+      filters: filters || [],
     },
     actions: {
       setFilters,

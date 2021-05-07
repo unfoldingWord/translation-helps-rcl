@@ -54,17 +54,16 @@ export default function DraggableCard({
       return (
         <BlockEditable
           preview
-          markdown={stripReferenceLinksFromMarkdown(content)}
           editable={false}
-          style={{
-            fontSize,
-          }}
+          fontSize={fontSize}
+          markdown={stripReferenceLinksFromMarkdown(content)}
         />
       )
     } else {
       return <Message fontSize={fontSize}>No content available.</Message>
     }
   }
+
   title = error ? 'Error' : title
 
   return (

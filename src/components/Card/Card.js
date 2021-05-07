@@ -11,7 +11,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
-import Scrollable from "../Scrollable"
+import Scrollable from '../Scrollable'
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -155,13 +155,14 @@ const Card = ({
 
   // TODO: in future we might want to add scroll into view support for list view, but for now
   //    we don't want list views scrolling to top each time the itemIndex changes
-  const enableAutoScrollToTop = (children?.props?.viewMode !== 'list')
+  const enableAutoScrollToTop = children?.props?.viewMode !== 'list'
 
   return (
     <Paper id={id} ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
         <FlexDiv>
           <DragIndicatorIcon
+            id={`${id}_drag_indicator`}
             className={`${classes.dragIcon} ${dragIndicator}`}
           />
           <div className={classes.title}>{title}</div>

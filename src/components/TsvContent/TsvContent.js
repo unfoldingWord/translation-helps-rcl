@@ -19,7 +19,7 @@ const Fieldset = styled.fieldset`
   word-break: break-word;
   width: 100%;
   grid-column: ${({ label }) =>
-    label === 'Annotation' || label === 'OccurrenceNote'
+    label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
       ? 'span 3 / span 3'
       : label === 'GLQuote'
       ? 'span 2 / span 2'
@@ -41,7 +41,9 @@ const Fieldset = styled.fieldset`
 
 const Legend = styled.legend`
   margin-bottom: ${({ label }) =>
-    label === 'Annotation' || label === 'OccurrenceNote' ? '0px' : '7px'};
+    label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
+      ? '0px'
+      : '7px'};
   padding-inline-start: ${props =>
     props.error || props.caution ? '2px' : '0px'};
   padding-inline-end: ${props =>
@@ -140,17 +142,23 @@ const TsvContent = ({
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
-  const { Annotation, Occurrence, SupportReference, OccurrenceNote } = item
+  const {
+    Note,
+    Annotation,
+    OccurrenceNote,
+    Occurrence,
+    SupportReference,
+  } = item
   const rawMarkdown = stripReferenceLinksFromMarkdown(
-    Annotation || OccurrenceNote
+    Annotation || Note || OccurrenceNote
   )
   const markdown = (
     <BlockEditable
       preview={!markdownView}
       markdown={rawMarkdown}
       editable={false}
+      fontSize={fontSize}
       style={{
-        fontSize,
         padding: '0px',
         margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
       }}
@@ -167,6 +175,7 @@ const TsvContent = ({
     SupportReference: 8,
     Quote: 7,
     Tags: 6,
+    Note: 5,
     Annotation: 5,
     Question: 5,
     Annotation2: 4,
@@ -193,7 +202,9 @@ const TsvContent = ({
     <Container>
       {filters.map(label => {
         const value =
-          label === 'Annotation' || label === 'OccurrenceNote'
+          label === 'Annotation' ||
+          label === 'Note' ||
+          label === 'OccurrenceNote'
             ? markdown
             : item[label]
         return (
