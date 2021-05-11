@@ -28,22 +28,14 @@ const useContent = ({
   }
 
   const {
-    state: {
-      resource,
-      content,
-      loadingResource,
-      loadingContent,
-    },
+    state: { resource, content, loadingResource, loadingContent },
   } = useRsrc({
     resourceLink,
     reference,
     config,
   })
 
-  const {
-    items,
-    loading: loadingTSV,
-  } = useTsvItems({
+  const { items, loading: loadingTSV } = useTsvItems({
     fetchMarkdown,
     languageId,
     resourceId,
