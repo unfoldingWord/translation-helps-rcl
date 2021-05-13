@@ -34,11 +34,15 @@ export default function DraggableCard({
   onClose,
   loading,
   fontSize,
+  id,
+  showRawContent,
 }) {
   const classes = useStyles()
 
   function getCardContent() {
-    if (error) {
+    if (showRawContent) {
+      return content
+    } else if (error) {
       return (
         <Message fontSize={fontSize}>
           Sorry, there was a problem loading the content.
@@ -64,7 +68,7 @@ export default function DraggableCard({
 
   return (
     <DraggableModal
-      id='draggable_article_card'
+      id={id}
       open={open}
       title={title || ''}
       handleClose={onClose}
@@ -85,16 +89,22 @@ export default function DraggableCard({
 }
 
 DraggableCard.defaultProps = {
+  id: 'draggable_article_card',
   title: '',
   content: '',
   fontSize: '100%',
+  showRawContent: false,
 }
 
 DraggableCard.propTypes = {
   /** Determines whether the DraggableCard is opened or not */
   open: PropTypes.bool.isRequired,
+  /** if true then content is not processed */
+  showRawContent: PropTypes.bool,
   /** The title of the card */
   title: PropTypes.string,
+  /** identifier for the card */
+  id: PropTypes.string,
   /** DraggableCard content */
   content: PropTypes.oneOfType([
     PropTypes.string,
