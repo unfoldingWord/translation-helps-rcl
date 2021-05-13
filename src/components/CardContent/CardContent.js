@@ -51,15 +51,17 @@ const CardContent = ({
         markdown={markdown}
         fontSize={fontSize}
         preview={!markdownView}
+        style={{ padding: '0px' }}
       />
     )
   } else if (item && item.markdown && viewMode === 'markdown') {
     return (
       <BlockEditable
         preview={!markdownView}
-        markdown={stripReferenceLinksFromMarkdown(item.markdown)}
         editable={false}
         fontSize={fontSize}
+        style={{ padding: '0px' }}
+        markdown={stripReferenceLinksFromMarkdown(item.markdown)}
       />
     )
   } else if (item && viewMode === 'list') {
@@ -97,9 +99,7 @@ const CardContent = ({
         markdown={markdown}
         editable={false}
         fontSize={fontSize}
-        style={{
-          display: 'block',
-        }}
+        style={{ display: 'block', padding: '0px' }}
       />
     )
   } else if (
