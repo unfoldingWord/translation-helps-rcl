@@ -99,7 +99,7 @@ DraggableCard.defaultProps = {
 DraggableCard.propTypes = {
   /** Determines whether the DraggableCard is opened or not */
   open: PropTypes.bool.isRequired,
-  /** if true then content in not processed */
+  /** if true then content is not processed */
   showRawContent: PropTypes.bool,
   /** The title of the card */
   title: PropTypes.string,
