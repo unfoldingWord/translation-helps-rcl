@@ -1,5 +1,12 @@
+import { useEffect, useState } from 'react'
 import { useRsrc } from 'scripture-resources-rcl'
 import useTsvItems from './useTsvItems'
+import {
+  CONTENT_NOT_FOUND_ERROR,
+  ERROR_STATE, INITIALIZED_STATE,
+  LOADING_STATE,
+  MANIFEST_NOT_LOADED_ERROR,
+} from '../common/constants'
 
 const useContent = ({
   verse,
@@ -13,6 +20,8 @@ const useContent = ({
   resourceId,
   fetchMarkdown,
 }) => {
+  const [initialized, setInitialized] = useState(false)
+
   const reference = {
     verse,
     chapter,
@@ -47,11 +56,25 @@ const useContent = ({
     verse,
   })
 
+  const contentNotFoundError = !content
+  const manifestNotFoundError = !resource?.manifest
+  const loading = loadingResource || loadingContent || loadingTSV
+  const error = initialized && !loading && (contentNotFoundError || manifestNotFoundError)
   const resourceStatus = {
-    loading: loadingResource || loadingContent || loadingTSV,
-    contentNotFoundError: !content,
-    manifestNotFoundError: !resource?.manifest,
+    [LOADING_STATE]: loading,
+    [CONTENT_NOT_FOUND_ERROR]: contentNotFoundError,
+    [MANIFEST_NOT_LOADED_ERROR]: manifestNotFoundError,
+    [ERROR_STATE]: error,
+    [INITIALIZED_STATE]: initialized,
   }
+
+  useEffect(() => {
+    if (!initialized) {
+      if (loading) { // once first load has begun, we are initialized
+        setInitialized(true)
+      }
+    }
+  }, [loading])
 
   return {
     items,
