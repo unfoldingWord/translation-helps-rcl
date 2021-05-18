@@ -10,7 +10,7 @@ const Container = styled.div`
   row-gap: 1.5rem;
   column-gap: 1rem;
   width: 100%;
-  padding: 10px 0px 0px;
+  padding: 0px;
   margin: 7px 0px 0px;
 `
 

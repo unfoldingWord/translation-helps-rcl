@@ -21,10 +21,11 @@ const useStyles = makeStyles(() => ({
     maxWidth: '100%',
     color: '#424242',
     lineHeight: '14px',
+    wordBreak: 'break-word',
   },
   dragIcon: {
     color: '#ECECEC',
-    margin: '0px 10px 0px 0px',
+    margin: '0px',
     cursor: props => (props.dragging ? 'grabbing' : 'grab'),
   },
   chevronIcon: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     overflow: 'auto',
     textAlign: 'start',
-    padding: '4px 0px 0px 4px',
+    padding: '0px 6px',
   },
   paddingRight: {
     padding: '0px 15px 0px 0px',
@@ -53,6 +54,14 @@ const FlexDiv = styled.div`
 const FlexSpacedDiv = styled.div`
   display: flex;
   justify-content: space-between;
+`
+
+const NavigationFlexDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3px;
+  width: 100%;
 `
 
 const Navigation = ({
@@ -167,18 +176,6 @@ const Card = ({
           />
           <div className={classes.title}>{title}</div>
         </FlexDiv>
-        <FlexDiv>
-          {!disableNavigation && items && items.length > 1 && (
-            <Navigation
-              baseId={id}
-              items={items}
-              classes={classes}
-              itemIndex={itemIndex}
-              onPrevItem={onPrevItem}
-              onNextItem={onNextItem}
-            />
-          )}
-        </FlexDiv>
         {closeable ? (
           <CloseIcon
             id='settings_card_close'
@@ -224,6 +221,20 @@ const Card = ({
             )}
           </FlexDiv>
         )}
+      </FlexSpacedDiv>
+      <FlexSpacedDiv className={header}>
+        <NavigationFlexDiv>
+        {!disableNavigation && items && items.length > 1 && (
+            <Navigation
+              baseId={id}
+              items={items}
+              classes={classes}
+              itemIndex={itemIndex}
+              onPrevItem={onPrevItem}
+              onNextItem={onNextItem}
+            />
+          )}
+        </NavigationFlexDiv>
       </FlexSpacedDiv>
       <Scrollable
         className={`${classes.children} ${childrenClassName}`}

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Paper = styled.div`
   margin: 2.5px;
-  padding: 16px;
+  padding: 10px;
   border-radius: 2px;
   position: relative;
   transition: all 0.2s ease-in-out;
