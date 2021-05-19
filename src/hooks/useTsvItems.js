@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import base64DecodeUnicode from '../core/base64DecodeUnicode'
+import { processHttpErrors, processUnknownError } from '../core/network'
 
 export default function useTsvItems({
   fetchMarkdown = true,
@@ -11,6 +12,7 @@ export default function useTsvItems({
   server,
   owner,
   verse,
+  onResourceError,
 }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
@@ -63,30 +65,39 @@ export default function useTsvItems({
           _items[0].TWLink?.includes('rc://*/'))
       ) {
         const newItems = []
+        let url
 
         if (fetchMarkdown) {
           setLoading(true)
           for (let i = 0; i < _items.length; i++) {
             const item = _items[i]
-            const path =
-              item.SupportReference || typeof item.SupportReference === 'string'
-                ? item.SupportReference.replace('rc://*/', '')
-                : item.TWLink.replace('rc://*/', '')
-            const routes = path.split('/')
-            const resource = routes[0]
-            const newRoutes = routes.slice(2, routes.length)
-            const filename = resource === 'ta' ? '/01.md' : '.md'
-            const filePath = `${newRoutes.join('/')}${filename}`
-            const url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
-            let markdown = ''
-            try {
-              const result = await fetch(url).then(data => data.json())
-              markdown = base64DecodeUnicode(result.content)
-            } catch (e) {
-              console.warn(`useTsvItems(url) - article not found`, e)
+            if (item?.SupportReference) { // only fetch if we have SupportReference
+              const path =
+                item.SupportReference || typeof item.SupportReference === 'string'
+                  ? item.SupportReference.replace('rc://*/', '')
+                  : item.TWLink.replace('rc://*/', '')
+              const routes = path.split('/')
+              const resource = routes[0]
+              const newRoutes = routes.slice(2, routes.length)
+              const filename = resource === 'ta' ? '/01.md' : '.md'
+              const filePath = `${newRoutes.join('/')}${filename}`
+              url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
+              let markdown = ''
+              try {
+                const result = await fetch(url).then(response => {
+                  const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
+                  processHttpErrors(response, resourceDescr, url, onResourceError)
+                  return response?.json()
+                })
+                markdown = base64DecodeUnicode(result.content)
+              } catch (e) {
+                console.warn(`useTsvItems(url) - article not found`, e)
+                const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
+                processUnknownError(e, resourceDescr, url, onResourceError)
+              }
+              newItems.push({...item, markdown})
+              item.markdown = markdown
             }
-            newItems.push({ ...item, markdown })
-            item.markdown = markdown
           }
           _items = newItems
           setLoading(false)

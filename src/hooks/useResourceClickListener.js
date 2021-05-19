@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, useCallback } from 'react'
 import axios from 'axios'
 import { AuthenticationContext } from 'gitea-react-toolkit'
 import useEventListener from './useEventListener'
+import { processHttpErrors, processUnknownError } from '../core/network'
 
 /**
  * Custom hook that listens for link click events and if the link is a translation helps resource then fetches it.
@@ -28,6 +29,7 @@ export default function useResourceClickListener({
   branch,
   taArticle,
   languageId,
+  onResourceError,
 }) {
   const { state: authentication } = useContext(AuthenticationContext)
   const [link, setLink] = useState(null)
@@ -55,6 +57,8 @@ export default function useResourceClickListener({
       if (link) {
         setTitle('')
         setLoading(true)
+        let url = ''
+        let titleUrl = ''
 
         try {
           const tw = ['/other/', '/kt/', '/names/']
@@ -62,8 +66,6 @@ export default function useResourceClickListener({
             ? new URL(link).pathname
             : link.replace('rc://*/', '').replace('rc://', '')
           const slugs = slug.split('/')
-          let url = ''
-          let titleUrl = ''
           let _languageId = ''
           let resourceId = ''
           let filePath = ''
@@ -99,13 +101,17 @@ export default function useResourceClickListener({
           const _config = { ...authentication.config }
 
           if (url) {
-            data = await axios.get(url, { ..._config }).then(res => res.data)
+            data = await axios.get(url, { ..._config }).then(res => {
+              processHttpErrors(res, link, url, onResourceError)
+              return res.data
+            })
           }
 
           if (titleUrl) {
-            title = await axios
-              .get(titleUrl, { ..._config })
-              .then(res => res.data)
+            title = await axios.get(titleUrl, { ..._config }).then(res => {
+                processHttpErrors(res, link, titleUrl, onResourceError)
+                return res.data
+              })
           }
 
           setContent(data)
@@ -115,6 +121,7 @@ export default function useResourceClickListener({
           clearContent()
           setError(true)
           console.error(error)
+          processUnknownError(error, link, `'${url} or ${titleUrl}'`, onResourceError)
         }
       }
     }

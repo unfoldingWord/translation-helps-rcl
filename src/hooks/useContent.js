@@ -19,6 +19,7 @@ const useContent = ({
   languageId,
   resourceId,
   fetchMarkdown,
+  onResourceError,
 }) => {
   const [initialized, setInitialized] = useState(false)
 
@@ -54,6 +55,7 @@ const useContent = ({
     server,
     owner,
     verse,
+    onResourceError,
   })
 
   const contentNotFoundError = !content
