@@ -33,6 +33,7 @@ export default function useResourceClickListener({
 }) {
   const { state: authentication } = useContext(AuthenticationContext)
   const [link, setLink] = useState(null)
+  const [linkHtml, setLinkHtml] = useState(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -43,9 +44,9 @@ export default function useResourceClickListener({
       e.preventDefault()
 
       if (e?.target?.href) {
+        setLinkHtml(e.target.outerHTML || null)
         setLink(e.target.href || null)
       }
-      return
     },
     [setLink]
   )
@@ -114,6 +115,11 @@ export default function useResourceClickListener({
               })
           }
 
+          if (!url || !titleUrl) {
+            console.warn(`useResourceClickListener() error parsing link: ${link} from embedded html: ${linkHtml}`)
+            setError(true)
+          }
+
           setContent(data)
           setTitle(title)
           setLoading(false)
@@ -121,6 +127,7 @@ export default function useResourceClickListener({
           clearContent()
           setError(true)
           console.error(error)
+          console.warn(`useResourceClickListener() error parsing link: ${link} from embedded html: ${linkHtml}`)
           processUnknownError(error, link, `'${url} or ${titleUrl}'`, onResourceError)
         }
       }
