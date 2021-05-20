@@ -126,8 +126,7 @@ export default function useResourceClickListener({
         } catch (error) {
           clearContent()
           setError(true)
-          console.error(error)
-          console.warn(`useResourceClickListener() error parsing link: ${link} from embedded html: ${linkHtml}`)
+          console.error(`useResourceClickListener() error loading link: ${link} from embedded html: ${linkHtml}`, error)
           processUnknownError(error, link, `'${url} or ${titleUrl}'`, onResourceError)
         }
       }

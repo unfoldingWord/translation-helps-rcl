@@ -48,5 +48,5 @@ export function processHttpErrors(response, resourceDescr, url, onResourceError)
  */
 export function processUnknownError(error, resourceDescr, url, onResourceError) {
     const message = `Unexpected error ${error?.toString()} fetching '${url}' for '${resourceDescr}'`
-    onResourceError && onResourceError(message, isPossibleDisconnectError(0))
+    onResourceError && onResourceError(message, true)
 }
