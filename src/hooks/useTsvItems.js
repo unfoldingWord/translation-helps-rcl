@@ -71,18 +71,18 @@ export default function useTsvItems({
           setLoading(true)
           for (let i = 0; i < _items.length; i++) {
             const item = _items[i]
-            if (item?.SupportReference) { // only fetch if we have SupportReference
-              const path =
-                item.SupportReference || typeof item.SupportReference === 'string'
-                  ? item.SupportReference.replace('rc://*/', '')
-                  : item.TWLink.replace('rc://*/', '')
-              const routes = path.split('/')
-              const resource = routes[0]
-              const newRoutes = routes.slice(2, routes.length)
-              const filename = resource === 'ta' ? '/01.md' : '.md'
-              const filePath = `${newRoutes.join('/')}${filename}`
-              url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
-              let markdown = ''
+            const path =
+              item.SupportReference || typeof item.SupportReference === 'string'
+                ? item.SupportReference.replace('rc://*/', '')
+                : item.TWLink.replace('rc://*/', '')
+            const routes = path.split('/')
+            const resource = routes[0]
+            const newRoutes = routes.slice(2, routes.length)
+            const filename = resource === 'ta' ? '/01.md' : '.md'
+            const filePath = `${newRoutes.join('/')}${filename}`
+            url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
+            let markdown = ''
+            if (path) { // only fetch data if we were able to get path for item
               try {
                 const result = await fetch(url).then(response => {
                   const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
@@ -95,9 +95,9 @@ export default function useTsvItems({
                 const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
-              newItems.push({...item, markdown})
-              item.markdown = markdown
             }
+            newItems.push({...item, markdown})
+            item.markdown = markdown
           }
           _items = newItems
           setLoading(false)
