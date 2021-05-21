@@ -1,6 +1,30 @@
+import { useEffect, useState } from 'react'
 import { useRsrc } from 'scripture-resources-rcl'
 import useTsvItems from './useTsvItems'
+import {
+  CONTENT_NOT_FOUND_ERROR,
+  ERROR_STATE, INITIALIZED_STATE,
+  LOADING_STATE,
+  MANIFEST_NOT_LOADED_ERROR,
+} from '../common/constants'
 
+/**
+ * hook for loading content of translation helps resources
+ * @param {string} verse
+ * @param {string} owner
+ * @param {string} branch
+ * @param {string} server
+ * @param {string} chapter
+ * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
+ * @param {string} projectId
+ * @param {string} languageId
+ * @param {string} resourceId
+ * @param {boolean} fetchMarkdown - flag that resource being fetched is in markdown
+ * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters returned are:
+ *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
+ *      - isAccessError - is true if this was an error trying to access file
+ *      - resourceStatus - is object containing details about problems fetching resource
+*/
 const useContent = ({
   verse,
   owner,
@@ -12,7 +36,10 @@ const useContent = ({
   languageId,
   resourceId,
   fetchMarkdown,
+  onResourceError,
 }) => {
+  const [initialized, setInitialized] = useState(false)
+
   const reference = {
     verse,
     chapter,
@@ -45,13 +72,28 @@ const useContent = ({
     server,
     owner,
     verse,
+    onResourceError,
   })
 
+  const contentNotFoundError = !content
+  const manifestNotFoundError = !resource?.manifest
+  const loading = loadingResource || loadingContent || loadingTSV
+  const error = initialized && !loading && (contentNotFoundError || manifestNotFoundError)
   const resourceStatus = {
-    loading: loadingResource || loadingContent || loadingTSV,
-    contentNotFoundError: !content,
-    manifestNotFoundError: !resource?.manifest,
+    [LOADING_STATE]: loading,
+    [CONTENT_NOT_FOUND_ERROR]: contentNotFoundError,
+    [MANIFEST_NOT_LOADED_ERROR]: manifestNotFoundError,
+    [ERROR_STATE]: error,
+    [INITIALIZED_STATE]: initialized,
   }
+
+  useEffect(() => {
+    if (!initialized) {
+      if (loading) { // once first load has begun, we are initialized
+        setInitialized(true)
+      }
+    }
+  }, [loading])
 
   return {
     items,
