@@ -30,8 +30,8 @@ export function isPossibleDisconnectError(httpCode) {
  * process the http code to see if error, if error call onResourceError
  * @param {object} response - from fetch or axios
  * @param {string} resourceDescr - description of resource being fetched
- * @param {string} url
- * @param {function} onResourceError
+ * @param {string} url - path to resource
+ * @param {function} onResourceError - callback for reporting fetch errors
  */
 export function processHttpErrors(response, resourceDescr, url, onResourceError) {
   if (response?.status !== 200) {
@@ -43,8 +43,8 @@ export function processHttpErrors(response, resourceDescr, url, onResourceError)
  * process the http code to see if error, if error call onResourceError
  * @param {object} error - from catch statement
  * @param {string} resourceDescr - description of resource being fetched
- * @param {string} url
- * @param {function} onResourceError
+ * @param {string} url - path to resource
+ * @param {function} onResourceError - callback for reporting fetch errors
  */
 export function processUnknownError(error, resourceDescr, url, onResourceError) {
     const message = `Unexpected error ${error?.toString()} fetching '${url}' for '${resourceDescr}'`

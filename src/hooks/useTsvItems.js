@@ -2,6 +2,22 @@ import { useEffect, useState } from 'react'
 import base64DecodeUnicode from '../core/base64DecodeUnicode'
 import { processHttpErrors, processUnknownError } from '../core/network'
 
+/**
+ * hook for loading translation helps resources listed in content
+ * @param {boolean} fetchMarkdown - flag that resource being fetched is in markdown
+ * @param {string} languageId
+ * @param {string} resourceId
+ * @param {string} projectId
+ * @param {string} chapter
+ * @param {array} content - list of resources to load
+ * @param {string} server
+ * @param {string} owner
+ * @param {string} verse
+ * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters returned are:
+ *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
+ *      - isAccessError - is true if this was an error trying to access file
+ *      - resourceStatus - is object containing details about problems fetching resource
+ */
 export default function useTsvItems({
   fetchMarkdown = true,
   languageId,

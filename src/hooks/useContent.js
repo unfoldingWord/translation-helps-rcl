@@ -8,6 +8,23 @@ import {
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
 
+/**
+ * hook for loading content of translation helps resources
+ * @param {string} verse
+ * @param {string} owner
+ * @param {string} branch
+ * @param {string} server
+ * @param {string} chapter
+ * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
+ * @param {string} projectId
+ * @param {string} languageId
+ * @param {string} resourceId
+ * @param {boolean} fetchMarkdown - flag that resource being fetched is in markdown
+ * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters returned are:
+ *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
+ *      - isAccessError - is true if this was an error trying to access file
+ *      - resourceStatus - is object containing details about problems fetching resource
+*/
 const useContent = ({
   verse,
   owner,
