@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import useDeepCompareEffect from 'use-deep-compare-effect'
-import determineDiffTsvVersion from '../core/DetermineDiffTsvVersion'
+import determineDiffTsvVersion from '../core/determineDiffTsvVersion'
 
 const useCardState = ({
   id,
