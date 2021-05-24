@@ -1,6 +1,23 @@
 import { useEffect, useState } from 'react'
 import base64DecodeUnicode from '../core/base64DecodeUnicode'
+import { processHttpErrors, processUnknownError } from '../core/network'
 
+/**
+ * hook for loading translation helps resources listed in content
+ * @param {boolean} fetchMarkdown - flag that resource being fetched is in markdown
+ * @param {string} languageId
+ * @param {string} resourceId
+ * @param {string} projectId
+ * @param {string} chapter
+ * @param {array} content - list of resources to load
+ * @param {string} server
+ * @param {string} owner
+ * @param {string} verse
+ * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters returned are:
+ *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
+ *      - isAccessError - is true if this was an error trying to access file
+ *      - resourceStatus - is object containing details about problems fetching resource
+ */
 export default function useTsvItems({
   fetchMarkdown = true,
   languageId,
@@ -11,6 +28,7 @@ export default function useTsvItems({
   server,
   owner,
   verse,
+  onResourceError,
 }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
@@ -63,6 +81,7 @@ export default function useTsvItems({
           _items[0].TWLink?.includes('rc://*/'))
       ) {
         const newItems = []
+        let url
 
         if (fetchMarkdown) {
           setLoading(true)
@@ -77,15 +96,23 @@ export default function useTsvItems({
             const newRoutes = routes.slice(2, routes.length)
             const filename = resource === 'ta' ? '/01.md' : '.md'
             const filePath = `${newRoutes.join('/')}${filename}`
-            const url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
+            url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
             let markdown = ''
-            try {
-              const result = await fetch(url).then(data => data.json())
-              markdown = base64DecodeUnicode(result.content)
-            } catch (e) {
-              console.warn(`useTsvItems(url) - article not found`, e)
+            if (path) { // only fetch data if we were able to get path for item
+              try {
+                const result = await fetch(url).then(response => {
+                  const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
+                  processHttpErrors(response, resourceDescr, url, onResourceError)
+                  return response?.json()
+                })
+                markdown = base64DecodeUnicode(result.content)
+              } catch (e) {
+                console.warn(`useTsvItems(url) - article not found`, e)
+                const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
+                processUnknownError(e, resourceDescr, url, onResourceError)
+              }
             }
-            newItems.push({ ...item, markdown })
+            newItems.push({...item, markdown})
             item.markdown = markdown
           }
           _items = newItems
