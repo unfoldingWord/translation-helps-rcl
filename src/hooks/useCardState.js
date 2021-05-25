@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import useDeepCompareEffect from 'use-deep-compare-effect'
+import determineDiffTsvVersion from '../core/determineDiffTsvVersion'
 
 const useCardState = ({
   id,
@@ -66,6 +67,12 @@ const useCardState = ({
   useDeepCompareEffect(() => {
     if (!filters && headers.length) {
       setFilters(headers)
+    } else if (filters && filters.length && headers.length) {
+      const isDifferentTsvVersion = determineDiffTsvVersion(filters, headers)
+
+      if (isDifferentTsvVersion) {
+        setFilters(headers)
+      }
     }
   }, [headers])
 
