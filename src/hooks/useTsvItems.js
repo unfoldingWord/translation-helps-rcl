@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import base64DecodeUnicode from '../core/base64DecodeUnicode'
 import { processHttpErrors, processUnknownError } from '../core/network'
+import { core } from 'scripture-resources-rcl'
 
 /**
  * hook for loading translation helps resources listed in content
@@ -17,6 +18,7 @@ import { processHttpErrors, processUnknownError } from '../core/network'
  *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
  *      - isAccessError - is true if this was an error trying to access file
  *      - resourceStatus - is object containing details about problems fetching resource
+ * @param {number} timeout - optional http timeout for fetching resources, default is 0 (very long wait)
  */
 export default function useTsvItems({
   fetchMarkdown = true,
@@ -29,6 +31,7 @@ export default function useTsvItems({
   owner,
   verse,
   onResourceError,
+  timeout,
 }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
@@ -100,7 +103,7 @@ export default function useTsvItems({
             let markdown = ''
             if (path) { // only fetch data if we were able to get path for item
               try {
-                const result = await fetch(url).then(response => {
+                const result = await core.doFetch(url, {}, timeout).then(response => {
                   const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
                   processHttpErrors(response, resourceDescr, url, onResourceError)
                   return response?.json()

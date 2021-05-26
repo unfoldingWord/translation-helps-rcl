@@ -21,10 +21,12 @@ import {
  * @param {string} resourceId
  * @param {boolean} fetchMarkdown - flag that resource being fetched is in markdown
  * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters returned are:
- *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
+ *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus, {Error} error)
  *      - isAccessError - is true if this was an error trying to access file
  *      - resourceStatus - is object containing details about problems fetching resource
-*/
+ *      - error - Error object that has the specific error returned
+ * @param {number} timeout - optional http timeout for fetching resources, default is 0 (very long wait)
+ */
 const useContent = ({
   verse,
   owner,
@@ -37,6 +39,7 @@ const useContent = ({
   resourceId,
   fetchMarkdown,
   onResourceError,
+  timeout = 0,
 }) => {
   const [initialized, setInitialized] = useState(false)
 
@@ -51,6 +54,7 @@ const useContent = ({
     server,
     cache: {
       maxAge: 1 * 1 * 1 * 60 * 1000, // override cache to 1 minute
+      timeout,
     },
   }
 
