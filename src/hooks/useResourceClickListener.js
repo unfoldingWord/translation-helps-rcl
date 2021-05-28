@@ -30,6 +30,7 @@ export default function useResourceClickListener({
   taArticle,
   languageId,
   onResourceError,
+  timeout = 0,
 }) {
   const { state: authentication } = useContext(AuthenticationContext)
   const [link, setLink] = useState(null)
@@ -99,7 +100,7 @@ export default function useResourceClickListener({
             title = title.charAt(0).toUpperCase() + title.slice(1)
           }
 
-          const _config = { ...authentication.config }
+          const _config = { ...authentication.config, timeout }
 
           if (url) {
             data = await axios.get(url, { ..._config }).then(res => {
@@ -126,7 +127,9 @@ export default function useResourceClickListener({
         } catch (error) {
           clearContent()
           setError(true)
-          console.error(`useResourceClickListener() error loading link: ${link} from embedded html: ${linkHtml}`, error)
+          const httpCode = error?.response?.status || 0;
+          // if server online, return error response
+          console.error(`useResourceClickListener() httpCode ${httpCode}, error loading link: ${link} from embedded html: ${linkHtml}`, error)
           processUnknownError(error, link, `'${url} or ${titleUrl}'`, onResourceError)
         }
       }
