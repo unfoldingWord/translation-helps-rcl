@@ -128,7 +128,6 @@ export default function useResourceClickListener({
           clearContent()
           setError(true)
           const httpCode = error?.response?.status || 0;
-          // if server online, return error response
           console.error(`useResourceClickListener() httpCode ${httpCode}, error loading link: ${link} from embedded html: ${linkHtml}`, error)
           processUnknownError(error, link, `'${url} or ${titleUrl}'`, onResourceError)
         }
