@@ -14,7 +14,11 @@ const useCardState = ({
 }) => {
   const [itemIndex, setItemIndex] = useState(0)
   const item = items ? items[itemIndex] : null
-  const [headers, setHeaders] = useState([])
+  let initialHeaders = Object.keys(item || {})
+  initialHeaders = initialHeaders.filter(item => item !== 'markdown')
+  const [headers, setHeaders] = useUserLocalStorage
+    ? useUserLocalStorage(`headers_${id}`, [])
+    : useState([])
   const [filters, setFilters] = useUserLocalStorage
     ? useUserLocalStorage(`filters_${id}`, null)
     : useState(null)
@@ -58,23 +62,29 @@ const useCardState = ({
     }
   }, [items, SupportReference, quote, occurrence])
 
-  useEffect(() => {
-    let initialHeaders = Object.keys(item || {})
-    initialHeaders = initialHeaders.filter(item => item !== 'markdown')
-    setHeaders(initialHeaders)
-  }, [item])
+  useDeepCompareEffect(() => {
+    if (headers?.length === 0) {
+      setHeaders(initialHeaders)
+    }
+  }, [item, headers])
 
   useDeepCompareEffect(() => {
-    if (!filters && headers.length) {
+    if (!filters && headers.length > 0) {
       setFilters(headers)
-    } else if (filters && filters.length && headers.length) {
-      const isDifferentTsvVersion = determineDiffTsvVersion(filters, headers)
-
-      if (isDifferentTsvVersion) {
-        setFilters(headers)
-      }
     }
   }, [headers])
+
+  useDeepCompareEffect(() => {
+    if (
+      initialHeaders?.length &&
+      headers?.length &&
+      determineDiffTsvVersion(initialHeaders, headers)
+    ) {
+      // If different Tsv Version reset headers & filters.
+      setHeaders(initialHeaders)
+      setFilters(initialHeaders)
+    }
+  }, [item, headers])
 
   function setItem(index) {
     setItemIndex(index)
