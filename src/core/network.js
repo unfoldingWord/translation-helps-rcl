@@ -39,6 +39,7 @@ export function processHttpErrors(response, resourceDescr, url, onResourceError)
     onResourceError && onResourceError(message, isPossibleDisconnectError(response?.status))
   }
 }
+
 /**
  * process the http code to see if error, if error call onResourceError
  * @param {object} error - from catch statement
@@ -48,5 +49,5 @@ export function processHttpErrors(response, resourceDescr, url, onResourceError)
  */
 export function processUnknownError(error, resourceDescr, url, onResourceError) {
     const message = `Unexpected error ${error?.toString()} fetching '${url}' for '${resourceDescr}'`
-    onResourceError && onResourceError(message, true)
+    onResourceError && onResourceError(message, true, null, error)
 }

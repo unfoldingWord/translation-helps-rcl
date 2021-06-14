@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import base64DecodeUnicode from '../core/base64DecodeUnicode'
-import { processHttpErrors, processUnknownError } from '../core/network'
+import {
+  doFetch,
+  processHttpErrors,
+  processUnknownError,
+} from '../core/network'
+import axios from "axios";
 
 /**
  * hook for loading translation helps resources listed in content
@@ -14,9 +19,11 @@ import { processHttpErrors, processUnknownError } from '../core/network'
  * @param {string} owner
  * @param {string} verse
  * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters returned are:
- *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
+ *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus, {Error} error)
  *      - isAccessError - is true if this was an error trying to access file
  *      - resourceStatus - is object containing details about problems fetching resource
+ *      - error - Error object that has the specific error returned
+ * @param {number} timeout - optional http timeout in milliseconds for fetching resources, default is 0 (very long wait)
  */
 export default function useTsvItems({
   fetchMarkdown = true,
@@ -29,6 +36,7 @@ export default function useTsvItems({
   owner,
   verse,
   onResourceError,
+  timeout,
 }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
@@ -98,17 +106,20 @@ export default function useTsvItems({
             const filePath = `${newRoutes.join('/')}${filename}`
             url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
             let markdown = ''
+            const ref = item?.SupportReference || item?.TWLink;
             if (path) { // only fetch data if we were able to get path for item
               try {
-                const result = await fetch(url).then(response => {
-                  const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
+                const config = { timeout }
+                const result = await axios.get(url, config).then(response => {
+                  const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`;
                   processHttpErrors(response, resourceDescr, url, onResourceError)
-                  return response?.json()
+                  return response?.data
                 })
                 markdown = base64DecodeUnicode(result.content)
               } catch (e) {
-                console.warn(`useTsvItems(url) - article not found`, e)
-                const resourceDescr = `${languageId}_${resourceId}, ref '${item?.SupportReference}'`;
+                const httpCode = e?.response?.status || 0;
+                console.warn(`useTsvItems(${url}) - httpCode ${httpCode}, article not found`, e)
+                const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`;
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
             }
