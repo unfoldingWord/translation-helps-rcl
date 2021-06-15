@@ -1,6 +1,6 @@
 {
   "name": "translation-helps-rcl",
-  "version": "1.47.2",
+  "version": "1.47.3-rc0",
   "main": "dist",
   "homepage": "https://translation-helps-rcl.netlify.app/",
   "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
@@ -12,7 +12,8 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "prepublishOnly": "rm -rf ./dist && babel ./src --out-dir ./dist -s inline"
+    "prepublishOnly": "rm -rf ./dist && babel ./src --out-dir ./dist -s inline",
+    "postpublish": "git push origin v$npm_package_version"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.x",
