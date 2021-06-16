@@ -27,6 +27,7 @@ export default function useResourceClickListener({
   owner,
   server,
   branch,
+  subResourceLink,
   taArticle,
   languageId,
   onResourceError,
@@ -39,6 +40,7 @@ export default function useResourceClickListener({
   const [content, setContent] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+  subResourceLink = subResourceLink || `branch/${branch}` // if subResourceLink not given, fall back to branch
 
   const handler = useCallback(
     e => {
@@ -83,19 +85,19 @@ export default function useResourceClickListener({
             _languageId = slugs[0] || languageId
             resourceId = slugs[1] || 'ta'
             filePath = `${slugs[3]}/${slugs[4]}`
-            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/${filePath}/01.md`
-            titleUrl = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/${filePath}/title.md`
+            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/${filePath}/01.md`
+            titleUrl = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/${filePath}/title.md`
           } else if (slug.includes('01.md')) {
             _languageId = languageId
             resourceId = 'ta'
             filePath = `${taArticle?.projectId || 'translate'}/${slugs[1]}`
-            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/${filePath}/01.md`
-            titleUrl = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/${filePath}/title.md`
+            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/${filePath}/01.md`
+            titleUrl = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/${filePath}/title.md`
           } else if (tw.find(slugItem => slug.includes(slugItem))) {
             _languageId = languageId
             resourceId = 'tw'
             filePath = slug
-            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/branch/${branch}/bible${filePath}`
+            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/bible${filePath}`
             title = slugs[2].replace('.md', '')
             title = title.charAt(0).toUpperCase() + title.slice(1)
           }

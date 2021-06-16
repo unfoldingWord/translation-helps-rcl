@@ -12,7 +12,7 @@ import {
  * hook for loading content of translation helps resources
  * @param {string} verse
  * @param {string} owner
- * @param {string} branch
+ * @param {string} subResourceLink - points to specific branch (e.g. 'branch/master') or tag (e.g. 'tag/v9')
  * @param {string} server
  * @param {string} chapter
  * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
@@ -30,7 +30,7 @@ import {
 const useContent = ({
   verse,
   owner,
-  branch,
+  subResourceLink,
   server,
   chapter,
   filePath,
@@ -49,11 +49,11 @@ const useContent = ({
     filePath,
     projectId,
   }
-  const resourceLink = `${owner}/${languageId}/${resourceId}/${branch}`
+  const resourceLink = `${owner}/${languageId}/${resourceId}/${subResourceLink}`
   const config = {
     server,
     cache: {
-      maxAge: 1 * 1 * 1 * 60 * 1000, // override cache to 1 minute
+      maxAge: 1 * 60 * 60 * 1000, // override cache to 1 hour
       timeout,
     },
   }
@@ -108,7 +108,7 @@ const useContent = ({
     props: {
       verse,
       owner,
-      branch,
+      subResourceLink,
       server,
       chapter,
       filePath,
