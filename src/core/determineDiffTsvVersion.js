@@ -1,20 +1,15 @@
-export default function determineDiffTsvVersion(filters, headers) {
-  const Annotation =
-    (filters.includes('Annotation') && !headers.includes('Annotation')) ||
-    (!filters.includes('Annotation') && headers.includes('Annotation'))
+function arrayEquals(_a, _b) {
+  const a = _a.sort()
+  const b = _b.sort()
 
-  const Note =
-    (filters.includes('Note') && !headers.includes('Note')) ||
-    (!filters.includes('Note') && headers.includes('Note'))
+  return (
+    Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index])
+  )
+}
 
-  const OccurrenceNote =
-    (filters.includes('OccurrenceNote') &&
-      !headers.includes('OccurrenceNote')) ||
-    (!filters.includes('OccurrenceNote') && headers.includes('OccurrenceNote'))
-
-  const Reference =
-    (filters.includes('Reference') && !headers.includes('Reference')) ||
-    (!filters.includes('Reference') && headers.includes('Reference'))
-
-  return Annotation || Note || OccurrenceNote || Reference
+export default function determineDiffTsvVersion(initialHeaders, headers) {
+  return !arrayEquals(initialHeaders, headers)
 }
