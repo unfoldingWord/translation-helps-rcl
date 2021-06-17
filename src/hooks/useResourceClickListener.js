@@ -1,15 +1,14 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
-import axios from 'axios'
-import { AuthenticationContext } from 'gitea-react-toolkit'
+import { AuthenticationContext, get } from 'gitea-react-toolkit'
 import useEventListener from './useEventListener'
-import { processHttpErrors, processUnknownError } from '../core/network'
+import { getResponseData, processHttpErrors, processUnknownError } from '../core/network'
 
 /**
  * Custom hook that listens for link click events and if the link is a translation helps resource then fetches it.
  * @param {object} {
  *  owner,
  *  server,
- *  branch,
+ *  ref,
  *  taArticle,
  *  languageId,
  * }
@@ -27,11 +26,11 @@ export default function useResourceClickListener({
   owner,
   server,
   branch,
-  subResourceLink,
+  ref,
   taArticle,
   languageId,
   onResourceError,
-  timeout = 0,
+  httpConfig = {},
 }) {
   const { state: authentication } = useContext(AuthenticationContext)
   const [link, setLink] = useState(null)
@@ -40,7 +39,7 @@ export default function useResourceClickListener({
   const [content, setContent] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  subResourceLink = subResourceLink || `branch/${branch}` // if subResourceLink not given, fall back to branch
+  ref = ref || branch // if ref not given, fall back to branch
 
   const handler = useCallback(
     e => {
@@ -85,36 +84,45 @@ export default function useResourceClickListener({
             _languageId = slugs[0] || languageId
             resourceId = slugs[1] || 'ta'
             filePath = `${slugs[3]}/${slugs[4]}`
-            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/${filePath}/01.md`
-            titleUrl = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/${filePath}/title.md`
+            url = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/01.md?ref=${ref}`
+            titleUrl = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/title.md?ref=${ref}`
           } else if (slug.includes('01.md')) {
             _languageId = languageId
             resourceId = 'ta'
             filePath = `${taArticle?.projectId || 'translate'}/${slugs[1]}`
-            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/${filePath}/01.md`
-            titleUrl = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/${filePath}/title.md`
+            url = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/01.md?ref=${ref}`
+            titleUrl = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/title.md?ref=${ref}`
           } else if (tw.find(slugItem => slug.includes(slugItem))) {
             _languageId = languageId
             resourceId = 'tw'
             filePath = slug
-            url = `${server}/${owner}/${_languageId}_${resourceId}/raw/${subResourceLink}/bible${filePath}`
+            url = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/bible${filePath}?ref=${ref}`
             title = slugs[2].replace('.md', '')
             title = title.charAt(0).toUpperCase() + title.slice(1)
           }
 
-          const _config = { ...authentication.config, timeout }
+          const _config = {
+            ...authentication.config,
+            ...httpConfig,
+          }
 
           if (url) {
-            data = await axios.get(url, { ..._config }).then(res => {
+            console.log(`useResourceClickListener - get url: ${url}, config:`, httpConfig)
+            data = await get({
+              url, params: {}, config: _config, fullResponse: true,
+            }).then(res => {
               processHttpErrors(res, link, url, onResourceError)
-              return res.data
+              return getResponseData(res)
             })
           }
 
           if (titleUrl) {
-            title = await axios.get(titleUrl, { ..._config }).then(res => {
+            console.log(`useResourceClickListener - get titleUrl: ${titleUrl}, config:`, httpConfig)
+            title = await get({
+              url: titleUrl, params: {}, config: _config, fullResponse: true,
+            }).then(res => {
                 processHttpErrors(res, link, titleUrl, onResourceError)
-                return res.data
+                return getResponseData(res)
               })
           }
 

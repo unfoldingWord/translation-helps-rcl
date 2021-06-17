@@ -1,6 +1,6 @@
 {
   "name": "translation-helps-rcl",
-  "version": "1.48.0",
+  "version": "1.49.0-alpha",
   "main": "dist",
   "homepage": "https://translation-helps-rcl.netlify.app/",
   "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
@@ -18,6 +18,7 @@
   "peerDependencies": {
     "@material-ui/core": "^4.x",
     "@material-ui/lab": "^4.x",
+    "gitea-react-toolkit": "^1.8.1",
     "markdown-translatable": "^1.x",
     "prop-types": "^15.x",
     "react": "^17.x",
@@ -36,7 +37,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "babel-loader": "^8.2.2",
-    "gitea-react-toolkit": "^1.8.0",
+    "gitea-react-toolkit": "^1.8.1",
     "markdown-translatable": "^1.2.15",
     "prettier": "^2.1.2",
     "prop-types": "^15.7.2",

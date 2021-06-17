@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
-import base64DecodeUnicode from '../core/base64DecodeUnicode'
 import {
-  doFetch,
+  doFetch, getResponseData,
   processHttpErrors,
   processUnknownError,
 } from '../core/network'
-import axios from "axios";
+import { decodeBase64ToUtf8, get } from 'gitea-react-toolkit'
 
 /**
  * hook for loading translation helps resources listed in content
@@ -17,13 +16,14 @@ import axios from "axios";
  * @param {array} content - list of resources to load
  * @param {string} server
  * @param {string} owner
+ * @param {string} ref - points to specific ref that could be a branch or tag
  * @param {string} verse
  * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters returned are:
  *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus, {Error} error)
  *      - isAccessError - is true if this was an error trying to access file
  *      - resourceStatus - is object containing details about problems fetching resource
  *      - error - Error object that has the specific error returned
- * @param {number} timeout - optional http timeout in milliseconds for fetching resources, default is 0 (very long wait)
+ * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  */
 export default function useTsvItems({
   fetchMarkdown = true,
@@ -34,9 +34,10 @@ export default function useTsvItems({
   content,
   server,
   owner,
+  ref: ref_ = 'master',
   verse,
   onResourceError,
-  timeout,
+  httpConfig = {},
 }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
@@ -104,22 +105,24 @@ export default function useTsvItems({
             const newRoutes = routes.slice(2, routes.length)
             const filename = resource === 'ta' ? '/01.md' : '.md'
             const filePath = `${newRoutes.join('/')}${filename}`
-            url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}`
+            url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}?ref=${ref_}`
             let markdown = ''
-            const ref = item?.SupportReference || item?.TWLink;
             if (path) { // only fetch data if we were able to get path for item
+              const ref = item?.SupportReference || item?.TWLink;
               try {
-                const config = { timeout }
-                const result = await axios.get(url, config).then(response => {
-                  const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`;
+                console.log(`useTsvItems - get url: ${url}, config:`, httpConfig)
+                const result = await get({
+                    url, params: {}, config: httpConfig, fullResponse: true,
+                  }).then(response => {
+                  const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
                   processHttpErrors(response, resourceDescr, url, onResourceError)
-                  return response?.data
+                  return response
                 })
-                markdown = base64DecodeUnicode(result.content)
+                markdown = getResponseData(result)
               } catch (e) {
                 const httpCode = e?.response?.status || 0;
                 console.warn(`useTsvItems(${url}) - httpCode ${httpCode}, article not found`, e)
-                const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`;
+                const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
             }

@@ -12,7 +12,7 @@ import {
  * hook for loading content of translation helps resources
  * @param {string} verse
  * @param {string} owner
- * @param {string} subResourceLink - points to specific branch (e.g. 'branch/master') or tag (e.g. 'tag/v9')
+ * @param {string} ref - points to specific ref that could be a branch or tag
  * @param {string} server
  * @param {string} chapter
  * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
@@ -25,12 +25,12 @@ import {
  *      - isAccessError - is true if this was an error trying to access file
  *      - resourceStatus - is object containing details about problems fetching resource
  *      - error - Error object that has the specific error returned
- * @param {number} timeout - optional http timeout in milliseconds for fetching resources, default is 0 (very long wait)
+ * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  */
 const useContent = ({
   verse,
   owner,
-  subResourceLink,
+  ref,
   server,
   chapter,
   filePath,
@@ -39,7 +39,7 @@ const useContent = ({
   resourceId,
   fetchMarkdown,
   onResourceError,
-  timeout = 0,
+  httpConfig = {},
 }) => {
   const [initialized, setInitialized] = useState(false)
 
@@ -48,14 +48,12 @@ const useContent = ({
     chapter,
     filePath,
     projectId,
+    ref,
   }
-  const resourceLink = `${owner}/${languageId}/${resourceId}/${subResourceLink}`
+  const resourceLink = `${owner}/${languageId}/${resourceId}/${ref}`
   const config = {
     server,
-    cache: {
-      maxAge: 1 * 60 * 60 * 1000, // override cache to 1 hour
-      timeout,
-    },
+    ...httpConfig,
   }
 
   const {
@@ -75,9 +73,10 @@ const useContent = ({
     chapter,
     server,
     owner,
+    ref,
     verse,
     onResourceError,
-    timeout,
+    httpConfig: config,
   })
 
   const contentNotFoundError = !content
@@ -108,7 +107,7 @@ const useContent = ({
     props: {
       verse,
       owner,
-      subResourceLink,
+      ref,
       server,
       chapter,
       filePath,
@@ -123,7 +122,7 @@ useContent.defaultProps = {
   verse: 1,
   chapter: 1,
   filePath: '',
-  branch: 'master',
+  ref: 'master',
   fetchMarkdown: true,
 }
 
