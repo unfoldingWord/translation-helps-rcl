@@ -107,7 +107,6 @@ export default function useResourceClickListener({
           }
 
           if (url) {
-            console.log(`useResourceClickListener - get url: ${url}, config:`, httpConfig)
             data = await get({
               url, params: {}, config: _config, fullResponse: true,
             }).then(res => {
@@ -117,7 +116,6 @@ export default function useResourceClickListener({
           }
 
           if (titleUrl) {
-            console.log(`useResourceClickListener - get titleUrl: ${titleUrl}, config:`, httpConfig)
             title = await get({
               url: titleUrl, params: {}, config: _config, fullResponse: true,
             }).then(res => {
