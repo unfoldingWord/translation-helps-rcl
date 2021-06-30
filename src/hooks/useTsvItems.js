@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import {
-  doFetch, getResponseData,
+  getResponseData,
   processHttpErrors,
   processUnknownError,
 } from '../core/network'
-import { decodeBase64ToUtf8, get } from 'gitea-react-toolkit'
+import { get } from 'gitea-react-toolkit'
 
 /**
  * hook for loading translation helps resources listed in content
