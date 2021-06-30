@@ -110,7 +110,6 @@ export default function useTsvItems({
             if (path) { // only fetch data if we were able to get path for item
               const ref = item?.SupportReference || item?.TWLink;
               try {
-                console.log(`useTsvItems - get url: ${url}, config:`, httpConfig)
                 const result = await get({
                     url, params: {}, config: httpConfig, fullResponse: true,
                   }).then(response => {
