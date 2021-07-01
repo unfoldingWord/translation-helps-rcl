@@ -1,3 +1,5 @@
+import { decodeBase64ToUtf8 } from "gitea-react-toolkit";
+
 /**
  * determine if http code is could be due to possible network disconnect
  * @param {number} httpCode
@@ -50,4 +52,15 @@ export function processHttpErrors(response, resourceDescr, url, onResourceError)
 export function processUnknownError(error, resourceDescr, url, onResourceError) {
     const message = `Unexpected error ${error?.toString()} fetching '${url}' for '${resourceDescr}'`
     onResourceError && onResourceError(message, true, null, error)
+}
+
+/**
+ * get data from http response and decode data in base64 format
+ * @param {object} response - http response
+ * @return {*} - response data decoded
+ */
+export function getResponseData(response) {
+  let data = response?.data;
+  data = (data?.encoding === 'base64') ? decodeBase64ToUtf8(data.content) : data;
+  return data;
 }
