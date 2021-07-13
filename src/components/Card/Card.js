@@ -170,6 +170,10 @@ const Card = ({
     }
   }
 
+  const onSourceClick = () => {
+    console.log("SOurce Clicked!!!")
+  }
+
   const cardMenuId = id ? `${id}_card_menu` : 'card_menu'
 
   // TODO: in future we might want to add scroll into view support for list view, but for now
@@ -190,11 +194,6 @@ const Card = ({
             {title}
           </div>
         </FlexDiv>
-        <div
-          id={`${id}_source`}
-          className={classes.source}>
-          {source}
-        </div>
         {closeable ? (
           <CloseIcon
             id='settings_card_close'
@@ -231,6 +230,13 @@ const Card = ({
                 getCustomComponent={getCustomComponent}
               />
             )}
+            <div
+              id={`${id}_source`}
+              className={classes.source}
+              onClick={onSourceClick}
+            >
+              {source}
+            </div>
             {!disableSettingsButton && (
               <MoreVertIcon
                 id={cardMenuId}
