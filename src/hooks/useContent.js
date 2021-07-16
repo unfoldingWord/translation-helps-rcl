@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { core, useRsrc } from 'scripture-resources-rcl'
+import { useRsrc } from 'scripture-resources-rcl'
 import useTsvItems from './useTsvItems'
 import {
   CONTENT_NOT_FOUND_ERROR,
-  ERROR_STATE, INITIALIZED_STATE,
+  ERROR_STATE,
+  INITIALIZED_STATE,
   LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
-  USER_BRANCH_EXTENSION,
 } from '../common/constants'
 
 /**
@@ -28,13 +28,11 @@ import {
  *      - resourceStatus - is object containing details about problems fetching resource
  *      - error - Error object that has the specific error returned
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
- * @param {string} loggedInUser - username for logged in user
  */
 const useContent = ({
   verse,
   owner,
   ref,
-  setRef,
   server,
   chapter,
   filePath,
@@ -44,7 +42,6 @@ const useContent = ({
   fetchMarkdown,
   onResourceError,
   httpConfig = {},
-  loggedInUser,
 }) => {
   const [initialized, setInitialized] = useState(false)
 
@@ -103,14 +100,6 @@ const useContent = ({
       }
     }
   }, [loading])
-
-  useEffect(async () => {
-    const repoName = `${languageId}_${resourceId}`;
-    const currentBranch = await core.getUsersWorkingBranch(server, owner, repoName, loggedInUser, USER_BRANCH_EXTENSION)
-    if (currentBranch !== ref) {
-      setRef(currentBranch)
-    }
-  }, [])
 
   return {
     items,

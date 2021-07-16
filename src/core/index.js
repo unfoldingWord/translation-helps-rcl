@@ -1,3 +1,4 @@
+export * from './branching'
 export * from './network'
 export * from './stripReferenceLinksFromMarkdown'
 export * from './tsvToJson'

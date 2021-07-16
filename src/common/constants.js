@@ -9,4 +9,4 @@ export const INVALID_MANIFEST_ERROR = 'invalidManifestError'
 export const LOADING_STATE = 'loading'
 export const ERROR_STATE = 'error'
 export const INITIALIZED_STATE = 'initialized'
-export const USER_BRANCH_EXTENSION = '-tc-create-1';
+export const USER_BRANCH_EXTENSION = '-tc-create-1'
