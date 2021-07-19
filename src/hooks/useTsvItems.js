@@ -137,9 +137,8 @@ export default function useTsvItems({
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
             }
-            newItems.push({ ...item, markdown })
+            newItems.push({ ...item, markdown, filePath })
             item.markdown = markdown
-            item.filePath = filePath
           }
           _items = newItems
           setLoading(false)
