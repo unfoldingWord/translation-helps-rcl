@@ -58,7 +58,13 @@ const useContent = ({
   }
 
   const {
-    state: { resource, content, loadingResource, loadingContent },
+    state: {
+      resource,
+      content,
+      loadingResource,
+      loadingContent,
+      fetchResponse,
+    },
   } = useRsrc({
     resourceLink,
     reference,
@@ -105,8 +111,9 @@ const useContent = ({
   return {
     items,
     resource,
-    markdown: Array.isArray(content) ? null : content,
+    fetchResponse,
     resourceStatus,
+    markdown: Array.isArray(content) ? null : content,
     props: {
       verse,
       owner,
