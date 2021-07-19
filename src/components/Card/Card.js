@@ -111,6 +111,7 @@ const Card = ({
   itemIndex,
   closeable,
   setFilters,
+  onSaveEdit,
   setFontSize,
   markdownView,
   setItemIndex,
@@ -220,7 +221,7 @@ const Card = ({
               <IconButton
                 aria-label='save'
                 title={saved ? 'Saved' : 'Save'}
-                onClick={() => {}}
+                onClick={() => onSaveEdit()}
                 className={classes.margin}
               >
                 {saved ? (
@@ -289,6 +290,7 @@ Card.defaultProps = {
     children: '',
     dragIndicator: '',
   },
+  title: '',
   filters: [],
   headers: [],
   alert: false,
@@ -299,9 +301,9 @@ Card.defaultProps = {
   closeable: false,
   disableFilters: false,
   disableNavigation: false,
-  disableSettingsButton: false,
   hideMarkdownToggle: false,
-  title: '',
+  disableSettingsButton: false,
+  onSaveEdit: () => console.info('onSaveEdit() funct not passed'),
 }
 
 Card.propTypes = {
