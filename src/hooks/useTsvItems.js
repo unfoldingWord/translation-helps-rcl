@@ -107,26 +107,39 @@ export default function useTsvItems({
             const filePath = `${newRoutes.join('/')}${filename}`
             url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}?ref=${ref_}`
             let markdown = ''
-            if (path) { // only fetch data if we were able to get path for item
-              const ref = item?.SupportReference || item?.TWLink;
+            if (path) {
+              // only fetch data if we were able to get path for item
+              const ref = item?.SupportReference || item?.TWLink
               try {
                 const result = await get({
-                    url, params: {}, config: httpConfig, fullResponse: true,
-                  }).then(response => {
+                  url,
+                  params: {},
+                  config: httpConfig,
+                  fullResponse: true,
+                }).then(response => {
                   const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
-                  processHttpErrors(response, resourceDescr, url, onResourceError)
+                  processHttpErrors(
+                    response,
+                    resourceDescr,
+                    url,
+                    onResourceError
+                  )
                   return response
                 })
                 markdown = getResponseData(result)
               } catch (e) {
-                const httpCode = e?.response?.status || 0;
-                console.warn(`useTsvItems(${url}) - httpCode ${httpCode}, article not found`, e)
+                const httpCode = e?.response?.status || 0
+                console.warn(
+                  `useTsvItems(${url}) - httpCode ${httpCode}, article not found`,
+                  e
+                )
                 const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
             }
-            newItems.push({...item, markdown})
+            newItems.push({ ...item, markdown })
             item.markdown = markdown
+            item.filePath = filePath
           }
           _items = newItems
           setLoading(false)
