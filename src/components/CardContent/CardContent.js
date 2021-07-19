@@ -10,10 +10,12 @@ const CardContent = ({
   id,
   item,
   items,
+  onEdit,
   filters,
   markdown,
   viewMode,
   setQuote,
+  editable,
   isLoading,
   markdownView,
   errorMessage,
@@ -47,7 +49,8 @@ const CardContent = ({
   } else if (markdown && typeof markdown === 'string') {
     return (
       <BlockEditable
-        editable={false}
+        onEdit={onEdit}
+        editable={editable}
         markdown={markdown}
         fontSize={fontSize}
         preview={!markdownView}
@@ -57,9 +60,10 @@ const CardContent = ({
   } else if (item && item.markdown && viewMode === 'markdown') {
     return (
       <BlockEditable
-        preview={!markdownView}
-        editable={false}
+        onEdit={onEdit}
+        editable={editable}
         fontSize={fontSize}
+        preview={!markdownView}
         style={{ padding: '0px' }}
         markdown={stripReferenceLinksFromMarkdown(item.markdown)}
       />
@@ -95,10 +99,11 @@ const CardContent = ({
 
     return (
       <BlockEditable
-        preview={!markdownView}
+        onEdit={onEdit}
         markdown={markdown}
-        editable={false}
+        editable={editable}
         fontSize={fontSize}
+        preview={!markdownView}
         style={{ display: 'block', padding: '0px' }}
       />
     )
@@ -110,10 +115,12 @@ const CardContent = ({
       <TsvContent
         id={id}
         item={item}
+        onEdit={onEdit}
         filters={filters}
+        setQuote={setQuote}
+        editable={editable}
         fontSize={_fontSize}
         markdownView={markdownView}
-        setQuote={setQuote}
         selectedQuote={selectedQuote}
       />
     )
@@ -140,7 +147,9 @@ const CardContent = ({
 
 CardContent.defaultProps = {
   fontSize: 100,
+  editable: false,
   isLoading: false,
+  onEdit: () => {},
   viewMode: 'default',
 }
 
@@ -148,9 +157,11 @@ CardContent.propTypes = {
   id: PropTypes.string,
   item: PropTypes.object,
   items: PropTypes.array,
+  onEdit: PropTypes.func,
   filters: PropTypes.array,
   setQuote: PropTypes.func,
   isLoading: PropTypes.bool,
+  editable: PropTypes.bool,
   markdown: PropTypes.string,
   fontSize: PropTypes.number,
   markdownView: PropTypes.bool,
