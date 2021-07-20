@@ -107,6 +107,7 @@ export default function useTsvItems({
             const filePath = `${newRoutes.join('/')}${filename}`
             url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}?ref=${ref_}`
             let markdown = ''
+            let fetchResponse = null
             if (path) {
               // only fetch data if we were able to get path for item
               const ref = item?.SupportReference || item?.TWLink
@@ -126,6 +127,7 @@ export default function useTsvItems({
                   )
                   return response
                 })
+                fetchResponse = result
                 markdown = getResponseData(result)
               } catch (e) {
                 const httpCode = e?.response?.status || 0
@@ -137,7 +139,7 @@ export default function useTsvItems({
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
             }
-            newItems.push({ ...item, markdown, filePath })
+            newItems.push({ ...item, markdown, fetchResponse, filePath })
             item.markdown = markdown
           }
           _items = newItems
