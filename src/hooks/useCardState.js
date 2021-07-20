@@ -17,7 +17,7 @@ const useCardState = ({
   let initialHeaders = Object.keys(item || {})
   initialHeaders = initialHeaders.filter(
     item =>
-      item !== 'markdown' || item !== 'filePath' || item !== 'fetchResponse'
+      item !== 'markdown' && item !== 'filePath' && item !== 'fetchResponse'
   )
   const [headers, setHeaders] = useUserLocalStorage
     ? useUserLocalStorage(`headers_${id}`, [])
