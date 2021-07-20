@@ -1,4 +1,6 @@
 import { get, post } from 'gitea-react-toolkit';
+import { USER_BRANCH_EXTENSION } from "../common";
+import axios from "axios";
 
 /**
  * query server for list of branches on repo
@@ -20,16 +22,115 @@ export async function getBranchesForRepo(server, repoOwner, repoName, ) {
 }
 
 /**
- * query server for list of branches on repo.  Will return user edit branch name `${branchUser}${userExtension}` if exists or 'master'
+ * generate user branch name based on logged in user
+ * @param {string} loggedInUser
+ * @return {string} name for user edit branch
+ */
+export function getUserEditBranch(loggedInUser) {
+  return `${loggedInUser}${USER_BRANCH_EXTENSION}`;
+}
+
+/**
+ * do http get without checking server for connection errors
+ * @param {string} url
+ * @param {object} params
+ * @param {object} config - axios compatible config parameters
+ * @param {boolean} fullResponse - optional flag to return full http response including data and statusCode, useful if you want specifics such as http codes
+ */
+export async function getWithoutServerCheck({
+  url, params, config, fullResponse,
+}) {
+  const _config = {
+    ...config
+  };
+  let response
+
+  try {
+    const _params = {noCache: Math.random(), ...params};
+    response = await axios.get(url, {..._config, params: _params});
+  } catch (e) {
+    if (fullResponse) {
+      if (e?.response) { // if http error, get response
+        response = e?.response;
+      } else { // this is not http error, so get what we can from exception
+        response = {
+          statusText: e?.toString(),
+          status: 1,
+        }
+      }
+    }
+  }
+
+  if (fullResponse) {
+    return response;
+  }
+  return response ? response.data : null;
+}
+
+/**
+ * gets the metadata for branch
  * @param {string} server such as https://git.door43.org
  * @param {string} repoOwner
  * @param {string} repoName
- * @param {string} userBranch - branch name to match
+ * @param {string} branch - branch name to match
+ * @return {Promise<object>} returns the metadata response and flag if branch exists
+ */
+export async function getBranchMetaData(server, repoOwner, repoName, branch) {
+  const url = `${server}/api/v1/repos/${repoOwner}/${repoName}/branches/${branch}`
+  let error = true
+  let response
+  try {
+    response = await getWithoutServerCheck({
+      url,
+      config: {
+        server,
+      },
+      noCache: true,
+      fullResponse: true,
+    });
+
+    switch (response?.status) {
+      case 200:
+      case 404:
+        error = false
+        break
+
+      default:
+        // any other response is an unexpected error
+        error = new Error(`Error getting repo status '${url}'`)
+        error.response = response
+        error.url = url
+    }
+  } catch (e) {
+    response = e?.response
+    if (response?.status === 404) { // file missing is a known error we can handle
+      error = false
+    } else {
+      error = e
+    }
+  }
+
+  if (error) {
+    throw error
+  }
+
+  return {
+    isBranchPresent: response?.status === 200,
+    response,
+  }
+}
+
+/**
+ * Checks to see if user edit branch name `${branchUser}${userExtension}` exists. If so, it returns the name of the user branch, Otherwise returns 'master'
+ * @param {string} server such as https://git.door43.org
+ * @param {string} repoOwner
+ * @param {string} repoName
+ * @param {string} userBranch - user branch name to find
  * @return {Promise<string>} returns name of userBranch if found, otherwise returns master
  */
 export async function getUsersWorkingBranch(server, repoOwner, repoName, userBranch) {
-  const response = await getBranchesForRepo(server, repoOwner, repoName);
-  const found = response.find(branch => (branch.name === userBranch));
+  const response = await getBranchMetaData(server, repoOwner, repoName, userBranch);
+  const found = response?.isBranchPresent;
   return found ? userBranch : 'master';
 }
 
