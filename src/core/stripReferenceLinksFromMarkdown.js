@@ -8,7 +8,7 @@ export default function stripReferenceLinksFromMarkdown(markdown) {
     return markdown
   }
 
-  if (typeof markdown !== 'string') {
+  if (typeof markdown !== 'string') { // protection in case fetching markdown returned an error object rather than string
     return markdown
   }
 

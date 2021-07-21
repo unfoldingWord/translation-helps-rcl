@@ -68,7 +68,7 @@ export async function getBranchMetaData(server, repoOwner, repoName, branch) {
     }
   } catch (e) {
     response = e?.response
-    if (response?.status === 404) { // file missing is a known error we can handle
+    if (response?.status === 404) { // branch missing is a known error we can handle
       error = false
     } else {
       error = e

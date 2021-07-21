@@ -41,7 +41,7 @@ const useUserBranch = ({
     : useState(false)
   const repoName = `${languageId}_${cardResourceId}`
 
-  useEffect(async () => { // query to make sure we are loading the correct branch.  If userEdit branch exists load it, otherwise load master
+  useEffect(async () => { // query to make sure we are loading the correct branch.  If user edit branch exists then load it, otherwise load master
     try {
       const userEditBranch = getUserEditBranch(loggedInUser);
       const currentBranch = await getUsersWorkingBranch(server, owner, repoName, userEditBranch)

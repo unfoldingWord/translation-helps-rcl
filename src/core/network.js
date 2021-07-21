@@ -34,7 +34,7 @@ export function isPossibleDisconnectError(httpCode) {
  * @param {string} resourceDescr - description of resource being fetched
  * @param {string} url - path to resource
  * @param {function} onResourceError - callback for reporting fetch errors
- * @return (string} returns error message
+ * @return (string|null} returns error message
  */
 export function processHttpErrors(response, resourceDescr, url, onResourceError) {
   if (response?.status !== 200) {

@@ -16,7 +16,6 @@ import { getUserEditBranch, getUsersWorkingBranch } from "../core";
  * @param {string} verse
  * @param {string} owner
  * @param {string} ref - points to specific ref that could be a branch or tag
- * @param {function} setRef
  * @param {string} server
  * @param {string} chapter
  * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
@@ -124,7 +123,7 @@ const useContent = ({
 
     if (isTwType) {
       const userEditBranch = getUserEditBranch(loggedInUser);
-      const listRepoName = `${languageId}_${resourceId}`
+      const listRepoName = `${languageId}_twl`
       const currentListBranch = await getUsersWorkingBranch(server, owner, listRepoName, userEditBranch)
       const contentRepoName = `${languageId}_tw`
       const currentContentBranch = await getUsersWorkingBranch(server, owner, contentRepoName, userEditBranch)

@@ -23,15 +23,6 @@ const useStyles = makeStyles(() => ({
     lineHeight: '14px',
     wordBreak: 'break-word',
   },
-  source: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-    fontFamily: `Noto Sans`,
-    maxWidth: '100%',
-    color: '#424242',
-    lineHeight: '24px',
-    wordBreak: 'break-word',
-  },
   dragIcon: {
     color: '#ECECEC',
     margin: '0px',
@@ -124,7 +115,6 @@ const Card = ({
   disableSettingsButton,
   hideMarkdownToggle,
   getCustomComponent,
-  source,
   settingsTitle: settingsTitle_,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
@@ -278,7 +268,6 @@ Card.defaultProps = {
   disableSettingsButton: false,
   hideMarkdownToggle: false,
   title: '',
-  source: '',
 }
 
 Card.propTypes = {
@@ -334,8 +323,6 @@ Card.propTypes = {
   setMarkdownView: PropTypes.func,
   /** function to get a custom component to add to settings card (optional) */
   getCustomComponent: PropTypes.func,
-  /** identifies the content being shown such as branch name or tag */
-  source: PropTypes.string,
 }
 
 export default Card
