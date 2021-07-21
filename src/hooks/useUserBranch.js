@@ -45,7 +45,6 @@ const useUserBranch = ({
     try {
       const userEditBranch = getUserEditBranch(loggedInUser);
       const currentBranch = await getUsersWorkingBranch(server, owner, repoName, userEditBranch)
-      console.log(`useEditState - get user branch SUCCESS ${JSON.stringify({ server, owner, repoName, loggedInUser })}`)
       if (currentBranch !== ref) {
         setRef(currentBranch)
       }
@@ -61,10 +60,10 @@ const useUserBranch = ({
    * @return {Promise<boolean>} returns true if user branch already exists or created
    */
   async function ensureUserEditBranch() {
-    try {
-      const userBranch = getUserEditBranch(loggedInUser)
-      const config = authentication.config
+    const userBranch = getUserEditBranch(loggedInUser)
+    const config = authentication.config
 
+    try {
       if (ref !== userBranch) {
         const response = await createUserBranch(server, owner, repoName, config, userBranch)
         console.log(`useEditState - startEdit user branch created ${JSON.stringify({
@@ -78,9 +77,8 @@ const useUserBranch = ({
       }
       return true
     } catch (e) {
-      // TODO - add error handling
       console.error(`useEditState - startEdit FAILED`, e)
-      processUnknownError(e, 'DCS API', 'create user branch', onResourceError)
+      processUnknownError(e, 'DCS API', `create user branch ${userBranch} on ${repoName}`, onResourceError)
     }
     return false
   }

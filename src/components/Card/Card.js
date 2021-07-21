@@ -127,7 +127,6 @@ const Card = ({
   source,
   settingsTitle: settingsTitle_,
   classes: { root, dragIndicator, header, children: childrenClassName },
-  onEditClick,  // TODO: remove after testing
 }) => {
   const [showMenu, setShowMenu] = useState(false)
   const classes = useStyles({ dragging })
@@ -169,11 +168,6 @@ const Card = ({
     } else {
       setItemIndex(newIndex)
     }
-  }
-
-  const onSourceClick = () => {  // TODO: remove after testing
-    console.log("Source Clicked!!!")
-    onEditClick()
   }
 
   const cardMenuId = id ? `${id}_card_menu` : 'card_menu'
@@ -232,14 +226,6 @@ const Card = ({
                 getCustomComponent={getCustomComponent}
               />
             )}
-            {  /* TODO: remove after testing */ }
-            <div
-              id={`${id}_source`}
-              className={classes.source}
-              onClick={onSourceClick}
-            >
-              {source}
-            </div>
             {!disableSettingsButton && (
               <MoreVertIcon
                 id={cardMenuId}

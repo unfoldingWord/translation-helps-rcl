@@ -14,6 +14,7 @@ export async function getBranchesForRepo(server, repoOwner, repoName, ) {
     url: `${server}/api/v1/repos/${repoOwner}/${repoName}/branches`,
     config: {
       server,
+      skipNetworkCheck: true,
     },
     noCache: true,
   });
@@ -31,43 +32,6 @@ export function getUserEditBranch(loggedInUser) {
 }
 
 /**
- * do http get without checking server for connection errors
- * @param {string} url
- * @param {object} params
- * @param {object} config - axios compatible config parameters
- * @param {boolean} fullResponse - optional flag to return full http response including data and statusCode, useful if you want specifics such as http codes
- */
-export async function getWithoutServerCheck({
-  url, params, config, fullResponse,
-}) {
-  const _config = {
-    ...config
-  };
-  let response
-
-  try {
-    const _params = {noCache: Math.random(), ...params};
-    response = await axios.get(url, {..._config, params: _params});
-  } catch (e) {
-    if (fullResponse) {
-      if (e?.response) { // if http error, get response
-        response = e?.response;
-      } else { // this is not http error, so get what we can from exception
-        response = {
-          statusText: e?.toString(),
-          status: 1,
-        }
-      }
-    }
-  }
-
-  if (fullResponse) {
-    return response;
-  }
-  return response ? response.data : null;
-}
-
-/**
  * gets the metadata for branch
  * @param {string} server such as https://git.door43.org
  * @param {string} repoOwner
@@ -80,10 +44,11 @@ export async function getBranchMetaData(server, repoOwner, repoName, branch) {
   let error = true
   let response
   try {
-    response = await getWithoutServerCheck({
+    response = await get({
       url,
       config: {
         server,
+        skipNetworkCheck: true,
       },
       noCache: true,
       fullResponse: true,
