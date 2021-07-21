@@ -202,10 +202,10 @@ const Card = ({
                 </Badge>
               </IconButton>
             )}
-            {
+            {!hideMarkdownToggle ? (
               <IconButton
-                aria-label='save'
                 title={markdownView ? 'Preview' : 'Markdown'}
+                aria-label={markdownView ? 'Preview' : 'Markdown'}
                 onClick={() => setMarkdownView(!markdownView)}
                 className={classes.margin}
               >
@@ -215,11 +215,11 @@ const Card = ({
                   <VisibilityIcon id='visibility_icon' htmlColor='#000' />
                 )}
               </IconButton>
-            }
+            ) : null}
             {editable ? (
               <IconButton
-                aria-label='save'
                 title={saved ? 'Saved' : 'Save'}
+                aria-label={saved ? 'Saved' : 'Save'}
                 onClick={() => {}}
                 className={classes.margin}
               >
