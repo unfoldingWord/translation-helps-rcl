@@ -14,7 +14,7 @@ function Component() {
     verse: 1,
     chapter: 1,
     projectId: 'tit',
-    branch: 'master',
+    ref: 'master',
     languageId: 'en',
     resourceId: 'tn',
     owner: 'test_org',

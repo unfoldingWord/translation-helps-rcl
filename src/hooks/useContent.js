@@ -31,9 +31,9 @@ import { getUserEditBranch, getUsersWorkingBranch } from "../core";
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  */
 const useContent = ({
+  ref,
   verse,
   owner,
-  ref,
   server,
   chapter,
   filePath,
@@ -88,7 +88,8 @@ const useContent = ({
   const contentNotFoundError = !content
   const manifestNotFoundError = !resource?.manifest
   const loading = loadingResource || loadingContent || loadingTSV
-  const error = initialized && !loading && (contentNotFoundError || manifestNotFoundError)
+  const error =
+    initialized && !loading && (contentNotFoundError || manifestNotFoundError)
   const resourceStatus = {
     [LOADING_STATE]: loading,
     [CONTENT_NOT_FOUND_ERROR]: contentNotFoundError,
@@ -99,7 +100,8 @@ const useContent = ({
 
   useEffect(() => {
     if (!initialized) {
-      if (loading) { // once first load has begun, we are initialized
+      if (loading) {
+        // once first load has begun, we are initialized
         setInitialized(true)
       }
     }

@@ -135,6 +135,8 @@ const Item = ({
 const TsvContent = ({
   id,
   item,
+  onEdit,
+  editable,
   filters,
   setQuote,
   markdownView,
@@ -154,10 +156,11 @@ const TsvContent = ({
   )
   const markdown = (
     <BlockEditable
-      preview={!markdownView}
-      markdown={rawMarkdown}
-      editable={false}
+      onEdit={onEdit}
+      editable={editable}
       fontSize={fontSize}
+      markdown={rawMarkdown}
+      preview={!markdownView}
       style={{
         padding: '0px',
         margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',

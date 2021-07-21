@@ -9,6 +9,11 @@ import AnnouncementIcon from '@material-ui/icons/Announcement'
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import SaveIcon from '@material-ui/icons/Save'
+import IconButton from '@material-ui/core/IconButton'
+import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined'
+import VisibilityIcon from '@material-ui/icons/Visibility'
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
 import Scrollable from '../Scrollable'
@@ -94,6 +99,7 @@ const Card = ({
   alert,
   title,
   items,
+  saved,
   dragRef,
   onClose,
   headers,
@@ -101,6 +107,7 @@ const Card = ({
   fontSize,
   dragging,
   children,
+  editable,
   itemIndex,
   closeable,
   setFilters,
@@ -189,15 +196,44 @@ const Card = ({
         ) : (
           <FlexDiv>
             {alert && (
-              <div
-                className={`${classes.pointerIcon} ${classes.paddingRight}`}
+              <IconButton
+                aria-label='save'
                 onClick={onAlertClick}
+                className={classes.margin}
               >
                 <Badge color='secondary' variant='dot'>
-                  <AnnouncementIcon />
+                  <AnnouncementIcon htmlColor='#000' />
                 </Badge>
-              </div>
+              </IconButton>
             )}
+            {
+              <IconButton
+                aria-label='save'
+                title={markdownView ? 'Preview' : 'Markdown'}
+                onClick={() => setMarkdownView(!markdownView)}
+                className={classes.margin}
+              >
+                {markdownView ? (
+                  <VisibilityOffIcon id='visibility_icon' htmlColor='#000' />
+                ) : (
+                  <VisibilityIcon id='visibility_icon' htmlColor='#000' />
+                )}
+              </IconButton>
+            }
+            {editable ? (
+              <IconButton
+                aria-label='save'
+                title={saved ? 'Saved' : 'Save'}
+                onClick={() => {}}
+                className={classes.margin}
+              >
+                {saved ? (
+                  <SaveOutlinedIcon id='saved_icon' htmlColor='#000' />
+                ) : (
+                  <SaveIcon id='save_icon' htmlColor='#000' />
+                )}
+              </IconButton>
+            ) : null}
             {showMenu && (
               <SettingsCard
                 title={settingsTitle}
@@ -228,7 +264,7 @@ const Card = ({
       </FlexSpacedDiv>
       <FlexSpacedDiv className={header}>
         <NavigationFlexDiv>
-        {!disableNavigation && items && items.length > 1 && (
+          {!disableNavigation && items && items.length > 1 && (
             <Navigation
               baseId={id}
               items={items}
@@ -261,6 +297,8 @@ Card.defaultProps = {
   headers: [],
   alert: false,
   fontSize: 100,
+  editable: false,
+  saved: false,
   dragging: false,
   closeable: false,
   disableFilters: false,
