@@ -111,7 +111,6 @@ const CardContent = ({
     (item && viewMode === 'default') ||
     (item && viewMode === 'table')
   ) {
-    console.log('filters', filters)
     return (
       <TsvContent
         id={id}

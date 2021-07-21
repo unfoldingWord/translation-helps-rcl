@@ -59,8 +59,8 @@ const useContent = ({
 
   const {
     state: {
-      resource,
       content,
+      resource,
       loadingResource,
       loadingContent,
       fetchResponse,
