@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import {
   createUserBranch,
-  getBranchMetaData,
   getUserEditBranch,
-  getUsersWorkingBranch, processHttpErrors,
+  getUsersWorkingBranch,
+  processHttpErrors,
   processUnknownError,
 } from "../core"
+import useDeepCompareEffect from "use-deep-compare-effect";
 
 /**
  * manage edit state for card
@@ -39,33 +40,34 @@ const useUserBranch = ({
   const [usingUserBranch, setUsingUserBranch] = useUserLocalStorage
     ? useUserLocalStorage(`editing_${cardId}_${languageId}`, false)
     : useState(false)
-  const repoName = `${languageId}_${cardResourceId}`
+  const [listRef, setListRef] = useState(ref)
+  const [contentRef, setContentRef] = useState(ref)
+  const userEditBranchName = getUserEditBranch(loggedInUser);
 
-  useEffect(async () => { // query to make sure we are loading the correct branch.  If user edit branch exists then load it, otherwise load master
+  async function getWorkingBranchForResource(resourceId) {
+    const repoName = `${languageId}_${resourceId}`
+    let currentBranch
+
     try {
-      const userEditBranch = getUserEditBranch(loggedInUser);
-      const currentBranch = await getUsersWorkingBranch(server, owner, repoName, userEditBranch)
-      if (currentBranch !== ref) {
-        setRef(currentBranch)
-      }
-      setUsingUserBranch(currentBranch === userEditBranch) // if edit branch may have been merged or deleted, we are no longer using edit branch
+      currentBranch = await getUsersWorkingBranch(server, owner, repoName, userEditBranchName)
     } catch (e) {
       console.error(`useEditState - get user branch FAILED ${JSON.stringify({ server, owner, repoName, loggedInUser })}`, e)
       processHttpErrors(e?.response || null, `${repoName} user edit branch`, e?.url, onResourceError)
     }
-  }, [])
+    return currentBranch
+  }
 
   /**
    * makes sure that we are using the user's edit branch, if not it creates one for user
    * @return {Promise<boolean>} returns true if user branch already exists or created
    */
   async function ensureUserEditBranch() {
-    const userBranch = getUserEditBranch(loggedInUser)
+    const repoName = `${languageId}_${cardResourceId}`
     const config = authentication.config
 
     try {
-      if (ref !== userBranch) {
-        const response = await createUserBranch(server, owner, repoName, config, userBranch)
+      if (ref !== userEditBranchName) {
+        const response = await createUserBranch(server, owner, repoName, config, userEditBranchName)
         console.log(`useEditState - startEdit user branch created ${JSON.stringify({
           server,
           owner,
@@ -73,12 +75,12 @@ const useUserBranch = ({
           loggedInUser
         })}`, response)
 
-        setRef(userBranch) // switch current branch to user edit branch
+        setRef(userEditBranchName) // switch current branch to user edit branch
       }
       return true
     } catch (e) {
       console.error(`useEditState - startEdit FAILED`, e)
-      processUnknownError(e, 'DCS API', `create user branch ${userBranch} on ${repoName}`, onResourceError)
+      processUnknownError(e, 'DCS API', `create user branch ${userEditBranchName} on ${repoName}`, onResourceError)
     }
     return false
   }
@@ -94,8 +96,59 @@ const useUserBranch = ({
     }
   }
 
+  /**
+   * update ref value if different
+   * @param {any} ref
+   * @param {any} newRef
+   * @param {function} setRefState
+   */
+  function updateRef(ref, newRef, setRefState) {
+    newRef = newRef || 'master' // default to master in case error fetching branch name
+    if (ref !== newRef) {
+      setRefState(newRef)
+    }
+  }
+
+  useDeepCompareEffect(async () => {
+    let newListRef , newContentRef
+    const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
+    if (currentResourceRef !== ref) {
+      setRef(currentResourceRef)
+    }
+    setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
+
+    // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
+    switch (cardResourceId) {
+      case 'tw':
+        newContentRef = currentResourceRef
+        newListRef = await getWorkingBranchForResource('twl')
+        break
+
+      case 'twl':
+        newListRef = currentResourceRef
+        newContentRef = await getWorkingBranchForResource('tw')
+        break
+
+      default:
+        newListRef = newContentRef = currentResourceRef
+    }
+
+    updateRef(listRef, newListRef, setListRef)
+    updateRef(contentRef, newContentRef, setContentRef)
+  }, [{
+    ref,
+    languageId,
+    server,
+    owner,
+  }])
+
   return {
-    state: { usingUserBranch },
+    state: {
+      contentRef,
+      listRef,
+      usingUserBranch,
+      workingResourceBranch: ref,
+    },
     actions: { startEdit },
   }
 }

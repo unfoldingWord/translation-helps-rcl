@@ -31,7 +31,8 @@ import { getUserEditBranch, getUsersWorkingBranch } from "../core";
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  */
 const useContent = ({
-  ref,
+  listRef,
+  contentRef,
   verse,
   owner,
   server,
@@ -43,11 +44,8 @@ const useContent = ({
   fetchMarkdown,
   onResourceError,
   httpConfig = {},
-  loggedInUser,
 }) => {
   const [initialized, setInitialized] = useState(false)
-  const [listRef, setListRef] = useState(ref)
-  const [contentRef, setContentRef] = useState(ref)
 
   const reference = {
     verse,
@@ -106,42 +104,6 @@ const useContent = ({
       }
     }
   }, [loading])
-
-  /**
-   * update state value if different
-   * @param {any} state
-   * @param {any} newState
-   * @param {function} setState
-   */
-  function updateState(state, newState, setState) {
-    if (state !== newState) {
-      setState(newState)
-    }
-  }
-
-  useDeepCompareEffect(async () => {
-    // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
-    const isTwType = (resourceId === 'tw') || (resourceId === 'twl')
-
-    if (isTwType) {
-      const userEditBranch = getUserEditBranch(loggedInUser);
-      const listRepoName = `${languageId}_twl`
-      const currentListBranch = await getUsersWorkingBranch(server, owner, listRepoName, userEditBranch)
-      const contentRepoName = `${languageId}_tw`
-      const currentContentBranch = await getUsersWorkingBranch(server, owner, contentRepoName, userEditBranch)
-      updateState(listRef, currentListBranch, setListRef)
-      updateState(contentRef, currentContentBranch, setContentRef)
-    } else {
-      updateState(listRef, ref, setListRef)
-      updateState(contentRef, ref, setContentRef)
-    }
-  }, [{
-    ref,
-    resourceId,
-    resourceLink,
-    reference,
-    config
-  }])
 
   return {
     items,
