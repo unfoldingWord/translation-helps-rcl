@@ -137,8 +137,6 @@ const useUserBranch = ({
     setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
     updateRef(listRef, newListRef, setListRef)
     updateRef(contentRef, newContentRef, setContentRef)
-
-    console.log(`useUserBranch updated:`,{ cardResourceId, currentResourceRef, newListRef, newContentRef, ref })
   }, [{
     ref,
     languageId,
