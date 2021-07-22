@@ -114,7 +114,12 @@ export default function useTsvItems({
                     url, params: {}, config: httpConfig, fullResponse: true,
                   }).then(response => {
                   const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
-                  processHttpErrors(response, resourceDescr, url, onResourceError)
+                  const message = processHttpErrors(response, resourceDescr, url, onResourceError);
+                  if (message) {
+                    const httpCode = response?.status || 0;
+                    console.warn(`useTsvItems(${url}) - httpCode ${httpCode}, article not found: ${message}`)
+                    return null
+                  }
                   return response
                 })
                 markdown = getResponseData(result)

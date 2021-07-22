@@ -34,12 +34,15 @@ export function isPossibleDisconnectError(httpCode) {
  * @param {string} resourceDescr - description of resource being fetched
  * @param {string} url - path to resource
  * @param {function} onResourceError - callback for reporting fetch errors
+ * @return (string|null} returns error message
  */
 export function processHttpErrors(response, resourceDescr, url, onResourceError) {
   if (response?.status !== 200) {
     const message = `Error code ${response?.status} fetching '${url}' for '${resourceDescr}'`
     onResourceError && onResourceError(message, isPossibleDisconnectError(response?.status))
+    return message
   }
+  return null
 }
 
 /**

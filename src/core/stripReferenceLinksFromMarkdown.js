@@ -7,6 +7,11 @@ export default function stripReferenceLinksFromMarkdown(markdown) {
   if (!markdown) {
     return markdown
   }
+
+  if (typeof markdown !== 'string') { // protection in case fetching markdown returned an error object rather than string
+    return markdown
+  }
+
   // OBS tN: Convert all [<Title>](rc://<lang>/tn/help/obs/*) links to just show "Open Bible Stories - <Title>"
   markdown = markdown.replace(
     /\[([^\]]+)\]\(rc:\/\/[^/]+\/tn\/help\/obs[^)]+\)/g,

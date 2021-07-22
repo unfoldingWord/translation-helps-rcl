@@ -181,7 +181,11 @@ const Card = ({
             id={`${id}_drag_indicator`}
             className={`${classes.dragIcon} ${dragIndicator}`}
           />
-          <div className={classes.title}>{title}</div>
+          <div
+            id={`${id}_title`}
+            className={classes.title}>
+            {title}
+          </div>
         </FlexDiv>
         {closeable ? (
           <CloseIcon
