@@ -110,7 +110,11 @@ export default function useResourceClickListener({
             data = await get({
               url, params: {}, config: _config, fullResponse: true,
             }).then(res => {
-              processHttpErrors(res, link, url, onResourceError)
+              const message = processHttpErrors(res, link, url, onResourceError)
+              if (message) {
+                console.warn(`useResourceClickListener() url not found: ${url}: ${message}`)
+                return null
+              }
               return getResponseData(res)
             })
           }
@@ -119,9 +123,13 @@ export default function useResourceClickListener({
             title = await get({
               url: titleUrl, params: {}, config: _config, fullResponse: true,
             }).then(res => {
-                processHttpErrors(res, link, titleUrl, onResourceError)
-                return getResponseData(res)
-              })
+              const message = processHttpErrors(res, link, titleUrl, onResourceError)
+              if (message) {
+                console.warn(`useResourceClickListener() title url not found: ${titleUrl}: ${message}`)
+                return null
+              }
+              return getResponseData(res)
+            })
           }
 
           if (!url || !titleUrl) {

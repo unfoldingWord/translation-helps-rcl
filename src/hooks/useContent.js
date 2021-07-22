@@ -2,18 +2,21 @@ import { useEffect, useState } from 'react'
 import { useRsrc } from 'scripture-resources-rcl'
 import useTsvItems from './useTsvItems'
 import {
-  ERROR_STATE,
-  LOADING_STATE,
-  INITIALIZED_STATE,
   CONTENT_NOT_FOUND_ERROR,
+  ERROR_STATE,
+  INITIALIZED_STATE,
+  LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
+import useDeepCompareEffect from "use-deep-compare-effect";
+import { getUserEditBranch, getUsersWorkingBranch } from "../core";
 
 /**
  * hook for loading content of translation helps resources
  * @param {string} verse
  * @param {string} owner
- * @param {string} ref - points to specific ref that could be a branch or tag
+ * @param {string} listRef - points to specific branch or tag for tsv list
+ * @param {string} contentRef - points to specific branch or tag for tsv contents
  * @param {string} server
  * @param {string} chapter
  * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
@@ -29,7 +32,8 @@ import {
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  */
 const useContent = ({
-  ref,
+  listRef,
+  contentRef,
   verse,
   owner,
   server,
@@ -45,13 +49,13 @@ const useContent = ({
   const [initialized, setInitialized] = useState(false)
 
   const reference = {
-    ref,
     verse,
     chapter,
     filePath,
     projectId,
+    ref: listRef,
   }
-  const resourceLink = `${owner}/${languageId}/${resourceId}/${ref}`
+  const resourceLink = `${owner}/${languageId}/${resourceId}/${listRef}`
   const config = {
     server,
     ...httpConfig,
@@ -80,7 +84,7 @@ const useContent = ({
     chapter,
     server,
     owner,
-    ref,
+    ref: contentRef,
     verse,
     onResourceError,
     httpConfig: config,
@@ -117,7 +121,6 @@ const useContent = ({
     props: {
       verse,
       owner,
-      ref,
       server,
       chapter,
       filePath,
@@ -132,7 +135,6 @@ useContent.defaultProps = {
   verse: 1,
   chapter: 1,
   filePath: '',
-  ref: 'master',
   fetchMarkdown: true,
 }
 

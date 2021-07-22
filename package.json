@@ -37,7 +37,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "babel-loader": "^8.2.2",
-    "gitea-react-toolkit": "^1.8.1",
+    "gitea-react-toolkit": "1.9.2",
     "markdown-translatable": "^1.3.0",
     "prettier": "^2.1.2",
     "prop-types": "^15.7.2",

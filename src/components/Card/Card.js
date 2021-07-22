@@ -182,7 +182,11 @@ const Card = ({
             id={`${id}_drag_indicator`}
             className={`${classes.dragIcon} ${dragIndicator}`}
           />
-          <div className={classes.title}>{title}</div>
+          <div
+            id={`${id}_title`}
+            className={classes.title}>
+            {title}
+          </div>
         </FlexDiv>
         {closeable ? (
           <CloseIcon
@@ -203,10 +207,10 @@ const Card = ({
                 </Badge>
               </IconButton>
             )}
-            {
+            {!hideMarkdownToggle ? (
               <IconButton
-                aria-label='save'
                 title={markdownView ? 'Preview' : 'Markdown'}
+                aria-label={markdownView ? 'Preview' : 'Markdown'}
                 onClick={() => setMarkdownView(!markdownView)}
                 className={classes.margin}
               >
@@ -216,11 +220,11 @@ const Card = ({
                   <VisibilityIcon id='visibility_icon' htmlColor='#000' />
                 )}
               </IconButton>
-            }
+            ) : null}
             {editable ? (
               <IconButton
-                aria-label='save'
                 title={saved ? 'Saved' : 'Save'}
+                aria-label={saved ? 'Saved' : 'Save'}
                 onClick={() => onSaveEdit()}
                 className={classes.margin}
               >
