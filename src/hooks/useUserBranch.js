@@ -112,10 +112,6 @@ const useUserBranch = ({
   useDeepCompareEffect(async () => {
     let newListRef , newContentRef
     const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
-    if (currentResourceRef !== ref) {
-      setRef(currentResourceRef)
-    }
-    setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
 
     // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
     switch (cardResourceId) {
@@ -133,8 +129,16 @@ const useUserBranch = ({
         newListRef = newContentRef = currentResourceRef
     }
 
+    // update states
+    if (currentResourceRef !== ref) {
+      setRef(currentResourceRef)
+    }
+
+    setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
     updateRef(listRef, newListRef, setListRef)
     updateRef(contentRef, newContentRef, setContentRef)
+
+    console.log(`useUserBranch updated:`,{ cardResourceId, currentResourceRef, newListRef, newContentRef, ref })
   }, [{
     ref,
     languageId,

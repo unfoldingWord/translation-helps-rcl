@@ -15,7 +15,8 @@ import { getUserEditBranch, getUsersWorkingBranch } from "../core";
  * hook for loading content of translation helps resources
  * @param {string} verse
  * @param {string} owner
- * @param {string} ref - points to specific ref that could be a branch or tag
+ * @param {string} listRef - points to specific branch or tag for tsv list
+ * @param {string} contentRef - points to specific branch or tag for tsv contents
  * @param {string} server
  * @param {string} chapter
  * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
@@ -113,7 +114,6 @@ const useContent = ({
     props: {
       verse,
       owner,
-      ref,
       server,
       chapter,
       filePath,
@@ -128,7 +128,6 @@ useContent.defaultProps = {
   verse: 1,
   chapter: 1,
   filePath: '',
-  ref: 'master',
   fetchMarkdown: true,
 }
 
