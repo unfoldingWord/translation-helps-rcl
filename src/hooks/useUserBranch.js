@@ -25,18 +25,19 @@ import useDeepCompareEffect from 'use-deep-compare-effect'
  * @return {{state: {editing: boolean}, actions: {startEdit: ((function(): Promise<void>)|*), saveEdit: ((function(*): Promise<void>)|*)}}}
  */
 const useUserBranch = ({
-  languageId,
-  server,
   owner,
-  ref,
-  setRef,
-  useUserLocalStorage,
+  server,
+  appRef,
+  cardId,
+  languageId,
   loggedInUser,
   authentication,
   cardResourceId,
-  cardId,
   onResourceError,
+  useUserLocalStorage,
 }) => {
+  // initialize to default for app
+  const [ref, setRef] = useUserLocalStorage(`${cardId}_ref`, appRef)
   const [usingUserBranch, setUsingUserBranch] = useUserLocalStorage
     ? useUserLocalStorage(`editing_${cardId}_${languageId}`, false)
     : useState(false)
@@ -182,8 +183,8 @@ const useUserBranch = ({
 
   return {
     state: {
-      contentRef,
       listRef,
+      contentRef,
       usingUserBranch,
       workingResourceBranch: ref,
     },
