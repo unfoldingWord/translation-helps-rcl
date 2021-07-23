@@ -124,11 +124,9 @@ const useUserBranch = ({
    */
   async function startEdit() {
     if (!usingUserBranch) {
-      const success = await ensureUserEditBranch()
+      await ensureUserEditBranch()
       setUsingUserBranch(true)
-      return success
     }
-    return
   }
 
   /**
