@@ -8,8 +8,6 @@ import {
   LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
-import useDeepCompareEffect from "use-deep-compare-effect";
-import { getUserEditBranch, getUsersWorkingBranch } from "../core";
 
 /**
  * hook for loading content of translation helps resources
@@ -69,6 +67,7 @@ const useContent = ({
       loadingContent,
       fetchResponse,
     },
+    actions: { reloadResource },
   } = useRsrc({
     resourceLink,
     reference,
@@ -117,6 +116,7 @@ const useContent = ({
     resource,
     fetchResponse,
     resourceStatus,
+    reloadResource,
     markdown: Array.isArray(content) ? null : content,
     props: {
       verse,
