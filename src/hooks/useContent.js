@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
-import { useRsrc } from 'scripture-resources-rcl'
+import { core, useRsrc } from 'scripture-resources-rcl'
 import useTsvItems from './useTsvItems'
 import {
-  CONTENT_NOT_FOUND_ERROR,
+  CONTENT_NOT_FOUND_ERROR, DOOR43_CATALOG,
   ERROR_STATE,
   INITIALIZED_STATE,
   LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
-import useDeepCompareEffect from "use-deep-compare-effect";
-import { getUserEditBranch, getUsersWorkingBranch } from "../core";
+import { searchCatalogForRepos } from "../core";
 
 /**
  * hook for loading content of translation helps resources
@@ -32,21 +31,23 @@ import { getUserEditBranch, getUsersWorkingBranch } from "../core";
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  */
 const useContent = ({
-  listRef,
-  contentRef,
-  verse,
+  listRef = 'master',
+  contentRef = 'master',
+  verse = 1,
   owner,
   server,
-  chapter,
-  filePath,
+  chapter= 1,
+  filePath = '',
   projectId,
   languageId,
   resourceId,
-  fetchMarkdown,
+  fetchMarkdown = true,
   onResourceError,
   httpConfig = {},
 }) => {
   const [initialized, setInitialized] = useState(false)
+  const [loadingGlBible, setLoadingGlBible] = useState(false)
+  const [glBibles, setGlBibles] = useState(null)
 
   const reference = {
     verse,
@@ -97,7 +98,7 @@ const useContent = ({
     [INITIALIZED_STATE]: initialized,
   }
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!initialized) {
       if (loading) {
         // once first load has begun, we are initialized
@@ -105,6 +106,130 @@ const useContent = ({
       }
     }
   }, [loading])
+
+  useEffect(async () => {
+    if ((resourceId === 'twl') && initialized && !loading && !error && !loadingGlBible && !glBibles) {
+      setLoadingGlBible(true)
+      const glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner)
+      console.log('useContent - GL bibles loaded')
+      setGlBibles(glBibles_)
+      setLoadingGlBible(false)
+    }
+  }, [initialized, loading, error, loadingGlBible, glBibles])
+
+  async function getGlAlignmentBibles(languageId, httpConfig, server, owner) {
+    const glBibles_ = []
+    const glBibleList = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
+    for (const glBible of glBibleList) {
+      const bible = await loadGlBible(glBible)
+      if (bible) {
+        glBibles_.push(bible)
+      }
+    }
+    return glBibles_
+  }
+
+  async function loadGlBible(glBible) {
+    console.log(`loadGlBible() - loading ${glBible}`)
+
+    // get GL bible
+    const [langId, bible] = glBible.split('_')
+    const resourceLink = `${DOOR43_CATALOG}/${langId}/${bible}/${listRef}`
+    const config_ = {
+      server,
+      ...httpConfig,
+    };
+    try {
+      const resource = await core.resourceFromResourceLink({
+        resourceLink,
+        reference,
+        config: config_,
+      })
+      let loaded = false
+      if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
+        console.log(`loadGlBible() - loaded ${glBible} from ${resourceLink}`, resource)
+        const fileResults = await resource?.project?.parseUsfm()
+
+        if (fileResults?.response?.status === 200) {
+          const json = fileResults?.json;
+
+          if (json) {
+            console.log(`loadGlBible() - loaded ${glBible} json`)
+            return {
+              resource,
+              json,
+            }
+          } else {
+            console.log(`useContent - skipping ${glBible} - not a bible`)
+          }
+
+          const contextId = {
+            reference: {
+              chapter,
+              verse,
+            }
+          }
+        }
+      }
+      console.warn(`useContent - ${glBible} is not a valid bible at ${resourceLink}`)
+    } catch (e) {
+      console.warn(`useContent - error loading ${resourceLink}`, e)
+    }
+    return null
+  }
+
+  async function getGlAlignmentBiblesList(languageId, httpConfig, server, owner) {
+    const params = {
+      owner: DOOR43_CATALOG,
+      lang: languageId,
+      subject: ['Aligned Bible', 'Bible']
+    }
+    const config_ = {
+      server,
+      ...httpConfig,
+    };
+    let results
+
+    try {
+      results = await core.getResourceManifest({
+        username: owner,
+        languageId,
+        resourceId: 'tw',
+        config: config_,
+        fullResponse: true,
+      })
+    } catch (e) {
+      console.warn('tw manifest', e)
+    }
+
+    console.log('tw manifest', results)
+
+    if (!results?.manifest) {
+      return null
+    }
+
+    const bibleRepos = await searchCatalogForRepos(server, httpConfig, params)
+    console.log('twl bibles found', bibleRepos)
+
+    let alignmentBibles = []
+    if (bibleRepos) {
+      const tsv_relations = results?.manifest?.dublin_core?.relation
+      if (tsv_relations) {
+        for (const repo of tsv_relations) {
+          const [langId, bible] = repo.split('/')
+          const repoName = `${langId}_${bible}`
+          if ((langId === languageId) && (bible !== 'obs')) { // if GL bible
+            console.log(`getGlAlignmentBibles - found GL bible ${repoName}`)
+            alignmentBibles.push(repoName)
+          } else {
+            console.log(`getGlAlignmentBibles - skipping - not GL bible ${repoName}`)
+          }
+        }
+      }
+    }
+
+    return alignmentBibles
+  }
 
   return {
     items,
@@ -124,11 +249,5 @@ const useContent = ({
   }
 }
 
-useContent.defaultProps = {
-  verse: 1,
-  chapter: 1,
-  filePath: '',
-  fetchMarkdown: true,
-}
 
 export default useContent
