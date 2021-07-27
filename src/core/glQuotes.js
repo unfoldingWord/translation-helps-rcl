@@ -1,3 +1,7 @@
+import { DOOR43_CATALOG } from "../common";
+import { core } from "scripture-resources-rcl";
+import { searchCatalogForRepos } from "./network";
+
 const ELLIPSIS = '…';
 const DEFAULT_SEPARATOR = ' ';
 
@@ -114,3 +118,139 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
   }
   return quoteArray;
 };
+
+export async function getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBibleList) {
+  const glBibles_ = []
+  const config = {
+    ...httpConfig,
+    server,
+  }
+  for (const glBible of glBibleList) {
+    const bible = await loadGlBible(glBible, config, 'master', reference)
+    if (bible) {
+      glBibles_.push(bible)
+    }
+  }
+  return glBibles_
+}
+
+export async function loadGlBible(glBible, config, listRef, reference) {
+  console.log(`loadGlBible() - loading ${glBible}`)
+
+  // get GL bible
+  const [langId, bible] = glBible.split('_')
+  const resourceLink = `${DOOR43_CATALOG}/${langId}/${bible}/${listRef}`
+  try {
+    const resource = await core.resourceFromResourceLink({
+      resourceLink,
+      reference,
+      config,
+    })
+    let loaded = false
+    if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
+      console.log(`loadGlBible() - loaded ${glBible} from ${resourceLink}`, resource)
+      const fileResults = await resource?.project?.parseUsfm()
+
+      if (fileResults?.response?.status === 200) {
+        const json = fileResults?.json;
+
+        if (json) {
+          console.log(`loadGlBible() - loaded ${glBible} json`)
+          return {
+            resource,
+            json,
+          }
+        } else {
+          console.log(`useContent - skipping ${glBible} - not a bible`)
+        }
+      }
+    }
+    console.warn(`useContent - ${glBible} is not a valid bible at ${resourceLink}`)
+  } catch (e) {
+    console.warn(`useContent - error loading ${resourceLink}`, e)
+  }
+  return null
+}
+
+export async function getGlAlignmentBiblesList(languageId, httpConfig, server, owner) {
+  const params = {
+    owner: DOOR43_CATALOG,
+    lang: languageId,
+    subject: ['Aligned Bible', 'Bible']
+  }
+  const config_ = {
+    server,
+    ...httpConfig,
+  };
+  let results
+
+  try {
+    results = await core.getResourceManifest({
+      username: owner,
+      languageId,
+      resourceId: 'tw',
+      config: config_,
+      fullResponse: true,
+    })
+  } catch (e) {
+    console.warn('tw manifest', e)
+  }
+
+  console.log('tw manifest', results)
+
+  if (!results?.manifest) {
+    return null
+  }
+
+  const bibleRepos = await searchCatalogForRepos(server, httpConfig, params)
+  console.log('twl bibles found', bibleRepos)
+
+  let alignmentBibles = []
+  if (bibleRepos) {
+    const tsv_relations = results?.manifest?.dublin_core?.relation
+    if (tsv_relations) {
+      for (const repo of tsv_relations) {
+        const [langId, bible] = repo.split('/')
+        const repoName = `${langId}_${bible}`
+        if ((langId === languageId) && (bible !== 'obs')) { // if GL bible
+          console.log(`getGlAlignmentBibles - found GL bible ${repoName}`)
+          alignmentBibles.push(repoName)
+        } else {
+          console.log(`getGlAlignmentBibles - skipping - not GL bible ${repoName}`)
+        }
+      }
+    }
+  }
+
+  return alignmentBibles
+}
+
+export function addGlQuotesTo(chapter, verse, items, glBibles) {
+  const newItems = []
+
+  const reference = {
+    chapter,
+    verse,
+  };
+
+  for (const item of items) {
+    const contextId = {
+      reference: reference,
+      quote: item?.OrigWords,
+      occurrence: item?.Occurrence,
+    }
+    const newItem = {
+      ...item,
+      glQuote: '',
+    }
+    newItems.push(newItem)
+    for (const glBible of glBibles) {
+      const glText = getAlignedTextFromBible(contextId, glBible?.json?.chapters)
+      if (glText) {
+        newItem.glQuote = glText
+        break
+      }
+    }
+  }
+  return newItems;
+}
