@@ -1,5 +1,6 @@
 export * from './branching'
+export * from './determineDiffTsvVersion'
+export * from './glQuotes'
 export * from './network'
 export * from './stripReferenceLinksFromMarkdown'
 export * from './tsvToJson'
-export * from './determineDiffTsvVersion'

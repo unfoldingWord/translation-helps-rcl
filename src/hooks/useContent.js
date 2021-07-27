@@ -8,7 +8,8 @@ import {
   LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
-import { searchCatalogForRepos } from "../core";
+import useDeepCompareEffect from "use-deep-compare-effect"
+import { getAlignedTextFromBible, searchCatalogForRepos } from "../core"
 
 /**
  * hook for loading content of translation helps resources
@@ -107,15 +108,44 @@ const useContent = ({
     }
   }, [loading])
 
-  useEffect(async () => {
-    if ((resourceId === 'twl') && initialized && !loading && !error && !loadingGlBible && !glBibles) {
-      setLoadingGlBible(true)
-      const glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner)
-      console.log('useContent - GL bibles loaded')
-      setGlBibles(glBibles_)
-      setLoadingGlBible(false)
+  useDeepCompareEffect(async () => {
+    if ((resourceId === 'twl') && initialized && !loading && !error) {
+      if (!loadingGlBible && !glBibles) {
+        setLoadingGlBible(true)
+        const glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner)
+        console.log('useContent - GL bibles loaded')
+        setGlBibles(glBibles_)
+        setLoadingGlBible(false)
+      } else if (glBibles && items?.length) {
+        const newItems = []
+
+        const reference = {
+          chapter,
+          verse,
+        };
+
+        for (const item of items) {
+          const contextId = {
+            reference: reference,
+            quote: item?.OrigWords,
+            occurrence: item?.Occurrence,
+          }
+          const newItem = {
+            ...item,
+            glQuote: '',
+          }
+          newItems.push(newItem)
+          for (const glBible of glBibles) {
+            const glText = getAlignedTextFromBible(contextId, glBible?.json?.chapters)
+            if (glText) {
+              newItem.glQuote = glText
+              break
+            }
+          }
+        }
+      }
     }
-  }, [initialized, loading, error, loadingGlBible, glBibles])
+  }, [{initialized, loading, error, loadingGlBible, glBibles}])
 
   async function getGlAlignmentBibles(languageId, httpConfig, server, owner) {
     const glBibles_ = []
@@ -161,13 +191,6 @@ const useContent = ({
             }
           } else {
             console.log(`useContent - skipping ${glBible} - not a bible`)
-          }
-
-          const contextId = {
-            reference: {
-              chapter,
-              verse,
-            }
           }
         }
       }
