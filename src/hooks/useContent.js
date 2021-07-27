@@ -54,12 +54,14 @@ const useContent = ({
   viewMode = 'markdown',
 }) => {
   const [initialized, setInitialized] = useState(false)
-  const [loadingGlBible, setLoadingGlBible] = useState(false)
+  const [loadingGlData, setLoadingGlData] = useState(false)
   const [loadedGlRepo, setLoadedGlRepo] = useState(null)
   const [glBibles, setGlBibles] = useState(null)
+  const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
   const [glBiblesList, setGlBiblesList] = useState(null)
   const [processedItems, setProcessedItems] = useState(null)
 
+  const twlListView = (resourceId === 'twl') && (viewMode === 'list')
   const reference = {
     verse,
     chapter,
@@ -118,38 +120,65 @@ const useContent = ({
     }
   }, [loading])
 
-  useDeepCompareEffect(async () => {
-    if ((resourceId === 'twl') && (viewMode === 'list')) { // we only need to load gl quotes if we are showing list view
-      if (initialized && !loading && !error && !loadingGlBible) {
+  useDeepCompareEffect(async () => { // load GL bibles in resource manifest
+    if (twlListView) { // we only need to load gl quotes if we are showing list view
+      if (initialized && !loading && !error && !loadingGlData) {
+        setLoadingGlData(true)
         const currentGlRepo = `${owner}/${languageId}`;
-        if (loadedGlRepo !== currentGlRepo) { // see if we have alignment bibles list for current GL
-          setLoadingGlBible(true)
+        let glBibles_ = glBibles
+        let glBiblesList_ = glBiblesList
+
+        if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
           setGlBibles(null)
-          const glBibleList_ = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
+          glBibles_ = null
+          setProcessedItems(null)
+        }
+
+        if (glBiblesList_ && (loadedGlRepo !== currentGlRepo)) { // if we have don't have alignment bibles list for current GL
+          setGlBiblesList(null)
+          glBiblesList_ = null
+          setProcessedItems(null)
+        }
+
+        if (!glBiblesList_) { // see if we have alignment bibles list for current GL
+          glBiblesList_ = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
           console.log('useContent - GL bibles list loaded')
           setLoadedGlRepo(currentGlRepo)
-          setGlBiblesList(glBibleList_)
+          setGlBiblesList(glBiblesList_)
           setGlBibles(null)
-          setLoadingGlBible(false)
-        } else if (!glBibles && glBiblesList) {
-          setLoadingGlBible(true)
-          const glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList)
+          glBibles_ = null
+          setProcessedItems(null)
+        }
+
+        if (!glBibles_ && glBiblesList_) {
+          glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_)
           setGlBibles(glBibles_)
+          setGlLoadedProjectId(projectId)
           console.log('useContent - GL bibles loaded')
           setProcessedItems(null)
-          setLoadingGlBible(false)
-        } else if (glBibles && items?.length) {
+        }
+        setLoadingGlData(false)
+      }
+    }
+  }, [{initialized, loading, error, loadingGlData, loadedGlRepo, projectId, glBibles, glBiblesList, languageId, owner}])
+
+  useDeepCompareEffect(async () => { // get gl quotes if we have aligned bibles
+    if (twlListView) { // we only need to load gl quotes if we are showing list view
+      if (initialized && !loading && !error && !loadingGlData) {
+        if (glBibles && items?.length) {
           const newItems = addGlQuotesTo(chapter, verse, items, glBibles);
           if (!isEqual(processedItems, newItems)) {
             console.log('useContent - GL quotes added')
             setProcessedItems(newItems)
           }
+        } else if (processedItems) {
+          setProcessedItems(null)
         }
-      } else if (initialized && loading) {
+      } else if (processedItems) {
         setProcessedItems(null)
       }
     }
-  }, [{initialized, loading, error, loadingGlBible, loadedGlRepo, glBibles, glBiblesList, languageId, owner, items}])
+  }, [{initialized, loading, error, loadingGlData, loadedGlRepo, glBibles, glBiblesList, items}])
 
   return {
     items: processedItems || items, // processed items take priority

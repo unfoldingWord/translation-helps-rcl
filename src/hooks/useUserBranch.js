@@ -51,7 +51,7 @@ const useUserBranch = ({
     try {
       currentBranch = await getUsersWorkingBranch(server, owner, repoName, userEditBranchName)
     } catch (e) {
-      console.error(`useEditState - get user branch FAILED ${JSON.stringify({ server, owner, repoName, loggedInUser })}`, e)
+      console.error(`useUserBranch - get user branch FAILED ${JSON.stringify({ server, owner, repoName, loggedInUser })}`, e)
       processHttpErrors(e?.response || null, `${repoName} user edit branch`, e?.url, onResourceError)
     }
     return currentBranch
@@ -68,7 +68,7 @@ const useUserBranch = ({
     try {
       if (ref !== userEditBranchName) {
         const response = await createUserBranch(server, owner, repoName, config, userEditBranchName)
-        console.log(`useEditState - startEdit user branch created ${JSON.stringify({
+        console.log(`useUserBranch - user branch created ${JSON.stringify({
           server,
           owner,
           repoName,
@@ -79,7 +79,7 @@ const useUserBranch = ({
       }
       return true
     } catch (e) {
-      console.error(`useEditState - startEdit FAILED`, e)
+      console.error(`useUserBranch - ensureUserEditBranch FAILED`, e)
       processUnknownError(e, 'DCS API', `create user branch ${userEditBranchName} on ${repoName}`, onResourceError)
     }
     return false

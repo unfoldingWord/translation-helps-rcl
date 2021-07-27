@@ -54,6 +54,8 @@ export async function getBranchMetaData(server, repoOwner, repoName, branch) {
       error = new Error(`Error getting repo status '${url}'`)
       error.response = response
       error.url = url
+    } else {
+      error = false
     }
   } catch (e) {
     response = e?.response
