@@ -49,6 +49,7 @@ const useContent = ({
   const [initialized, setInitialized] = useState(false)
   const [loadingGlBible, setLoadingGlBible] = useState(false)
   const [glBibles, setGlBibles] = useState(null)
+  const [processedItems, setProcessedItems] = useState(null)
 
   const reference = {
     verse,
@@ -114,9 +115,10 @@ const useContent = ({
         setLoadingGlBible(true)
         const glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner)
         console.log('useContent - GL bibles loaded')
+        setProcessedItems(null)
         setGlBibles(glBibles_)
         setLoadingGlBible(false)
-      } else if (glBibles && items?.length) {
+      } else if (glBibles && items?.length && !processedItems) {
         const newItems = []
 
         const reference = {
@@ -143,6 +145,7 @@ const useContent = ({
             }
           }
         }
+        setProcessedItems(newItems)
       }
     }
   }, [{initialized, loading, error, loadingGlBible, glBibles}])
@@ -255,7 +258,7 @@ const useContent = ({
   }
 
   return {
-    items,
+    items: processedItems || items, // processed items take priority
     resource,
     markdown: Array.isArray(content) ? null : content,
     resourceStatus,
