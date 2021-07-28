@@ -161,15 +161,12 @@ export default function useResourceClickListener({
             })
           }
 
-          console.log('1', { data })
-
           if (!url || !title) {
             console.warn(
               `useResourceClickListener() error parsing link: ${link} from embedded html: ${linkHtml}`
             )
             setError(true)
           }
-          console.log('2', { data })
 
           setContent(data)
           setTitle(title)
