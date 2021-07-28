@@ -50,7 +50,6 @@ const useContent = ({
   useUserLocalStorage,
 }) => {
   const [initialized, setInitialized] = useState(false)
-  const [processedItems, setProcessedItems] = useState(null)
 
   const reference = {
     verse,
@@ -110,7 +109,7 @@ const useContent = ({
     }
   }, [loading])
 
-  useExtraContent({
+  const { processedItems } = useExtraContent({
     verse,
     owner,
     server,
@@ -124,8 +123,6 @@ const useContent = ({
     useUserLocalStorage,
     initialized,
     loading,
-    processedItems,
-    setProcessedItems,
     items,
     onResourceError,
     reference,

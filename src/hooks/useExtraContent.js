@@ -27,8 +27,6 @@ import {
  * @param {string} viewMode - list or markdown view
  * @param {boolean} initialized
  * @param {boolean} loading
- * @param {array} processedItems - list from useTsvItems with data added by useExtraContent
- * @param {function} setProcessedItems
  * @param {array} items - list created by useTsvItems
  * @param {boolean} error - error fetching resource
  * @param {function} useUserLocalStorage
@@ -48,8 +46,6 @@ const useExtraContent = ({
   useUserLocalStorage,
   initialized,
   loading,
-  processedItems,
-  setProcessedItems,
   items,
   error,
   onResourceError,
@@ -60,6 +56,7 @@ const useExtraContent = ({
   const [glBiblesList, setGlBiblesList] = useTwlListViewUserLocalStorage('gl_bible_list', null)
   const [glBibles, setGlBibles] = useState(null)
   const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
+  const [processedItems, setProcessedItems] = useState(null)
 
   useDeepCompareEffect(async () => { // load GL bibles in resource manifest
     if (twlListView) { // we only need to load gl quotes if we are showing list view
@@ -133,6 +130,10 @@ const useExtraContent = ({
     } else {
       return useState(value)
     }
+  }
+
+  return {
+    processedItems
   }
 }
 
