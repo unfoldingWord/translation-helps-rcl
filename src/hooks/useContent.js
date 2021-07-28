@@ -8,17 +8,16 @@ import {
   LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
-import useDeepCompareEffect from "use-deep-compare-effect";
-import { getUserEditBranch, getUsersWorkingBranch } from "../core";
+import useExtraContent from "./useExtraContent";
 
 /**
  * hook for loading content of translation helps resources
- * @param {string} verse
+ * @param {number|string} verse
  * @param {string} owner
  * @param {string} listRef - points to specific branch or tag for tsv list
  * @param {string} contentRef - points to specific branch or tag for tsv contents
  * @param {string} server
- * @param {string} chapter
+ * @param {number|string} chapter
  * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
  * @param {string} projectId
  * @param {string} languageId
@@ -30,21 +29,25 @@ import { getUserEditBranch, getUsersWorkingBranch } from "../core";
  *      - resourceStatus - is object containing details about problems fetching resource
  *      - error - Error object that has the specific error returned
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
+ * @param {string} viewMode - list or markdown view
+ * @param {function} useUserLocalStorage
  */
 const useContent = ({
-  listRef,
-  contentRef,
-  verse,
+  listRef = 'master',
+  contentRef = 'master',
+  verse = 1,
   owner,
   server,
-  chapter,
-  filePath,
+  chapter= 1,
+  filePath = '',
   projectId,
   languageId,
   resourceId,
-  fetchMarkdown,
+  fetchMarkdown = true,
   onResourceError,
   httpConfig = {},
+  viewMode = 'markdown',
+  useUserLocalStorage,
 }) => {
   const [initialized, setInitialized] = useState(false)
 
@@ -106,8 +109,27 @@ const useContent = ({
     }
   }, [loading])
 
-  return {
+  const { processedItems } = useExtraContent({
+    verse,
+    owner,
+    server,
+    chapter,
+    filePath,
+    projectId,
+    languageId,
+    resourceId,
+    httpConfig,
+    viewMode,
+    useUserLocalStorage,
+    initialized,
+    loading,
     items,
+    onResourceError,
+    reference,
+  })
+
+  return {
+    items: processedItems || items, // processed items take priority
     resource,
     markdown: Array.isArray(content) ? null : content,
     resourceStatus,
@@ -124,11 +146,5 @@ const useContent = ({
   }
 }
 
-useContent.defaultProps = {
-  verse: 1,
-  chapter: 1,
-  filePath: '',
-  fetchMarkdown: true,
-}
 
 export default useContent

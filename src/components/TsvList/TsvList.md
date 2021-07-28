@@ -9,6 +9,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
+  const viewMode = 'list'
   const [selectedQuote, setQuote] = useState({})
   const { markdown, items } = useContent({
     verse: 1,
@@ -20,6 +21,7 @@ const Component = () => {
     owner: 'test_org',
     fetchMarkdown: false,
     server: 'https://git.door43.org',
+    viewMode,
   })
 
   const {
