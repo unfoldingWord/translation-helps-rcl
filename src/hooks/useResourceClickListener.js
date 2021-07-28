@@ -1,7 +1,11 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
 import { AuthenticationContext, get } from 'gitea-react-toolkit'
 import useEventListener from './useEventListener'
-import { getResponseData, processHttpErrors, processUnknownError } from '../core/network'
+import {
+  getResponseData,
+  processHttpErrors,
+  processUnknownError,
+} from '../core/network'
 
 /**
  * Custom hook that listens for link click events and if the link is a translation helps resource then fetches it.
@@ -23,14 +27,14 @@ import { getResponseData, processHttpErrors, processUnknownError } from '../core
  * ]
  */
 export default function useResourceClickListener({
+  ref,
   owner,
   server,
   branch,
-  ref,
   taArticle,
   languageId,
-  onResourceError,
   httpConfig = {},
+  onResourceError,
 }) {
   const { state: authentication } = useContext(AuthenticationContext)
   const [link, setLink] = useState(null)
@@ -39,7 +43,8 @@ export default function useResourceClickListener({
   const [content, setContent] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  ref = ref || branch // if ref not given, fall back to branch
+  // if ref not given, fall back to branch
+  ref = ref || branch
 
   const handler = useCallback(
     e => {
@@ -75,12 +80,21 @@ export default function useResourceClickListener({
           let title = ''
           let data = ''
 
-          if (
+          if (slugs.includes('obs')) {
+            // slug = "rc://en/tn/help/obs/17/09"
+            // slugs:["en", "tn", "help", "obs", "17", "06"]
+            _languageId = slugs[0] || languageId
+            resourceId = `${slugs[3]}-${slugs[1]}`
+            filePath = `${slugs[4]}/${slugs[5]}.md`
+            const repoName = `${_languageId}_${resourceId}`
+            url = `${server}/api/v1/repos/${owner}/${repoName}/contents/content/${filePath}?ref=${ref}`
+            title = `${repoName} ${filePath}`
+          } else if (
             slugs.length === 5 &&
             slug.includes('/ta/man/') &&
             link.includes('rc:/')
           ) {
-            // "en/ta/man/translate/translate-names"
+            // slug = "en/ta/man/translate/translate-names"
             _languageId = slugs[0] || languageId
             resourceId = slugs[1] || 'ta'
             filePath = `${slugs[3]}/${slugs[4]}`
@@ -108,11 +122,16 @@ export default function useResourceClickListener({
 
           if (url) {
             data = await get({
-              url, params: {}, config: _config, fullResponse: true,
+              url,
+              params: {},
+              config: _config,
+              fullResponse: true,
             }).then(res => {
               const message = processHttpErrors(res, link, url, onResourceError)
               if (message) {
-                console.warn(`useResourceClickListener() url not found: ${url}: ${message}`)
+                console.warn(
+                  `useResourceClickListener() url not found: ${url}: ${message}`
+                )
                 return null
               }
               return getResponseData(res)
@@ -121,19 +140,31 @@ export default function useResourceClickListener({
 
           if (titleUrl) {
             title = await get({
-              url: titleUrl, params: {}, config: _config, fullResponse: true,
+              url: titleUrl,
+              params: {},
+              config: _config,
+              fullResponse: true,
             }).then(res => {
-              const message = processHttpErrors(res, link, titleUrl, onResourceError)
+              const message = processHttpErrors(
+                res,
+                link,
+                titleUrl,
+                onResourceError
+              )
               if (message) {
-                console.warn(`useResourceClickListener() title url not found: ${titleUrl}: ${message}`)
+                console.warn(
+                  `useResourceClickListener() title url not found: ${titleUrl}: ${message}`
+                )
                 return null
               }
               return getResponseData(res)
             })
           }
 
-          if (!url || !titleUrl) {
-            console.warn(`useResourceClickListener() error parsing link: ${link} from embedded html: ${linkHtml}`)
+          if (!url || !title) {
+            console.warn(
+              `useResourceClickListener() error parsing link: ${link} from embedded html: ${linkHtml}`
+            )
             setError(true)
           }
 
@@ -143,9 +174,17 @@ export default function useResourceClickListener({
         } catch (error) {
           clearContent()
           setError(true)
-          const httpCode = error?.response?.status || 0;
-          console.error(`useResourceClickListener() httpCode ${httpCode}, error loading link: ${link} from embedded html: ${linkHtml}`, error)
-          processUnknownError(error, link, `'${url} or ${titleUrl}'`, onResourceError)
+          const httpCode = error?.response?.status || 0
+          console.error(
+            `useResourceClickListener() httpCode ${httpCode}, error loading link: ${link} from embedded html: ${linkHtml}`,
+            error
+          )
+          processUnknownError(
+            error,
+            link,
+            `'${url} or ${titleUrl}'`,
+            onResourceError
+          )
         }
       }
     }

@@ -39,20 +39,23 @@ export default function useTsvItems({
   onResourceError,
   httpConfig = {},
 }) {
-  const [items, setItems] = useState([])
+  const [{ items, tsvs }, setState] = useState({
+    items: [],
+    tsvs: null,
+  })
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     async function getTsvItems() {
       const tsvItems = Array.isArray(content) ? content : []
       const tn = {}
+      const book = projectId?.toLowerCase() || 'list'
 
       for (let index = 0; index < tsvItems.length; index++) {
         const note = tsvItems[index]
         const referenceChunks = note?.Reference?.split(':')
         const Chapter = referenceChunks ? referenceChunks[0] : null
         const Verse = referenceChunks ? referenceChunks[1] : null
-        const book = projectId.toLowerCase() || 'list'
 
         if (Chapter && Verse && book) {
           note.Chapter = Chapter
@@ -107,41 +110,60 @@ export default function useTsvItems({
             const filePath = `${newRoutes.join('/')}${filename}`
             url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}?ref=${ref_}`
             let markdown = ''
-            if (path) { // only fetch data if we were able to get path for item
-              const ref = item?.SupportReference || item?.TWLink;
+            let fetchResponse = null
+            if (path) {
+              // only fetch data if we were able to get path for item
+              const ref = item?.SupportReference || item?.TWLink
               try {
                 const result = await get({
-                    url, params: {}, config: httpConfig, fullResponse: true,
-                  }).then(response => {
+                  url,
+                  params: {},
+                  config: httpConfig,
+                  fullResponse: true,
+                }).then(response => {
                   const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
-                  const message = processHttpErrors(response, resourceDescr, url, onResourceError);
+                  const message = processHttpErrors(
+                    response,
+                    resourceDescr,
+                    url,
+                    onResourceError
+                  )
                   if (message) {
-                    const httpCode = response?.status || 0;
-                    console.warn(`useTsvItems(${url}) - httpCode ${httpCode}, article not found: ${message}`)
+                    const httpCode = response?.status || 0
+                    console.warn(
+                      `useTsvItems(${url}) - httpCode ${httpCode}, article not found: ${message}`
+                    )
                     return null
                   }
                   return response
                 })
+                fetchResponse = result
                 markdown = getResponseData(result)
               } catch (e) {
-                const httpCode = e?.response?.status || 0;
-                console.warn(`useTsvItems(${url}) - httpCode ${httpCode}, article not found`, e)
+                const httpCode = e?.response?.status || 0
+                console.warn(
+                  `useTsvItems(${url}) - httpCode ${httpCode}, article not found`,
+                  e
+                )
                 const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
             }
-            newItems.push({...item, markdown})
+            newItems.push({ ...item, markdown, fetchResponse, filePath })
             item.markdown = markdown
           }
           _items = newItems
           setLoading(false)
         }
       }
-      setItems(_items)
+      setState({
+        items: _items,
+        tsvs: tn[book] || null,
+      })
     }
 
     getTsvItems()
   }, [content])
 
-  return { items, loading }
+  return { items, tsvs, loading }
 }

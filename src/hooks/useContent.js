@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { useRsrc } from 'scripture-resources-rcl'
 import useTsvItems from './useTsvItems'
 import {
-  CONTENT_NOT_FOUND_ERROR,
   ERROR_STATE,
-  INITIALIZED_STATE,
   LOADING_STATE,
+  INITIALIZED_STATE,
+  CONTENT_NOT_FOUND_ERROR,
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
-import useExtraContent from "./useExtraContent";
+import useExtraContent from './useExtraContent'
 
 /**
  * hook for loading content of translation helps resources
@@ -38,7 +38,7 @@ const useContent = ({
   verse = 1,
   owner,
   server,
-  chapter= 1,
+  chapter = 1,
   filePath = '',
   projectId,
   languageId,
@@ -65,14 +65,21 @@ const useContent = ({
   }
 
   const {
-    state: { resource, content, loadingResource, loadingContent },
+    state: {
+      content,
+      resource,
+      loadingResource,
+      loadingContent,
+      fetchResponse,
+    },
+    actions: { reloadResource },
   } = useRsrc({
     resourceLink,
     reference,
     config,
   })
 
-  const { items, loading: loadingTSV } = useTsvItems({
+  const { items, tsvs, loading: loadingTSV } = useTsvItems({
     fetchMarkdown,
     languageId,
     resourceId,
@@ -129,10 +136,13 @@ const useContent = ({
   })
 
   return {
-    items: processedItems || items, // processed items take priority
+    tsvs,
     resource,
-    markdown: Array.isArray(content) ? null : content,
+    fetchResponse,
     resourceStatus,
+    reloadResource,
+    items: processedItems || items, // processed items take priority
+    markdown: Array.isArray(content) ? null : content,
     props: {
       verse,
       owner,
@@ -145,6 +155,5 @@ const useContent = ({
     },
   }
 }
-
 
 export default useContent
