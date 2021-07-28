@@ -119,6 +119,16 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
   return quoteArray;
 };
 
+/**
+ * load the book (in reference) for each of the bibles listed in glBibleList
+ * @param {string} languageId
+ * @param {object} httpConfig - http request configuration
+ * @param {string} server
+ * @param {string} owner
+ * @param {object} reference - includes bookId or projectId
+ * @param {array} glBibleList - list of bible names to load such as en_ult
+ * @return {Promise<*[]>} returns array of loaded bibles
+ */
 export async function getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBibleList) {
   const glBibles_ = []
   const config = {
@@ -138,12 +148,20 @@ export async function getGlAlignmentBibles(languageId, httpConfig, server, owner
   return glBibles_
 }
 
-export async function loadGlBible(glBible, config, listRef, reference) {
+/**
+ * load the book (in reference) for glBible
+ * @param {string} glBible
+ * @param {object} config - http request configuration
+ * @param {string} ref - branch or tag name
+ * @param {object} reference
+ * @return {Promise<{resource: ({parseUsfm}|{manifest}|*), json: *}|null>}
+ */
+export async function loadGlBible(glBible, config, ref, reference) {
   console.log(`loadGlBible() - loading ${glBible}`)
 
   // get GL bible
   const [langId, bible] = glBible.split('_')
-  const resourceLink = `${DOOR43_CATALOG}/${langId}/${bible}/${listRef}`
+  const resourceLink = `${DOOR43_CATALOG}/${langId}/${bible}/${ref}`
   try {
     const resource = await core.resourceFromResourceLink({
       resourceLink,
@@ -176,6 +194,14 @@ export async function loadGlBible(glBible, config, listRef, reference) {
   return null
 }
 
+/**
+ * load the manifest of repo to get the relation.  Then parse the relation to get resources that are GL bibles
+ * @param {string} languageId
+ * @param {object} httpConfig - http request configuration
+ * @param {string} server
+ * @param {string} owner
+ * @return {Promise<null|*[]>}
+ */
 export async function getGlAlignmentBiblesList(languageId, httpConfig, server, owner) {
   const params = {
     owner: DOOR43_CATALOG,
@@ -229,6 +255,15 @@ export async function getGlAlignmentBiblesList(languageId, httpConfig, server, o
   return alignmentBibles
 }
 
+/**
+ * iterate through items adding gl quotes and return new list of items with GL quotes.
+ *   To find each GL quote we try each GL bible until a GL quote is found
+ * @param {number|string} chapter
+ * @param {number|string} verse
+ * @param {array} items - list of items from tsv
+ * @param {array} glBibles - list of bibles to search for GL quote
+ * @return {*[]}
+ */
 export function addGlQuotesTo(chapter, verse, items, glBibles) {
   const newItems = []
 

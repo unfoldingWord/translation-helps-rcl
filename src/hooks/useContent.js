@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import isEqual from 'deep-equal'
 import { useRsrc } from 'scripture-resources-rcl'
 import useTsvItems from './useTsvItems'
 import {
@@ -9,21 +8,16 @@ import {
   LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
-import useDeepCompareEffect from "use-deep-compare-effect"
-import {
-  addGlQuotesTo,
-  getGlAlignmentBibles,
-  getGlAlignmentBiblesList,
-} from "../core"
+import useExtraContent from "./useExtraContent";
 
 /**
  * hook for loading content of translation helps resources
- * @param {string} verse
+ * @param {number|string} verse
  * @param {string} owner
  * @param {string} listRef - points to specific branch or tag for tsv list
  * @param {string} contentRef - points to specific branch or tag for tsv contents
  * @param {string} server
- * @param {string} chapter
+ * @param {number|string} chapter
  * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
  * @param {string} projectId
  * @param {string} languageId
@@ -36,6 +30,7 @@ import {
  *      - error - Error object that has the specific error returned
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  * @param {string} viewMode - list or markdown view
+ * @param {function} useUserLocalStorage
  */
 const useContent = ({
   listRef = 'master',
@@ -52,16 +47,11 @@ const useContent = ({
   onResourceError,
   httpConfig = {},
   viewMode = 'markdown',
+  useUserLocalStorage,
 }) => {
   const [initialized, setInitialized] = useState(false)
-  const [loadingGlData, setLoadingGlData] = useState(false)
-  const [loadedGlRepo, setLoadedGlRepo] = useState(null)
-  const [glBibles, setGlBibles] = useState(null)
-  const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
-  const [glBiblesList, setGlBiblesList] = useState(null)
   const [processedItems, setProcessedItems] = useState(null)
 
-  const twlListView = (resourceId === 'twl') && (viewMode === 'list')
   const reference = {
     verse,
     chapter,
@@ -120,65 +110,26 @@ const useContent = ({
     }
   }, [loading])
 
-  useDeepCompareEffect(async () => { // load GL bibles in resource manifest
-    if (twlListView) { // we only need to load gl quotes if we are showing list view
-      if (initialized && !loading && !error && !loadingGlData) {
-        setLoadingGlData(true)
-        const currentGlRepo = `${owner}/${languageId}`;
-        let glBibles_ = glBibles
-        let glBiblesList_ = glBiblesList
-
-        if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
-          setGlBibles(null)
-          glBibles_ = null
-          setProcessedItems(null)
-        }
-
-        if (glBiblesList_ && (loadedGlRepo !== currentGlRepo)) { // if we have don't have alignment bibles list for current GL
-          setGlBiblesList(null)
-          glBiblesList_ = null
-          setProcessedItems(null)
-        }
-
-        if (!glBiblesList_) { // see if we have alignment bibles list for current GL
-          glBiblesList_ = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
-          console.log('useContent - GL bibles list loaded')
-          setLoadedGlRepo(currentGlRepo)
-          setGlBiblesList(glBiblesList_)
-          setGlBibles(null)
-          glBibles_ = null
-          setProcessedItems(null)
-        }
-
-        if (!glBibles_ && glBiblesList_) {
-          glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_)
-          setGlBibles(glBibles_)
-          setGlLoadedProjectId(projectId)
-          console.log('useContent - GL bibles loaded')
-          setProcessedItems(null)
-        }
-        setLoadingGlData(false)
-      }
-    }
-  }, [{initialized, loading, error, loadingGlData, loadedGlRepo, projectId, glBibles, glBiblesList, languageId, owner}])
-
-  useDeepCompareEffect(async () => { // get gl quotes if we have aligned bibles
-    if (twlListView) { // we only need to load gl quotes if we are showing list view
-      if (initialized && !loading && !error && !loadingGlData) {
-        if (glBibles && items?.length) {
-          const newItems = addGlQuotesTo(chapter, verse, items, glBibles);
-          if (!isEqual(processedItems, newItems)) {
-            console.log('useContent - GL quotes added')
-            setProcessedItems(newItems)
-          }
-        } else if (processedItems) {
-          setProcessedItems(null)
-        }
-      } else if (processedItems) {
-        setProcessedItems(null)
-      }
-    }
-  }, [{initialized, loading, error, loadingGlData, loadedGlRepo, glBibles, glBiblesList, items}])
+  useExtraContent({
+    verse,
+    owner,
+    server,
+    chapter,
+    filePath,
+    projectId,
+    languageId,
+    resourceId,
+    httpConfig,
+    viewMode,
+    useUserLocalStorage,
+    initialized,
+    loading,
+    processedItems,
+    setProcessedItems,
+    items,
+    onResourceError,
+    reference,
+  })
 
   return {
     items: processedItems || items, // processed items take priority

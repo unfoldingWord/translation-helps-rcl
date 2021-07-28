@@ -71,6 +71,11 @@ export function getResponseData(response) {
   return data;
 }
 
+/**
+ * iterate through params converting arrays to strings
+ * @param {object} params
+ * @return {object} new params object with arrays replaced
+ */
 function cleanUpParams(params) {
   const params_ = {...params}
   const keys = Object.keys(params_);
@@ -83,13 +88,13 @@ function cleanUpParams(params) {
 }
 
 /**
- * searches repos for matches
+ * searches catalog for repos that match params (low level function)
  * @param {string} server such as https://git.door43.org
- * @param {object} config
+ * @param {object} config - http request configuration
  * @param {object} params - optional search parameters
  * @return {Promise<object>} http response
  */
-export async function searchCatalog(server, config, params) {
+async function searchCatalog(server, config, params) {
   const params_ = cleanUpParams(params);
   const response = await get({
     url: `${server}/api/v1/repos/search`,
@@ -105,9 +110,9 @@ export async function searchCatalog(server, config, params) {
 }
 
 /**
- * searches repos for matches
+ * searches catalog for repos that match params
  * @param {string} server such as https://git.door43.org
- * @param {object} config
+ * @param {object} config - http request configuration
  * @param {object} params - optional search parameters
  * @return {Promise<object>} object containing repos by name
  */
@@ -138,7 +143,7 @@ export async function searchCatalogForRepos(server, config, params) {
 /**
  * gets the metadata for branch
  * @param {string} url
- * @param {object} config
+ * @param {object} config - http request configuration
  * @param {boolean} noCache
  * @param {boolean} skipNetworkCheck
  * @param {boolean} throwException - if true then unexpected errors will result in exception
@@ -196,7 +201,7 @@ export async function queryUrl({
 /**
  * read file
  * @param {string} server such as https://git.door43.org
- * @param {object} config
+ * @param {object} config - http request configuration
  * @param {string} repoOwner
  * @param {string} repoName
  * @param {string} filePath
