@@ -18,7 +18,7 @@
   "peerDependencies": {
     "@material-ui/core": "^4.x",
     "@material-ui/lab": "^4.x",
-    "gitea-react-toolkit": "^1.8.1",
+    "gitea-react-toolkit": "^1.10.0",
     "markdown-translatable": "^1.x",
     "prop-types": "^15.x",
     "react": "^17.x",
