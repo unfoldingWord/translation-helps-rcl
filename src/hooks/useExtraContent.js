@@ -106,7 +106,7 @@ const useExtraContent = ({
     }
   }, [{initialized, loading, error, loadingGlData, projectId, glBibles, glBiblesList, reference, languageId, owner}])
 
-  useDeepCompareEffect(async () => { // get gl quotes if we have aligned bibles
+  useDeepCompareEffect(() => { // get gl quotes if we have aligned bibles
     if (twlListView) { // we only need to load gl quotes if we are showing list view
       if (initialized && !loading && !error && !loadingGlData) {
         if (glBibles && items?.length) {

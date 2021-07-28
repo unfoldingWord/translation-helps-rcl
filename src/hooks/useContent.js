@@ -101,7 +101,7 @@ const useContent = ({
     [INITIALIZED_STATE]: initialized,
   }
 
-  useEffect(async () => {
+  useEffect(() => {
     if (!initialized) {
       if (loading) {
         // once first load has begun, we are initialized
