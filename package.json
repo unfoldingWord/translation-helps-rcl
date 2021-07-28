@@ -44,7 +44,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-styleguidist": "^11.1.1",
-    "scripture-resources-rcl": "5.0.0",
+    "scripture-resources-rcl": "5.1.0",
     "webpack": "4.44.0"
   },
   "dependencies": {
