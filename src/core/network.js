@@ -123,7 +123,6 @@ export async function searchCatalogForRepos(server, config, params) {
     skipNetworkCheck: true,
   };
   const results = await searchCatalog(server, config_, params)
-  console.log('twl search', results)
 
   let repos = null
   if (results?.status === 200) {
@@ -134,8 +133,6 @@ export async function searchCatalogForRepos(server, config, params) {
         repos[repo.name] = repo
       }
     }
-
-    console.log('twl bible list', Object.keys(repos))
   }
   return repos
 }

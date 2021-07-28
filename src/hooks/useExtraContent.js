@@ -85,7 +85,6 @@ const useExtraContent = ({
           setProcessedItems(null)
           setGlBibles(null)
           const newGlBiblesList = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
-          console.log('useExtraContent - GL bibles list loaded')
           glBiblesList_ = {
             repo: currentGlRepo,
             bibles: newGlBiblesList
@@ -99,7 +98,6 @@ const useExtraContent = ({
           glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_.bibles)
           setGlBibles(glBibles_)
           setGlLoadedProjectId(projectId)
-          console.log('useExtraContent - GL bibles loaded')
         }
         setLoadingGlData(false)
       }
@@ -112,7 +110,6 @@ const useExtraContent = ({
         if (glBibles && items?.length) {
           const newItems = addGlQuotesTo(chapter, verse, items, glBibles);
           if (!isEqual(processedItems, newItems)) {
-            console.log('useExtraContent - GL quotes added')
             setProcessedItems(newItems)
           }
         } else if (processedItems) {

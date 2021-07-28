@@ -157,9 +157,6 @@ export async function getGlAlignmentBibles(languageId, httpConfig, server, owner
  * @return {Promise<{resource: ({parseUsfm}|{manifest}|*), json: *}|null>}
  */
 export async function loadGlBible(glBible, config, ref, reference) {
-  console.log(`loadGlBible() - loading ${glBible}`)
-
-  // get GL bible
   const [langId, bible] = glBible.split('_')
   const resourceLink = `${DOOR43_CATALOG}/${langId}/${bible}/${ref}`
   try {
@@ -170,20 +167,16 @@ export async function loadGlBible(glBible, config, ref, reference) {
     })
     let loaded = false
     if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
-      console.log(`loadGlBible() - loaded ${glBible} from ${resourceLink}`, resource)
       const fileResults = await resource?.project?.parseUsfm()
 
       if (fileResults?.response?.status === 200) {
         const json = fileResults?.json;
 
         if (json) {
-          console.log(`loadGlBible() - loaded ${glBible} json`)
           return {
             resource,
             json,
           }
-        } else {
-          console.log(`useContent - skipping ${glBible} - not a bible`)
         }
       }
     }
@@ -226,16 +219,13 @@ export async function getGlAlignmentBiblesList(languageId, httpConfig, server, o
     console.warn('tw manifest', e)
   }
 
-  console.log('tw manifest', results)
-
   if (!results?.manifest) {
     return null
   }
 
   const bibleRepos = await searchCatalogForRepos(server, httpConfig, params)
-  console.log('twl bibles found', bibleRepos)
-
   let alignmentBibles = []
+
   if (bibleRepos) {
     const tsv_relations = results?.manifest?.dublin_core?.relation
     if (tsv_relations) {
@@ -243,10 +233,7 @@ export async function getGlAlignmentBiblesList(languageId, httpConfig, server, o
         const [langId, bible] = repo.split('/')
         const repoName = `${langId}_${bible}`
         if ((langId === languageId) && (bible !== 'obs')) { // if GL bible
-          console.log(`getGlAlignmentBibles - found GL bible ${repoName}`)
           alignmentBibles.push(repoName)
-        } else {
-          console.log(`getGlAlignmentBibles - skipping - not GL bible ${repoName}`)
         }
       }
     }
