@@ -105,7 +105,7 @@ const useUserBranch = ({
 
         setRef(userEditBranchName) // switch current branch to user edit branch
       }
-      return true
+      return userEditBranchName
     } catch (e) {
       console.error(`useEditState - startEdit FAILED`, e)
       processUnknownError(
@@ -124,9 +124,13 @@ const useUserBranch = ({
    */
   async function startEdit() {
     if (!usingUserBranch) {
-      await ensureUserEditBranch()
+      const branch = await ensureUserEditBranch()
       setUsingUserBranch(true)
+      console.log('startEdit branch', branch)
+      return branch
     }
+
+    return false
   }
 
   /**

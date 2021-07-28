@@ -39,20 +39,23 @@ export default function useTsvItems({
   onResourceError,
   httpConfig = {},
 }) {
-  const [items, setItems] = useState([])
+  const [{ items, tsvs }, setState] = useState({
+    items: [],
+    tsvs: null,
+  })
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     async function getTsvItems() {
       const tsvItems = Array.isArray(content) ? content : []
       const tn = {}
+      const book = projectId?.toLowerCase() || 'list'
 
       for (let index = 0; index < tsvItems.length; index++) {
         const note = tsvItems[index]
         const referenceChunks = note?.Reference?.split(':')
         const Chapter = referenceChunks ? referenceChunks[0] : null
         const Verse = referenceChunks ? referenceChunks[1] : null
-        const book = projectId.toLowerCase() || 'list'
 
         if (Chapter && Verse && book) {
           note.Chapter = Chapter
@@ -119,10 +122,17 @@ export default function useTsvItems({
                   fullResponse: true,
                 }).then(response => {
                   const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
-                  const message = processHttpErrors(response, resourceDescr, url, onResourceError);
+                  const message = processHttpErrors(
+                    response,
+                    resourceDescr,
+                    url,
+                    onResourceError
+                  )
                   if (message) {
-                    const httpCode = response?.status || 0;
-                    console.warn(`useTsvItems(${url}) - httpCode ${httpCode}, article not found: ${message}`)
+                    const httpCode = response?.status || 0
+                    console.warn(
+                      `useTsvItems(${url}) - httpCode ${httpCode}, article not found: ${message}`
+                    )
                     return null
                   }
                   return response
@@ -146,11 +156,14 @@ export default function useTsvItems({
           setLoading(false)
         }
       }
-      setItems(_items)
+      setState({
+        items: _items,
+        tsvs: tn[book] || null,
+      })
     }
 
     getTsvItems()
   }, [content])
 
-  return { items, loading }
+  return { items, tsvs, loading }
 }

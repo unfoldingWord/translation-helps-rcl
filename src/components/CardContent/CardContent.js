@@ -4,7 +4,7 @@ import { BlockEditable } from 'markdown-translatable'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
 import CircularProgress from '../CircularProgress'
-import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
+// import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
 
 const CardContent = ({
   id,
@@ -24,7 +24,7 @@ const CardContent = ({
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
-  markdown = stripReferenceLinksFromMarkdown(markdown)
+  // markdown = stripReferenceLinksFromMarkdown(markdown)
 
   if (isLoading) {
     return <CircularProgress size={200} />
@@ -65,7 +65,7 @@ const CardContent = ({
         fontSize={fontSize}
         preview={!markdownView}
         style={{ padding: '0px' }}
-        markdown={stripReferenceLinksFromMarkdown(item.markdown)}
+        markdown={item.markdown}
       />
     )
   } else if (item && viewMode === 'list') {

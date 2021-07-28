@@ -65,7 +65,6 @@ const NavigationFlexDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 3px;
   width: 100%;
 `
 
@@ -182,9 +181,7 @@ const Card = ({
             id={`${id}_drag_indicator`}
             className={`${classes.dragIcon} ${dragIndicator}`}
           />
-          <div
-            id={`${id}_title`}
-            className={classes.title}>
+          <div id={`${id}_title`} className={classes.title}>
             {title}
           </div>
         </FlexDiv>
@@ -223,13 +220,15 @@ const Card = ({
             ) : null}
             {editable ? (
               <IconButton
+                disabled={saved}
+                className={classes.margin}
+                onClick={() => onSaveEdit()}
                 title={saved ? 'Saved' : 'Save'}
                 aria-label={saved ? 'Saved' : 'Save'}
-                onClick={() => onSaveEdit()}
-                className={classes.margin}
+                style={{ cursor: saved ? 'none' : 'pointer ' }}
               >
                 {saved ? (
-                  <SaveOutlinedIcon id='saved_icon' htmlColor='#000' />
+                  <SaveOutlinedIcon id='saved_icon' />
                 ) : (
                   <SaveIcon id='save_icon' htmlColor='#000' />
                 )}

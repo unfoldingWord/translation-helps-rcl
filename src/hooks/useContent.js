@@ -74,7 +74,7 @@ const useContent = ({
     config,
   })
 
-  const { items, loading: loadingTSV } = useTsvItems({
+  const { items, tsvs, loading: loadingTSV } = useTsvItems({
     fetchMarkdown,
     languageId,
     resourceId,
@@ -112,6 +112,7 @@ const useContent = ({
   }, [loading])
 
   return {
+    tsvs,
     items,
     resource,
     fetchResponse,
