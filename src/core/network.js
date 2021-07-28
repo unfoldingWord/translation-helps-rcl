@@ -1,4 +1,7 @@
-import { decodeBase64ToUtf8 } from "gitea-react-toolkit";
+import {
+  decodeBase64ToUtf8,
+  get,
+} from "gitea-react-toolkit";
 
 /**
  * determine if http code is could be due to possible network disconnect
@@ -67,3 +70,154 @@ export function getResponseData(response) {
   data = (data?.encoding === 'base64') ? decodeBase64ToUtf8(data.content) : data;
   return data;
 }
+
+/**
+ * iterate through params converting arrays to strings
+ * @param {object} params
+ * @return {object} new params object with arrays replaced
+ */
+function cleanUpParams(params) {
+  const params_ = {...params}
+  const keys = Object.keys(params_);
+  for (const key of keys) {
+    if (Array.isArray(params_[key])) {
+      params_[key] = params_[key].join(',')
+    }
+  }
+  return params_;
+}
+
+/**
+ * searches catalog for repos that match params (low level function)
+ * @param {string} server such as https://git.door43.org
+ * @param {object} config - http request configuration
+ * @param {object} params - optional search parameters
+ * @return {Promise<object>} http response
+ */
+async function searchCatalog(server, config, params) {
+  const params_ = cleanUpParams(params);
+  const response = await get({
+    url: `${server}/api/v1/repos/search`,
+    config: {
+      ...config,
+      server,
+    },
+    params: params_,
+    fullResponse: config.fullResponse,
+  });
+
+  return response;
+}
+
+/**
+ * searches catalog for repos that match params
+ * @param {string} server such as https://git.door43.org
+ * @param {object} config - http request configuration
+ * @param {object} params - optional search parameters
+ * @return {Promise<object>} object containing repos by name
+ */
+export async function searchCatalogForRepos(server, config, params) {
+  const config_ = {
+    ...config,
+    fullResponse: true,
+    skipNetworkCheck: true,
+  };
+  const results = await searchCatalog(server, config_, params)
+
+  let repos = null
+  if (results?.status === 200) {
+    repos = {}
+    const foundRepos = results.data?.data || []
+    for (const repo of foundRepos) {
+      if (repo?.name) {
+        repos[repo.name] = repo
+      }
+    }
+  }
+  return repos
+}
+
+/**
+ * gets the metadata for branch
+ * @param {string} url
+ * @param {object} config - http request configuration
+ * @param {boolean} noCache
+ * @param {boolean} skipNetworkCheck
+ * @param {boolean} throwException - if true then unexpected errors will result in exception
+ * @return {Promise<object>} returns the metadata response and flag if branch exists
+ */
+export async function queryUrl({
+  url,
+  config= {},
+  noCache = true,
+  skipNetworkCheck = true,
+  throwException = false,
+}) {
+  let error = true
+  let response
+  try {
+    response = await get({
+      url,
+      config: {
+        ...config,
+        skipNetworkCheck,
+      },
+      noCache,
+      fullResponse: true,
+    });
+
+    switch (response?.status) {
+      case 200:
+      case 404:
+        error = false
+        break
+
+      default:
+        // any other response is an unexpected error
+        error = new Error(`Error getting repo status '${url}'`)
+        error.response = response
+        error.url = url
+    }
+  } catch (e) {
+    response = e?.response
+    if (response?.status === 404) { // branch missing is a known error we can handle
+      error = false
+    } else {
+      error = e
+    }
+  }
+
+  return {
+    success: response?.status === 200,
+    status: response?.status,
+    error,
+    response,
+  }
+}
+
+/**
+ * read file
+ * @param {string} server such as https://git.door43.org
+ * @param {object} config - http request configuration
+ * @param {string} repoOwner
+ * @param {string} repoName
+ * @param {string} filePath
+ * @param {string} ref - branch name or tag to find
+ * @return {Promise<string>} returns name of userBranch if found, otherwise returns master
+ */
+export async function getFileFromRepo(server, config, repoOwner, repoName,
+                                      filePath, ref = 'master') {
+  const url = `${server}/api/v1/repos/${repoOwner}/${repoName}/contents/${filePath}?ref=${ref}`
+  const response = await queryUrl({
+    url,
+    throwException: false,
+    config,
+  })
+
+  if (response?.error) {
+    console.warn(`getFileFromRepo - failed to get ${url}`, response?.error)
+  }
+
+  return response;
+}
+

@@ -1,6 +1,6 @@
 import { get, post } from 'gitea-react-toolkit';
 import { USER_BRANCH_EXTENSION } from "../common";
-import axios from "axios";
+import { queryUrl } from "./network";
 
 /**
  * query server for list of branches on repo
@@ -44,27 +44,18 @@ export async function getBranchMetaData(server, repoOwner, repoName, branch) {
   let error = true
   let response
   try {
-    response = await get({
+    response = await queryUrl({
       url,
-      config: {
-        server,
-        skipNetworkCheck: true,
-      },
-      noCache: true,
-      fullResponse: true,
-    });
+      throwException: true,
+    })
 
-    switch (response?.status) {
-      case 200:
-      case 404:
-        error = false
-        break
-
-      default:
-        // any other response is an unexpected error
-        error = new Error(`Error getting repo status '${url}'`)
-        error.response = response
-        error.url = url
+    if (response?.error) {
+      // unexpected error
+      error = new Error(`Error getting repo status '${url}'`)
+      error.response = response
+      error.url = url
+    } else {
+      error = false
     }
   } catch (e) {
     response = e?.response

@@ -5,6 +5,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Card1 = ({ selectedQuote, setQuote }) => {
+  const viewMode = 'list'
   const {
     items,
     markdown,
@@ -19,6 +20,7 @@ const Card1 = ({ selectedQuote, setQuote }) => {
     owner: 'test_org',
     fetchMarkdown: false,
     server: 'https://git.door43.org',
+    viewMode,
   })
 
   const {

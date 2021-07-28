@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   createUserBranch,
   getUserEditBranch,
@@ -58,7 +58,7 @@ const useUserBranch = ({
       )
     } catch (e) {
       console.error(
-        `useEditState - get user branch FAILED ${JSON.stringify({
+        `useUserBranch - get user branch FAILED ${JSON.stringify({
           server,
           owner,
           repoName,
@@ -94,7 +94,7 @@ const useUserBranch = ({
           userEditBranchName
         )
         console.log(
-          `useEditState - startEdit user branch created ${JSON.stringify({
+          `useUserBranch - user branch created ${JSON.stringify({
             server,
             owner,
             repoName,
@@ -107,7 +107,7 @@ const useUserBranch = ({
       }
       return userEditBranchName
     } catch (e) {
-      console.error(`useEditState - startEdit FAILED`, e)
+      console.error(`useUserBranch - ensureUserEditBranch FAILED`, e)
       processUnknownError(
         e,
         'DCS API',

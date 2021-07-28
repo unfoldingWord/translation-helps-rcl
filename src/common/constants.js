@@ -10,3 +10,4 @@ export const LOADING_STATE = 'loading'
 export const ERROR_STATE = 'error'
 export const INITIALIZED_STATE = 'initialized'
 export const USER_BRANCH_EXTENSION = '-tc-create-1'
+export const DOOR43_CATALOG = 'Door43-Catalog';
