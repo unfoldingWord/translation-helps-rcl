@@ -93,7 +93,7 @@ const useUserBranch = ({
           config,
           userEditBranchName
         )
-        console.log(
+        console.info(
           `useUserBranch - user branch created ${JSON.stringify({
             server,
             owner,
@@ -126,7 +126,6 @@ const useUserBranch = ({
     if (!usingUserBranch) {
       const branch = await ensureUserEditBranch()
       setUsingUserBranch(true)
-      console.log('startEdit branch', branch)
       return branch
     }
 
