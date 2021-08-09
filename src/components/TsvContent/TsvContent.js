@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
+import getNoteLabel from '../../core/getNoteLabel'
 
 export default function TsvContent({
   id,
@@ -125,7 +126,8 @@ const Item = ({
     label === 'OccurrenceNote'
   ) {
     const { Note, Annotation, OccurrenceNote } = item
-    const markdownLabel = Annotation || Note || OccurrenceNote
+    const rawMarkdown = Annotation || Note || OccurrenceNote
+    const markdownLabel = getNoteLabel({ Annotation, Note, OccurrenceNote })
     labelContent = (
       <BlockEditable
         editable={isEditable}
