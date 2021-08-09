@@ -121,7 +121,6 @@ const CardContent = ({
       <TsvContent
         id={id}
         item={item}
-        onEdit={onEdit}
         filters={filters}
         setQuote={setQuote}
         editable={editable}

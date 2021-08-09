@@ -2,83 +2,10 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
-import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
-import getNoteLabel from '../../core/getNoteLabel'
 
-const Container = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  row-gap: 1.5rem;
-  column-gap: 1rem;
-  width: 100%;
-  padding: 0px;
-  margin: 7px 0px 0px;
-`
-
-const Fieldset = styled.fieldset`
-  display: flex;
-  word-break: break-word;
-  width: 100%;
-  grid-column: ${({ label }) =>
-    label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
-      ? 'span 3 / span 3'
-      : label === 'GLQuote'
-      ? 'span 2 / span 2'
-      : 'span 1 / span 1'};
-  flex-direction: column;
-  padding: 0px;
-  padding-inline-end: 0px;
-  padding-inline-start: 0px;
-  margin: 0px;
-  margin-bottom: 0px;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  border-radius: 4px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: ${props =>
-    props.error ? '#FF1A1A' : props.caution ? '#FF8400' : 'transparent'};
-`
-
-const Legend = styled.legend`
-  margin-bottom: ${({ label }) =>
-    label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
-      ? '0px'
-      : '7px'};
-  padding-inline-start: ${props =>
-    props.error || props.caution ? '2px' : '0px'};
-  padding-inline-end: ${props =>
-    props.error || props.caution ? '2px' : '0px'};
-  color: ${props => (props.color ? props.color : '#000000')};
-  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
-`
-
-const Label = styled.label`
-  letter-spacing: 0.25px;
-  color: ${props => (props.color ? props.color : '#000000')};
-  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
-  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
-  cursor: ${props => (props.clickable ? 'pointer' : 'inherit')};
-  &:focus-visible {
-    outline: #38addf auto 1px;
-  }
-`
-
-const Input = styled.input`
-  border: none;
-  letter-spacing: 0.25px;
-  color: ${props => (props.color ? props.color : '#000000')};
-  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
-  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
-  &:focus-visible {
-    outline: #38addf auto 1px;
-  }
-`
-
-const TsvContent = ({
+export default function TsvContent({
   id,
   item,
-  onEdit,
   filters,
   editable,
   setQuote,
@@ -86,7 +13,7 @@ const TsvContent = ({
   markdownView,
   selectedQuote,
   fontSize: _fontSize,
-}) => {
+}) {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
   const { Occurrence, SupportReference } = item
   const ordering = {
@@ -198,8 +125,7 @@ const Item = ({
     label === 'OccurrenceNote'
   ) {
     const { Note, Annotation, OccurrenceNote } = item
-    const rawMarkdown = Annotation || Note || OccurrenceNote
-    const markdownLabel = getNoteLabel({ Annotation, Note, OccurrenceNote })
+    const markdownLabel = Annotation || Note || OccurrenceNote
     labelContent = (
       <BlockEditable
         editable={isEditable}
@@ -210,10 +136,7 @@ const Item = ({
           padding: '0px',
           margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
         }}
-        onEdit={markdown => {
-          console.log('Something happens')
-          onTsvEdit({ ...item, [markdownLabel]: markdown })
-        }}
+        onEdit={markdown => onTsvEdit({ ...item, [markdownLabel]: markdown })}
       />
     )
   } else if (isEditable) {
@@ -296,4 +219,72 @@ TsvContent.propTypes = {
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
-export default TsvContent
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: 1.5rem;
+  column-gap: 1rem;
+  width: 100%;
+  padding: 0px;
+  margin: 7px 0px 0px;
+`
+
+const Fieldset = styled.fieldset`
+  display: flex;
+  word-break: break-word;
+  width: 100%;
+  grid-column: ${({ label }) =>
+    label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
+      ? 'span 3 / span 3'
+      : label === 'GLQuote'
+      ? 'span 2 / span 2'
+      : 'span 1 / span 1'};
+  flex-direction: column;
+  padding: 0px;
+  padding-inline-end: 0px;
+  padding-inline-start: 0px;
+  margin: 0px;
+  margin-bottom: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: ${props =>
+    props.error ? '#FF1A1A' : props.caution ? '#FF8400' : 'transparent'};
+`
+
+const Legend = styled.legend`
+  margin-bottom: ${({ label }) =>
+    label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
+      ? '0px'
+      : '7px'};
+  padding-inline-start: ${props =>
+    props.error || props.caution ? '2px' : '0px'};
+  padding-inline-end: ${props =>
+    props.error || props.caution ? '2px' : '0px'};
+  color: ${props => (props.color ? props.color : '#000000')};
+  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
+`
+
+const Label = styled.label`
+  letter-spacing: 0.25px;
+  color: ${props => (props.color ? props.color : '#000000')};
+  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
+  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
+  cursor: ${props => (props.clickable ? 'pointer' : 'inherit')};
+  &:focus-visible {
+    outline: #38addf auto 1px;
+  }
+`
+
+const Input = styled.input`
+  border: none;
+  letter-spacing: 0.25px;
+  color: ${props => (props.color ? props.color : '#000000')};
+  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
+  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
+  &:focus-visible {
+    outline: #38addf auto 1px;
+  }
+`
