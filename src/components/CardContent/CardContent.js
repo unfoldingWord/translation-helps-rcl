@@ -16,6 +16,7 @@ const CardContent = ({
   setQuote,
   editable,
   isLoading,
+  onTsvEdit,
   markdownView,
   errorMessage,
   selectedQuote,
@@ -80,29 +81,37 @@ const CardContent = ({
     viewMode === 'question' &&
     (item.Annotation || item.Question)
   ) {
-    let question, answer
+    let question, response
 
     if (item.Annotation) {
       const text = item.Annotation.replace('', '')
       const chunks = text.split('?')
-      question = chunks[0]
-      answer = chunks[1].split('> ')[1]
+      question = `${chunks[0]}?`
+      response = chunks[1].split('> ')[1]
     } else {
-      question = item.Question
-      answer = item.Response || ''
+      question = `# ${item.Question}`
+      response = item.Response || ''
     }
 
-    const markdown = `# ${question}? \n\n${answer.trim()}`
-
     return (
-      <BlockEditable
-        onEdit={onEdit}
-        markdown={markdown}
-        editable={editable}
-        fontSize={fontSize}
-        preview={!markdownView}
-        style={{ display: 'block', padding: '0px' }}
-      />
+      <div>
+        <BlockEditable
+          onEdit={onEdit}
+          markdown={question}
+          editable={editable}
+          fontSize={fontSize}
+          preview={!markdownView}
+          style={{ display: 'block', padding: '0px' }}
+        />
+        <BlockEditable
+          onEdit={onEdit}
+          markdown={response}
+          editable={editable}
+          fontSize={fontSize}
+          preview={!markdownView}
+          style={{ display: 'block', padding: '0px' }}
+        />
+      </div>
     )
   } else if (
     (item && viewMode === 'default') ||
@@ -117,6 +126,7 @@ const CardContent = ({
         setQuote={setQuote}
         editable={editable}
         fontSize={_fontSize}
+        onTsvEdit={onTsvEdit}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
       />

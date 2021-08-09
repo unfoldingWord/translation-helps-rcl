@@ -111,6 +111,7 @@ export default function useTsvItems({
             url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}?ref=${ref_}`
             let markdown = ''
             let fetchResponse = null
+
             if (path) {
               // only fetch data if we were able to get path for item
               const ref = item?.SupportReference || item?.TWLink
