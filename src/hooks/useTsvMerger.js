@@ -39,6 +39,7 @@ export default function useTsvMerger({
 }) {
   function onTsvEdit(newItem) {
     if (tsvs) {
+      console.log({ newItem })
       const newTsvs = Object.assign({}, { ...tsvs })
       // Updating item reference with edited item.
       newTsvs[chapter][verse][itemIndex] = newItem

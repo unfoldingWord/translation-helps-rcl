@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
@@ -52,12 +52,12 @@ export default function TsvContent({
 
   return (
     <Container>
-      {filters.map(label => {
+      {filters.map((label, i) => {
         const value = item[label]
 
         return (
           <Item
-            key={label}
+            key={label + i}
             item={item}
             label={label}
             value={value}
@@ -95,6 +95,7 @@ const Item = ({
   selectedQuote,
   SupportReference,
 }) => {
+  const [inputValue, setInputValue] = useState(null)
   const selected = selectedQuote?.quote === value
   const editableFields = [
     'OccurrenceNumber',
@@ -146,12 +147,12 @@ const Item = ({
       <Input
         id={valueId}
         bold={selected}
-        value={value}
+        value={typeof inputValue == 'string' ? inputValue : value}
         fontSize={fontSize}
-        onChange={content => {
-          console.log('Something happens')
-          onTsvEdit({ ...item, [label]: content })
+        onBlur={event => {
+          onTsvEdit({ ...item, [label]: event.target.value })
         }}
+        onChange={e => setInputValue(e.target.value)}
         clickable={!!setQuote}
         color={selected ? '#38ADDF' : null}
       />

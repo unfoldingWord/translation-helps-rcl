@@ -107,7 +107,7 @@ export default function useTsvItems({
             const resource = routes[0]
             const newRoutes = routes.slice(2, routes.length)
             const filename = resource === 'ta' ? '/01.md' : '.md'
-            const filePath = `${newRoutes.join('/')}${filename}`
+            let filePath = `${newRoutes.join('/')}${filename}`
             url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}?ref=${ref_}`
             let markdown = ''
             let fetchResponse = null
@@ -150,6 +150,12 @@ export default function useTsvItems({
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
             }
+            // Remove filePath value for ta
+            if (resource === 'ta' || filePath === '.md') {
+              filePath = ''
+              fetchResponse = null
+            }
+
             newItems.push({ ...item, markdown, fetchResponse, filePath })
             item.markdown = markdown
           }
