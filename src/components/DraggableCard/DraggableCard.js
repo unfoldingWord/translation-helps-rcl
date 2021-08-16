@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import BlockEditable from 'markdown-translatable/dist/components/block-editable'
@@ -36,8 +36,10 @@ export default function DraggableCard({
   fontSize,
   id,
   showRawContent,
+  parentRef,
 }) {
   const classes = useStyles()
+  const cardRef = useRef(null)
 
   function getCardContent() {
     if (showRawContent) {
@@ -64,6 +66,21 @@ export default function DraggableCard({
     }
   }
 
+  function onStop(e) {
+    console.log('onStop', e)
+    const { clientX, clientY, screenX, screenY } = e
+    const {
+      clientHeight,
+      clientWidth,
+    } = parentRef?.current || {}
+    console.log({ clientX, clientY, clientHeight, clientWidth })
+    const min = 48;
+    if ( (clientX < min) || (clientY < min)
+    || (clientX > clientWidth - min) || (clientY > clientHeight - min)) {
+      console.log('outside of range')
+    }
+  }
+
   title = error ? 'Error' : title
 
   return (
@@ -72,6 +89,8 @@ export default function DraggableCard({
       open={open}
       title={title || ''}
       handleClose={onClose}
+      cardRef={cardRef}
+      onStop={onStop}
     >
       <Card
         closeable
@@ -94,6 +113,7 @@ DraggableCard.defaultProps = {
   content: '',
   fontSize: '100%',
   showRawContent: false,
+  mainScreenRef: null,
 }
 
 DraggableCard.propTypes = {
@@ -119,4 +139,6 @@ DraggableCard.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  /** Used to make sure card is on screen if defined */
+  parentRef: PropTypes.object,
 }

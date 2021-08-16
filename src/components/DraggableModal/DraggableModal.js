@@ -3,18 +3,31 @@ import PropTypes from 'prop-types'
 import Dialog from '@material-ui/core/Dialog'
 import Draggable from 'react-draggable'
 
-function PaperComponent(props) {
-  return (
-    <Draggable
-      handle='.draggable-dialog-title'
-      cancel={'[class*="MuiDialogContent-root"]'}
-    >
-      <div {...props} />
-    </Draggable>
-  )
-}
+export default function DraggableModal({
+   open,
+   handleClose,
+   children,
+   id,
+   onStop,
+ }) {
 
-export default function DraggableModal({ open, handleClose, children, id }) {
+  function PaperComponent(props) {
+    function onStop_(e) {
+      console.log('PaperComponent.onStop_', e)
+      onStop && onStop(e)
+    }
+
+    return (
+      <Draggable
+        handle='.draggable-dialog-title'
+        cancel={'[class*="MuiDialogContent-root"]'}
+        onStop={onStop_}
+      >
+        <div {...props} />
+      </Draggable>
+    )
+  }
+
   return (
     <Dialog
       open={open}
