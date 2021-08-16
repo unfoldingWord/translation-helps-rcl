@@ -44,11 +44,15 @@ export default function useTsvMerger({
       // Updating item reference with edited item.
       newTsvs[chapter][verse][itemIndex] = newItem
       const tsvItems = flattenObject(newTsvs)
+      const lastTsvItem = tsvItems[tsvItems.length - 1]
       // Front is always at end of array thus move to beginning of array.
-      const lastItem = tsvItems.pop()
+      console.log('lastTsvItem.Chapter', lastTsvItem.Chapter)
+      if (lastTsvItem.Chapter == 'front') {
+        const lastItem = tsvItems.pop()
 
-      if (lastItem) {
-        tsvItems.unshift(lastItem)
+        if (lastItem) {
+          tsvItems.unshift(lastItem)
+        }
       }
 
       // Check if it uses the Reference value, then remove Chapter, Verse and book that were added
@@ -57,6 +61,9 @@ export default function useTsvMerger({
         delete tsvItems[0].Verse
         delete tsvItems[0].Book
       }
+
+      console.log({ newTsvs })
+      console.log({ tsvItems })
 
       const tsvFile = parser.TSV.stringify(tsvItems)
 

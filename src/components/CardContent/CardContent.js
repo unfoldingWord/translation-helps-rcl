@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
+import CircularProgress from '../CircularProgress'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
-import CircularProgress from '../CircularProgress'
+import TqContent from '../TqContent'
 
 const CardContent = ({
   id,
@@ -81,37 +82,14 @@ const CardContent = ({
     viewMode === 'question' &&
     (item.Annotation || item.Question)
   ) {
-    let question, response
-
-    if (item.Annotation) {
-      const text = item.Annotation.replace('', '')
-      const chunks = text.split('?')
-      question = `${chunks[0]}?`
-      response = chunks[1].split('> ')[1]
-    } else {
-      question = `# ${item.Question}`
-      response = item.Response || ''
-    }
-
     return (
-      <div>
-        <BlockEditable
-          onEdit={onEdit}
-          markdown={question}
-          editable={editable}
-          fontSize={fontSize}
-          preview={!markdownView}
-          style={{ display: 'block', padding: '0px' }}
-        />
-        <BlockEditable
-          onEdit={onEdit}
-          markdown={response}
-          editable={editable}
-          fontSize={fontSize}
-          preview={!markdownView}
-          style={{ display: 'block', padding: '0px' }}
-        />
-      </div>
+      <TqContent
+        item={item}
+        fontSize={fontSize}
+        editable={editable}
+        onTsvEdit={onTsvEdit}
+        markdownView={markdownView}
+      />
     )
   } else if (
     (item && viewMode === 'default') ||
