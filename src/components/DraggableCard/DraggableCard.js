@@ -59,8 +59,9 @@ export default function DraggableCard({
       let bottom = clientTop + clientHeight - offsetTop;
 
       // tweak right and bottom so draggable handle stays on screen
-      right -= cardOffsetLeft
-      bottom -= cardOffsetTop
+      const scrollBarFactor = 1.25 // in case workspace scroll bar is visible (browser dependent)
+      right -= Math.round(cardOffsetLeft * scrollBarFactor)
+      bottom -= Math.round(cardOffsetTop * scrollBarFactor)
 
       const newBounds = {
         left: clientLeft - offsetLeft,
