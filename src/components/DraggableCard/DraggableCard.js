@@ -50,7 +50,7 @@ export default function DraggableCard({
       let offsetLeft = cardOffsetLeft
       let offsetTop = cardOffsetTop
 
-      if (cardRef.current.offsetParent) { // add parent offset if present
+      if (cardRef.current.offsetParent) { // add card parent offset if present
         offsetLeft += cardRef.current.offsetParent.offsetLeft
         offsetTop += cardRef.current.offsetParent.offsetTop
       }
@@ -71,13 +71,13 @@ export default function DraggableCard({
       if (!isEqual(bounds, newBounds)) { // update if changed
         setBounds(newBounds)
       }
-    } else {
+    } else if (bounds !== null) {
       setBounds(null)
     }
   }, [
     parentRef?.current,
     cardRef?.current,
-    // we watch the following because displayed content changes trigger card resizing
+    // we watch the following because displayed content changes trigger card resizing and recentering
     content,
     loading,
     error,
