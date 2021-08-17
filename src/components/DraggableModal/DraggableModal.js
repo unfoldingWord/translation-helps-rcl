@@ -14,7 +14,9 @@ export default function DraggableModal({
 
   function PaperComponent(props) {
     function onStart(e) {
-      onStartDrag && onStartDrag(e)
+      if (onStartDrag) {
+        return onStartDrag(e)
+      }
       return true
     }
 

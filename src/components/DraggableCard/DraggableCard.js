@@ -43,6 +43,10 @@ export default function DraggableCard({
   const cardRef = useRef(null)
   const [ bounds, setBounds ] = useState(null)
 
+  /**
+   * determines if bounds have changed for dragging
+   * @return {boolean} returns true if bounds changed
+   */
   function updateBounds() {
     if (parentRef?.current?.clientWidth && parentRef?.current?.clientHeight && cardRef?.current) {
       const {clientLeft, clientWidth, clientTop, clientHeight} = parentRef.current
@@ -71,10 +75,13 @@ export default function DraggableCard({
       }
       if (!isEqual(bounds, newBounds)) { // update if changed
         setBounds(newBounds)
+        return true
       }
     } else if (bounds !== null) {
       setBounds(null)
+      return true
     }
+    return false
   }
 
   useEffect(() => {
@@ -117,8 +124,12 @@ export default function DraggableCard({
   function onStartDrag() {
     // drag started, do check to see if drag bounds need to be updated
     if (parentRef?.current) {
-      updateBounds()
+      const updated = updateBounds()
+      if (updated) {
+        return false
+      }
     }
+    return true
   }
 
   title = error ? 'Error' : title
