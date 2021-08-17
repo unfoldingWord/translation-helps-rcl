@@ -15,7 +15,6 @@ export default function TsvContent({
 
   useEffect(() => {
     if (Question || Response) {
-      console.log({ Question, Response })
       const isOldTsvTq = item?.Annotation ? true : false
       const newItem = { ...item }
 
@@ -39,7 +38,6 @@ export default function TsvContent({
   const handleEdit = (field, edit) => {
     // Remove markdown that was added for view only
     const newEdit = edit?.replace('#', '')
-    console.log('handleEdit', { field, newEdit })
 
     setTqValue(prevState => ({
       ...prevState,

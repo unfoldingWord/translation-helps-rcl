@@ -39,14 +39,12 @@ export default function useTsvMerger({
 }) {
   function onTsvEdit(newItem) {
     if (tsvs) {
-      console.log({ newItem })
       const newTsvs = Object.assign({}, { ...tsvs })
       // Updating item reference with edited item.
       newTsvs[chapter][verse][itemIndex] = newItem
       const tsvItems = flattenObject(newTsvs)
       const lastTsvItem = tsvItems[tsvItems.length - 1]
       // Front is always at end of array thus move to beginning of array.
-      console.log('lastTsvItem.Chapter', lastTsvItem.Chapter)
       if (lastTsvItem.Chapter == 'front') {
         const lastItem = tsvItems.pop()
 
@@ -62,11 +60,7 @@ export default function useTsvMerger({
         delete tsvItems[0].Book
       }
 
-      console.log({ newTsvs })
-      console.log({ tsvItems })
-
       const tsvFile = parser.TSV.stringify(tsvItems)
-
       setContent(tsvFile)
     }
   }

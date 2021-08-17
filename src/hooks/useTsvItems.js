@@ -150,8 +150,8 @@ export default function useTsvItems({
                 processUnknownError(e, resourceDescr, url, onResourceError)
               }
             }
-            // Remove filePath value for ta
-            if (resource === 'ta' || filePath === '.md') {
+            // Remove filePath value for ta and twl
+            if (resource === 'ta' || resource === 'twl' || filePath === '.md') {
               filePath = ''
               fetchResponse = null
             }

@@ -74,6 +74,8 @@ const CardContent = ({
         filters={filters}
         fontSize={fontSize}
         setQuote={setQuote}
+        editable={editable}
+        onTsvEdit={onTsvEdit}
         selectedQuote={selectedQuote}
       />
     )
