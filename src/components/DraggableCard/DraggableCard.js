@@ -40,6 +40,46 @@ export default function DraggableCard({
 }) {
   const classes = useStyles()
   const cardRef = useRef(null)
+  const [ bounds, setBounds ] = useState(null)
+
+  useEffect(() => {
+    if (parentRef?.current?.clientWidth && parentRef?.current?.clientHeight && cardRef?.current) {
+      const { clientLeft, clientWidth, clientTop, clientHeight } = parentRef.current
+      const { offsetLeft: cardOffsetLeft, offsetTop: cardOffsetTop } = cardRef.current
+      let offsetLeft = cardOffsetLeft
+      let offsetTop = cardOffsetTop
+
+      if (cardRef.current.offsetParent) { // add parent offset if present
+        offsetLeft += cardRef.current.offsetParent.offsetLeft
+        offsetTop += cardRef.current.offsetParent.offsetTop
+      }
+
+      let right = clientLeft + clientWidth - offsetLeft;
+      let bottom = clientTop + clientHeight - offsetTop;
+
+      // tweak right and bottom so draggable handle stays on screen
+      right -= cardOffsetLeft
+      bottom -= cardOffsetTop
+
+      const newBounds = {
+        left: clientLeft - offsetLeft,
+        top: clientTop - offsetTop,
+        right,
+        bottom,
+      }
+      setBounds(newBounds)
+    } else {
+      setBounds(null)
+    }
+  }, [
+    parentRef?.current,
+    cardRef?.current?.offsetLeft,
+    cardRef?.current?.offsetTop,
+    cardRef?.current?.offsetParent?.offsetLeft,
+    cardRef?.current?.offsetParent?.offsetTop,
+    content,
+    loading
+  ])
 
   function getCardContent() {
     if (showRawContent) {
@@ -66,18 +106,17 @@ export default function DraggableCard({
     }
   }
 
-  function onStop(e) {
-    console.log('onStop', e)
-    const { clientX, clientY, screenX, screenY } = e
-    const {
-      clientHeight,
-      clientWidth,
-    } = parentRef?.current || {}
+  function onStopDrag(e) {
+    console.log('DraggableCard.onStopDrag', e)
+    const { clientX, clientY } = e
+    const { clientHeight, clientWidth } = parentRef?.current || {}
     console.log({ clientX, clientY, clientHeight, clientWidth })
-    const min = 48;
-    if ( (clientX < min) || (clientY < min)
-    || (clientX > clientWidth - min) || (clientY > clientHeight - min)) {
-      console.log('outside of range')
+    const min = 0
+    if (parentRef?.current) {
+      if ((clientX < min) || (clientY < min)
+        || (clientX > clientWidth - min) || (clientY > clientHeight - min)) {
+        console.log('outside of range')
+      }
     }
   }
 
@@ -89,8 +128,8 @@ export default function DraggableCard({
       open={open}
       title={title || ''}
       handleClose={onClose}
-      cardRef={cardRef}
-      onStop={onStop}
+      onStopDrag={onStopDrag}
+      bounds={bounds}
     >
       <Card
         closeable
@@ -100,6 +139,7 @@ export default function DraggableCard({
           root: classes.card,
           dragIndicator: 'draggable-dialog-title',
         }}
+        dragRef={cardRef}
       >
         {getCardContent()}
       </Card>
@@ -113,7 +153,7 @@ DraggableCard.defaultProps = {
   content: '',
   fontSize: '100%',
   showRawContent: false,
-  mainScreenRef: null,
+  parentRef: null,
 }
 
 DraggableCard.propTypes = {
@@ -139,6 +179,8 @@ DraggableCard.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
-  /** Used to make sure card is on screen if defined */
+  /** Optional, used to make sure draggable card is contained within parent */
   parentRef: PropTypes.object,
+  // /** optional drag limits */
+  // bounds: PropTypes.object,
 }

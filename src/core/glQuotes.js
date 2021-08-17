@@ -139,7 +139,7 @@ export async function getGlAlignmentBibles(languageId, httpConfig, server, owner
   // remove chapter and verse so we get back whole book of the bible
   delete reference_.chapter
   delete reference_.verse
-  for (const glBible of glBibleList) {
+  for (const glBible of glBibleList || []) {
     const bible = await loadGlBible(glBible, config, 'master', reference_)
     if (bible) {
       glBibles_.push(bible)
