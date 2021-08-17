@@ -48,7 +48,7 @@ export const getAlignedText = (verseObjects, quote, occurrenceToMatch, isMatch=f
       if (isMatch || wordsToMatch.find(item => (verseObject.content === item.word) && (verseObject.occurrence === item.occurrence))) {
         lastMatch = true;
 
-        // We have a match (or previoiusly had a match in the parent) so we want to include all text that we find,
+        // We have a match (or previously had a match in the parent) so we want to include all text that we find,
         if (needsEllipsis) {
           // Need to add an ellipsis to the separator since a previous match but not one right next to this one
           separator += ELLIPSIS+DEFAULT_SEPARATOR;

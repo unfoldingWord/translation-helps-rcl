@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
+import isEqual from 'deep-equal'
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -67,18 +68,20 @@ export default function DraggableCard({
         right,
         bottom,
       }
-      setBounds(newBounds)
+      if (!isEqual(bounds, newBounds)) { // update if changed
+        setBounds(newBounds)
+      }
     } else {
       setBounds(null)
     }
   }, [
     parentRef?.current,
-    cardRef?.current?.offsetLeft,
-    cardRef?.current?.offsetTop,
-    cardRef?.current?.offsetParent?.offsetLeft,
-    cardRef?.current?.offsetParent?.offsetTop,
+    cardRef?.current,
+    // we watch the following because displayed content changes trigger card resizing
     content,
-    loading
+    loading,
+    error,
+    showRawContent
   ])
 
   function getCardContent() {
@@ -106,20 +109,6 @@ export default function DraggableCard({
     }
   }
 
-  function onStopDrag(e) {
-    console.log('DraggableCard.onStopDrag', e)
-    const { clientX, clientY } = e
-    const { clientHeight, clientWidth } = parentRef?.current || {}
-    console.log({ clientX, clientY, clientHeight, clientWidth })
-    const min = 0
-    if (parentRef?.current) {
-      if ((clientX < min) || (clientY < min)
-        || (clientX > clientWidth - min) || (clientY > clientHeight - min)) {
-        console.log('outside of range')
-      }
-    }
-  }
-
   title = error ? 'Error' : title
 
   return (
@@ -128,7 +117,6 @@ export default function DraggableCard({
       open={open}
       title={title || ''}
       handleClose={onClose}
-      onStopDrag={onStopDrag}
       bounds={bounds}
     >
       <Card
@@ -181,6 +169,4 @@ DraggableCard.propTypes = {
   ]),
   /** Optional, used to make sure draggable card is contained within parent */
   parentRef: PropTypes.object,
-  // /** optional drag limits */
-  // bounds: PropTypes.object,
 }
