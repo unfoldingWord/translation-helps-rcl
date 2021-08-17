@@ -8,14 +8,21 @@ export default function DraggableModal({
   handleClose,
   children,
   id,
+  onStartDrag,
   bounds,
  }) {
 
   function PaperComponent(props) {
+    function onStart(e) {
+      onStartDrag && onStartDrag(e)
+      return true
+    }
+
     return (
       <Draggable
         handle='.draggable-dialog-title'
         cancel={'[class*="MuiDialogContent-root"]'}
+        onStart={onStart}
         bounds={bounds}
       >
         <div {...props} />
@@ -48,6 +55,8 @@ DraggableModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
   /** Modal Content */
   children: PropTypes.element.isRequired,
+  /** optional callback for drag start */
+  onStartDrag: PropTypes.func,
   /** optional drag limits */
   bounds: PropTypes.object,
 }

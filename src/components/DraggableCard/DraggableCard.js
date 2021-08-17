@@ -43,10 +43,10 @@ export default function DraggableCard({
   const cardRef = useRef(null)
   const [ bounds, setBounds ] = useState(null)
 
-  useEffect(() => {
+  function updateBounds() {
     if (parentRef?.current?.clientWidth && parentRef?.current?.clientHeight && cardRef?.current) {
-      const { clientLeft, clientWidth, clientTop, clientHeight } = parentRef.current
-      const { offsetLeft: cardOffsetLeft, offsetTop: cardOffsetTop } = cardRef.current
+      const {clientLeft, clientWidth, clientTop, clientHeight} = parentRef.current
+      const {offsetLeft: cardOffsetLeft, offsetTop: cardOffsetTop} = cardRef.current
       let offsetLeft = cardOffsetLeft
       let offsetTop = cardOffsetTop
 
@@ -75,6 +75,10 @@ export default function DraggableCard({
     } else if (bounds !== null) {
       setBounds(null)
     }
+  }
+
+  useEffect(() => {
+    updateBounds()
   }, [
     parentRef?.current,
     cardRef?.current,
@@ -110,6 +114,13 @@ export default function DraggableCard({
     }
   }
 
+  function onStartDrag() {
+    // drag started, do check to see if drag bounds need to be updated
+    if (parentRef?.current) {
+      updateBounds()
+    }
+  }
+
   title = error ? 'Error' : title
 
   return (
@@ -119,6 +130,7 @@ export default function DraggableCard({
       title={title || ''}
       handleClose={onClose}
       bounds={bounds}
+      onStartDrag={onStartDrag}
     >
       <Card
         closeable
