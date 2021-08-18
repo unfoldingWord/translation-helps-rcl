@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import BlockEditable from 'markdown-translatable/dist/components/block-editable'
 import styled from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
+import useBoundsUpdater from '../../hooks/useBoundsUpdater'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
-import isEqual from 'deep-equal'
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -41,60 +41,21 @@ export default function DraggableCard({
 }) {
   const classes = useStyles()
   const cardRef = useRef(null)
-  const [ bounds, setBounds ] = useState(null)
-
-  /**
-   * determines if bounds have changed for dragging
-   * @return {boolean} returns true if bounds changed
-   */
-  function updateBounds() {
-    if (parentRef?.current?.clientWidth && parentRef?.current?.clientHeight && cardRef?.current) {
-      const {clientLeft, clientWidth, clientTop, clientHeight} = parentRef.current
-      const {offsetLeft: cardOffsetLeft, offsetTop: cardOffsetTop} = cardRef.current
-      let offsetLeft = cardOffsetLeft
-      let offsetTop = cardOffsetTop
-
-      if (cardRef.current.offsetParent) { // add card parent offset if present
-        offsetLeft += cardRef.current.offsetParent.offsetLeft
-        offsetTop += cardRef.current.offsetParent.offsetTop
-      }
-
-      let right = clientLeft + clientWidth - offsetLeft;
-      let bottom = clientTop + clientHeight - offsetTop;
-
-      // tweak right and bottom so draggable handle stays on screen
-      const scrollBarFactor = 1.25 // in case workspace scroll bar is visible (browser dependent)
-      right -= Math.round(cardOffsetLeft * scrollBarFactor)
-      bottom -= Math.round(cardOffsetTop * scrollBarFactor)
-
-      const newBounds = {
-        left: clientLeft - offsetLeft,
-        top: clientTop - offsetTop,
-        right,
-        bottom,
-      }
-      if (!isEqual(bounds, newBounds)) { // update if changed
-        setBounds(newBounds)
-        return true
-      }
-    } else if (bounds !== null) {
-      setBounds(null)
-      return true
-    }
-    return false
-  }
-
-  useEffect(() => {
-    updateBounds()
-  }, [
-    parentRef?.current,
-    cardRef?.current,
-    // we watch the following because displayed content changes trigger card resizing and recentering
+  const displayState = {
     content,
     loading,
     error,
     showRawContent
-  ])
+  }
+
+  const {
+    state: { bounds },
+    actions: { updateBounds },
+  } = useBoundsUpdater({
+    parentRef,
+    cardRef,
+    displayState
+  })
 
   function getCardContent() {
     if (showRawContent) {
