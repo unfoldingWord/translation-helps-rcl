@@ -9,6 +9,19 @@ function flattenObject(obj) {
     for (let i = 0; i < chapters.length; i++) {
       const chapter = chapters[i]
       const verses = Object.keys(obj[chapter])
+
+      // Sorting to rearrange verse ranges in correct order.
+      verses.sort((a, b) => {
+        const _a = a.includes('-')
+          ? parseInt(a.split('-')[0], 10)
+          : parseInt(a, 10)
+        const _b = b.includes('-')
+          ? parseInt(b.split('-')[0], 10)
+          : parseInt(b, 10)
+
+        return _a - _b
+      })
+
       const lastVerse = verses[verses.length - 1]
 
       if (lastVerse == 'intro') {
@@ -20,8 +33,7 @@ function flattenObject(obj) {
       }
 
       flatten = verses.reduce(
-        (accumulator, currentValue) =>
-          accumulator.concat(obj[chapter][currentValue]),
+        (accumulator, verse) => accumulator.concat(obj[chapter][verse]),
         flatten
       )
     }
