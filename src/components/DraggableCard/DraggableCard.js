@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import BlockEditable from 'markdown-translatable/dist/components/block-editable'
 import styled from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
+import useBoundsUpdater from '../../hooks/useBoundsUpdater'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
 
 const useStyles = makeStyles(() => ({
@@ -36,8 +37,25 @@ export default function DraggableCard({
   fontSize,
   id,
   showRawContent,
+  workspaceRef,
 }) {
   const classes = useStyles()
+  const cardRef = useRef(null)
+  const displayState = {
+    content,
+    loading,
+    error,
+    showRawContent
+  }
+
+  const {
+    state: { bounds },
+    actions: { updateBounds },
+  } = useBoundsUpdater({
+    workspaceRef,
+    cardRef,
+    displayState
+  })
 
   function getCardContent() {
     if (showRawContent) {
@@ -64,6 +82,17 @@ export default function DraggableCard({
     }
   }
 
+  function onStartDrag() {
+    // drag started, do check to see if drag bounds need to be updated
+    if (workspaceRef?.current) {
+      const updated = updateBounds()
+      if (updated) {
+        return false
+      }
+    }
+    return true
+  }
+
   title = error ? 'Error' : title
 
   return (
@@ -72,6 +101,8 @@ export default function DraggableCard({
       open={open}
       title={title || ''}
       handleClose={onClose}
+      bounds={bounds}
+      onStartDrag={onStartDrag}
     >
       <Card
         closeable
@@ -81,6 +112,7 @@ export default function DraggableCard({
           root: classes.card,
           dragIndicator: 'draggable-dialog-title',
         }}
+        dragRef={cardRef}
       >
         {getCardContent()}
       </Card>
@@ -94,6 +126,7 @@ DraggableCard.defaultProps = {
   content: '',
   fontSize: '100%',
   showRawContent: false,
+  workspaceRef: null,
 }
 
 DraggableCard.propTypes = {
@@ -119,4 +152,6 @@ DraggableCard.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  /** Optional, used to make sure draggable card is contained within workspace */
+  workspaceRef: PropTypes.object,
 }

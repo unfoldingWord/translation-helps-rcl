@@ -48,7 +48,7 @@ export const getAlignedText = (verseObjects, quote, occurrenceToMatch, isMatch=f
       if (isMatch || wordsToMatch.find(item => (verseObject.content === item.word) && (verseObject.occurrence === item.occurrence))) {
         lastMatch = true;
 
-        // We have a match (or previoiusly had a match in the parent) so we want to include all text that we find,
+        // We have a match (or previously had a match in the parent) so we want to include all text that we find,
         if (needsEllipsis) {
           // Need to add an ellipsis to the separator since a previous match but not one right next to this one
           separator += ELLIPSIS+DEFAULT_SEPARATOR;
@@ -139,7 +139,7 @@ export async function getGlAlignmentBibles(languageId, httpConfig, server, owner
   // remove chapter and verse so we get back whole book of the bible
   delete reference_.chapter
   delete reference_.verse
-  for (const glBible of glBibleList) {
+  for (const glBible of glBibleList || []) {
     const bible = await loadGlBible(glBible, config, 'master', reference_)
     if (bible) {
       glBibles_.push(bible)

@@ -1,3 +1,4 @@
+export { default as useBoundsUpdater } from './useBoundsUpdater'
 export { default as useContent } from './useContent'
 export { default as useCardState } from './useCardState'
 export { default as useUserBranch } from './useUserBranch'
