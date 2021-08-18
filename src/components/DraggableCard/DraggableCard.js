@@ -37,7 +37,7 @@ export default function DraggableCard({
   fontSize,
   id,
   showRawContent,
-  parentRef,
+  workspaceRef,
 }) {
   const classes = useStyles()
   const cardRef = useRef(null)
@@ -52,7 +52,7 @@ export default function DraggableCard({
     state: { bounds },
     actions: { updateBounds },
   } = useBoundsUpdater({
-    parentRef,
+    workspaceRef,
     cardRef,
     displayState
   })
@@ -84,7 +84,7 @@ export default function DraggableCard({
 
   function onStartDrag() {
     // drag started, do check to see if drag bounds need to be updated
-    if (parentRef?.current) {
+    if (workspaceRef?.current) {
       const updated = updateBounds()
       if (updated) {
         return false
@@ -126,7 +126,7 @@ DraggableCard.defaultProps = {
   content: '',
   fontSize: '100%',
   showRawContent: false,
-  parentRef: null,
+  workspaceRef: null,
 }
 
 DraggableCard.propTypes = {
@@ -152,6 +152,6 @@ DraggableCard.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
-  /** Optional, used to make sure draggable card is contained within parent */
-  parentRef: PropTypes.object,
+  /** Optional, used to make sure draggable card is contained within workspace */
+  workspaceRef: PropTypes.object,
 }

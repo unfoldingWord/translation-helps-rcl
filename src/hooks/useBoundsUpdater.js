@@ -3,13 +3,13 @@ import isEqual from 'deep-equal'
 
 /**
  * monitors for changes in changes in draggable bounds.  Provides updateBounds() so that it can be updated by external events.
- * @param parentRef
- * @param cardRef
- * @param displayState
+ * @param {object} workspaceRef - reference for workspace to get size of the workspace
+ * @param {object} cardRef - reference of draggable card content
+ * @param {object} displayState - object that contains the values that control displayed size
  * @return {{state: {headers: *, item: *, itemIndex: *, fontSize: (string|*), filters: (*|*[]), markdownView: *}, actions: {setMarkdownView: *, setItemIndex: *, setFilters: *, setFontSize: *}}}
  */
 const useBoundsUpdater = ({
-  parentRef,
+  workspaceRef,
   cardRef,
   displayState
 }) => {
@@ -20,8 +20,8 @@ const useBoundsUpdater = ({
    * @return {boolean} returns true if bounds changed
    */
   function updateBounds() {
-    if (parentRef?.current?.clientWidth && parentRef?.current?.clientHeight && cardRef?.current) {
-      const {clientLeft, clientWidth, clientTop, clientHeight} = parentRef.current
+    if (workspaceRef?.current?.clientWidth && workspaceRef?.current?.clientHeight && cardRef?.current) {
+      const {clientLeft, clientWidth, clientTop, clientHeight} = workspaceRef.current
       const {offsetLeft: cardOffsetLeft, offsetTop: cardOffsetTop} = cardRef.current
       let offsetLeft = cardOffsetLeft
       let offsetTop = cardOffsetTop
@@ -59,11 +59,9 @@ const useBoundsUpdater = ({
   useEffect(() => {
     updateBounds()
   }, [
-    {
-      parentCurrent: parentRef?.current,
-      cardCurrent: cardRef?.current,
-      displayState,
-    }
+    workspaceRef?.current,
+    cardRef?.current,
+    displayState
   ])
 
   return {
