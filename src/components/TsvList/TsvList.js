@@ -188,7 +188,7 @@ function EditableItem({
         color={selected ? '#38ADDF' : null}
         onChange={e => setInputValue(e.target.value)}
         onBlur={event => {
-          if (inputValue) {
+          if (typeof inputValue == 'string') {
             // In the UI we use Quote but the TSV data calls it OrigWords
             const k = valueKey == 'Quote' ? 'OrigWords' : valueKey
             const newTsvItem = {

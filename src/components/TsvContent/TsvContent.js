@@ -150,7 +150,7 @@ const Item = ({
         value={typeof inputValue == 'string' ? inputValue : value}
         fontSize={fontSize}
         onBlur={event => {
-          if (inputValue) {
+          if (typeof inputValue == 'string') {
             onTsvEdit({ ...item, [label]: event.target.value })
           }
         }}
