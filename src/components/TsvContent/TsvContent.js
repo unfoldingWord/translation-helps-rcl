@@ -104,6 +104,7 @@ const Item = ({
     'OccurrenceNote',
     'Occurrence',
     'Annotation',
+    'OrigQuote',
     'Quote',
     'Note',
   ]

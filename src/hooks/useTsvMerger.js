@@ -43,15 +43,19 @@ function flattenObject(obj) {
 }
 
 export default function useTsvMerger({
+  itemIndex: defaultItemIndex,
   setContent,
-  itemIndex,
   chapter,
   verse,
   tsvs,
 }) {
-  function onTsvEdit(newItem) {
+  function onTsvEdit(newItem, itemIndex) {
     if (tsvs) {
+      console.log('onTsvEdit', { itemIndex, defaultItemIndex })
+
       const newTsvs = Object.assign({}, { ...tsvs })
+      itemIndex = typeof itemIndex == 'number' ? itemIndex : defaultItemIndex
+      console.log('onTsvEdit', { itemIndex })
       // Updating item reference with edited item.
       newTsvs[chapter][verse][itemIndex] = newItem
       const tsvItems = flattenObject(newTsvs)
@@ -70,6 +74,10 @@ export default function useTsvMerger({
         delete tsvItems[0].Chapter
         delete tsvItems[0].Verse
         delete tsvItems[0].Book
+      }
+
+      if (tsvItems[0] && tsvItems[0].markdown) {
+        delete tsvItems[0].markdown
       }
 
       const tsvFile = parser.TSV.stringify(tsvItems)

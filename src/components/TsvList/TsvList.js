@@ -82,6 +82,7 @@ export default function TsvList({
                         <EditableItem
                           key={key}
                           item={item}
+                          itemIndex={i}
                           valueKey={key}
                           tsvItem={items[i]}
                           fontSize={fontSize}
@@ -136,7 +137,7 @@ const Table = styled.table`
   width: 100%;
 `
 const Input = styled.input`
-  width: 75px;
+  width: 80px;
   border: none;
   letter-spacing: 0.25px;
   color: ${props => (props.color ? props.color : '#000000')};
@@ -155,6 +156,7 @@ function EditableItem({
   fontSize,
   setQuote,
   onTsvEdit,
+  itemIndex,
   SupportReference,
 }) {
   const [inputValue, setInputValue] = useState(null)
@@ -200,8 +202,9 @@ function EditableItem({
             delete newTsvItem.markdown
             delete newTsvItem.filePath
             delete newTsvItem.fetchResponse
+            console.log({ itemIndex })
 
-            onTsvEdit(newTsvItem)
+            onTsvEdit(newTsvItem, itemIndex)
             const newQuote = {
               quote: item.Quote,
               occurrence: item.Occurrence,

@@ -81,6 +81,7 @@ const useUserBranch = ({
    * @return {Promise<boolean>} returns true if user branch already exists or created
    */
   async function ensureUserEditBranch() {
+    console.info('ensureUserEditBranch')
     const repoName = `${languageId}_${cardResourceId}`
     const config = authentication.config
 
