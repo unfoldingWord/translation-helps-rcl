@@ -10,7 +10,7 @@ import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromM
 
 const useStyles = makeStyles(() => ({
   card: {
-    margin: '35px !important',
+    margin: '0px !important',
     minWidth: '400px',
     backgroundColor: '#ffffff',
   },
@@ -38,6 +38,7 @@ export default function DraggableCard({
   id,
   showRawContent,
   workspaceRef,
+  initialPosition,
 }) {
   const classes = useStyles()
   const cardRef = useRef(null)
@@ -82,17 +83,6 @@ export default function DraggableCard({
     }
   }
 
-  function onStartDrag() {
-    // drag started, do check to see if drag bounds need to be updated
-    if (workspaceRef?.current) {
-      const updated = updateBounds()
-      if (updated) {
-        return false
-      }
-    }
-    return true
-  }
-
   title = error ? 'Error' : title
 
   return (
@@ -102,7 +92,7 @@ export default function DraggableCard({
       title={title || ''}
       handleClose={onClose}
       bounds={bounds}
-      onStartDrag={onStartDrag}
+      initialPosition={initialPosition}
     >
       <Card
         closeable
@@ -154,4 +144,6 @@ DraggableCard.propTypes = {
   ]),
   /** Optional, used to make sure draggable card is contained within workspace */
   workspaceRef: PropTypes.object,
+  /** override default initial position */
+  initialPosition: PropTypes.object,
 }

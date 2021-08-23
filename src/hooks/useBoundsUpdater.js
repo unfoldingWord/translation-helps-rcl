@@ -35,9 +35,9 @@ const useBoundsUpdater = ({
       let bottom = clientTop + clientHeight - offsetTop;
 
       // tweak right and bottom so draggable handle stays on screen
-      const scrollBarFactor = 1.25 // in case workspace scroll bar is visible (browser dependent)
-      right -= Math.round(cardOffsetLeft * scrollBarFactor)
-      bottom -= Math.round(cardOffsetTop * scrollBarFactor)
+      const safetyMargin = 35
+      right -= safetyMargin
+      bottom -= safetyMargin
 
       const newBounds = {
         left: clientLeft - offsetLeft,
