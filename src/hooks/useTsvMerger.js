@@ -51,11 +51,8 @@ export default function useTsvMerger({
 }) {
   function onTsvEdit(newItem, itemIndex) {
     if (tsvs) {
-      console.log('onTsvEdit', { itemIndex, defaultItemIndex })
-
       const newTsvs = Object.assign({}, { ...tsvs })
       itemIndex = typeof itemIndex == 'number' ? itemIndex : defaultItemIndex
-      console.log('onTsvEdit', { itemIndex })
       // Updating item reference with edited item.
       newTsvs[chapter][verse][itemIndex] = newItem
       const tsvItems = flattenObject(newTsvs)

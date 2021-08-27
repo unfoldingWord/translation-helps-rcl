@@ -202,7 +202,6 @@ function EditableItem({
             delete newTsvItem.markdown
             delete newTsvItem.filePath
             delete newTsvItem.fetchResponse
-            console.log({ itemIndex })
 
             onTsvEdit(newTsvItem, itemIndex)
             const newQuote = {
