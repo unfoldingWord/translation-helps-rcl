@@ -319,7 +319,7 @@ Card.propTypes = {
   /** Current item index */
   itemIndex: PropTypes.number,
   /** Root ref, used as reference for drag action */
-  dragRef: PropTypes.node,
+  dragRef: PropTypes.oneOfType([PropTypes.node, PropTypes.object]),
   /** Show alert icon */
   alert: PropTypes.bool,
   /** Show dragging icon when card is dragged */
