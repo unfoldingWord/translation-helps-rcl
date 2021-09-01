@@ -10,6 +10,7 @@ export default function DraggableModal({
   id,
   onStartDrag,
   bounds,
+  initialPosition,
  }) {
 
   function PaperComponent(props) {
@@ -26,6 +27,7 @@ export default function DraggableModal({
         cancel={'[class*="MuiDialogContent-root"]'}
         onStart={onStart}
         bounds={bounds}
+        defaultPosition={initialPosition}
       >
         <div {...props} />
       </Draggable>
@@ -61,4 +63,6 @@ DraggableModal.propTypes = {
   onStartDrag: PropTypes.func,
   /** optional drag limits */
   bounds: PropTypes.object,
+  /** override default initial position */
+  initialPosition: PropTypes.object,
 }
