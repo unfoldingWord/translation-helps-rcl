@@ -7,12 +7,17 @@ import DraggableModal from '../DraggableModal'
 import Card from '../Card'
 import useBoundsUpdater from '../../hooks/useBoundsUpdater'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
+import {Backdrop} from "@material-ui/core";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   card: {
-    margin: '35px !important',
+    margin: '0px !important',
     minWidth: '400px',
     backgroundColor: '#ffffff',
+  },
+   backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 }))
 
@@ -38,6 +43,9 @@ export default function DraggableCard({
   id,
   showRawContent,
   workspaceRef,
+  initialPosition,
+  updateBounds,
+  dimBackground,
 }) {
   const classes = useStyles()
   const cardRef = useRef(null)
@@ -45,16 +53,18 @@ export default function DraggableCard({
     content,
     loading,
     error,
-    showRawContent
+    showRawContent,
+    updateBounds,
   }
 
   const {
     state: { bounds },
-    actions: { updateBounds },
+    actions: { doUpdateBounds },
   } = useBoundsUpdater({
     workspaceRef,
     cardRef,
-    displayState
+    open,
+    displayState,
   })
 
   function getCardContent() {
@@ -85,7 +95,7 @@ export default function DraggableCard({
   function onStartDrag() {
     // drag started, do check to see if drag bounds need to be updated
     if (workspaceRef?.current) {
-      const updated = updateBounds()
+      const updated = doUpdateBounds()
       if (updated) {
         return false
       }
@@ -95,29 +105,42 @@ export default function DraggableCard({
 
   title = error ? 'Error' : title
 
-  return (
-    <DraggableModal
-      id={id}
-      open={open}
-      title={title || ''}
-      handleClose={onClose}
-      bounds={bounds}
-      onStartDrag={onStartDrag}
-    >
-      <Card
-        closeable
+  function getDraggableModal() {
+    return (
+      <DraggableModal
+        id={id}
+        open={open}
         title={title || ''}
-        onClose={onClose}
-        classes={{
-          root: classes.card,
-          dragIndicator: 'draggable-dialog-title',
-        }}
-        dragRef={cardRef}
+        handleClose={onClose}
+        bounds={bounds}
+        initialPosition={initialPosition}
+        onStartDrag={onStartDrag}
       >
-        {getCardContent()}
-      </Card>
-    </DraggableModal>
-  )
+        <Card
+          closeable
+          title={title || ''}
+          onClose={onClose}
+          classes={{
+            root: classes.card,
+            dragIndicator: 'draggable-dialog-title',
+          }}
+          dragRef={cardRef}
+        >
+          {getCardContent()}
+        </Card>
+      </DraggableModal>
+    );
+  }
+
+  return dimBackground ?
+    <Backdrop
+      className={classes.backdrop}
+      open={open}
+    >
+      {getDraggableModal()}
+    </Backdrop>
+    :
+    getDraggableModal()
 }
 
 DraggableCard.defaultProps = {
@@ -127,6 +150,8 @@ DraggableCard.defaultProps = {
   fontSize: '100%',
   showRawContent: false,
   workspaceRef: null,
+  updateBounds: 0,
+  dimBackground: false,
 }
 
 DraggableCard.propTypes = {
@@ -154,4 +179,10 @@ DraggableCard.propTypes = {
   ]),
   /** Optional, used to make sure draggable card is contained within workspace */
   workspaceRef: PropTypes.object,
+  /** override default initial position */
+  initialPosition: PropTypes.object,
+  /** trigger to update drag bounds */
+  updateBounds: PropTypes.number,
+  /** optional flag to dim background */
+  dimBackground: PropTypes.bool,
 }
