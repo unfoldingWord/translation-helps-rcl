@@ -6,12 +6,14 @@ import isEqual from 'deep-equal'
  * @param {object} workspaceRef - reference for workspace to get size of the workspace
  * @param {object} cardRef - reference of draggable card content
  * @param {object} displayState - object that contains the values that control displayed size
+ * @param {boolean} open - true when card is open
  * @return {{state: {headers: *, item: *, itemIndex: *, fontSize: (string|*), filters: (*|*[]), markdownView: *}, actions: {setMarkdownView: *, setItemIndex: *, setFilters: *, setFontSize: *}}}
  */
 const useBoundsUpdater = ({
   workspaceRef,
   cardRef,
-  displayState
+  displayState,
+  open,
 }) => {
   const [ bounds, setBounds ] = useState(null)
 
@@ -19,8 +21,11 @@ const useBoundsUpdater = ({
    * determines if bounds have changed for dragging
    * @return {boolean} returns true if bounds changed
    */
-  function updateBounds() {
-    if (workspaceRef?.current?.clientWidth && workspaceRef?.current?.clientHeight && cardRef?.current) {
+  function doUpdateBounds() {
+    if (open &&
+      workspaceRef?.current?.clientWidth &&
+      workspaceRef?.current?.clientHeight &&
+      cardRef?.current) {
       const {clientLeft, clientWidth, clientTop, clientHeight} = workspaceRef.current
       const {offsetLeft: cardOffsetLeft, offsetTop: cardOffsetTop} = cardRef.current
       let offsetLeft = cardOffsetLeft
@@ -35,9 +40,9 @@ const useBoundsUpdater = ({
       let bottom = clientTop + clientHeight - offsetTop;
 
       // tweak right and bottom so draggable handle stays on screen
-      const scrollBarFactor = 1.25 // in case workspace scroll bar is visible (browser dependent)
-      right -= Math.round(cardOffsetLeft * scrollBarFactor)
-      bottom -= Math.round(cardOffsetTop * scrollBarFactor)
+      const safetyMargin = 35
+      right -= safetyMargin
+      bottom -= safetyMargin
 
       const newBounds = {
         left: clientLeft - offsetLeft,
@@ -57,7 +62,7 @@ const useBoundsUpdater = ({
   }
 
   useEffect(() => {
-    updateBounds()
+    doUpdateBounds()
   }, [
     workspaceRef?.current,
     cardRef?.current,
@@ -66,7 +71,7 @@ const useBoundsUpdater = ({
 
   return {
     state: { bounds },
-    actions: { updateBounds },
+    actions: { doUpdateBounds },
   }
 }
 
