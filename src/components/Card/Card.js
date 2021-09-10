@@ -111,20 +111,17 @@ const Card = ({
   closeable,
   setFilters,
   onSaveEdit,
-  setContent,
   setFontSize,
-  onMenuClose,
   markdownView,
   setItemIndex,
   onRemoveCard,
+  onMenuClose,
   disableFilters,
-  cardResourceId,
   setMarkdownView,
   disableNavigation,
+  disableSettingsButton,
   hideMarkdownToggle,
   getCustomComponent,
-  disableSettingsButton,
-  showSaveChangesPrompt,
   settingsTitle: settingsTitle_,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
@@ -153,39 +150,27 @@ const Card = ({
   }
 
   const onPrevItem = () => {
-    showSaveChangesPrompt(cardResourceId, setContent)
-      .then(() => {
-        const newIndex = itemIndex - 1
-        if (newIndex < 0) {
-          setItemIndex(items.length - 1)
-        } else {
-          setItemIndex(newIndex)
-        }
-      })
-      .catch(() => {
-        // User won't navigate to new item in order to save changes
-      })
+    const newIndex = itemIndex - 1
+    if (newIndex < 0) {
+      setItemIndex(items.length - 1)
+    } else {
+      setItemIndex(newIndex)
+    }
   }
 
   const onNextItem = () => {
-    showSaveChangesPrompt(cardResourceId, setContent)
-      .then(() => {
-        const newIndex = itemIndex + 1
-        if (newIndex > items.length - 1) {
-          setItemIndex(0)
-        } else {
-          setItemIndex(newIndex)
-        }
-      })
-      .catch(() => {
-        // User won't navigate to new item in order to save changes
-      })
+    const newIndex = itemIndex + 1
+    if (newIndex > items.length - 1) {
+      setItemIndex(0)
+    } else {
+      setItemIndex(newIndex)
+    }
   }
 
   const cardMenuId = id ? `${id}_card_menu` : 'card_menu'
 
-  // TODO: In future we might want to add scroll into view support for list view, but for now
-  // we don't want list views scrolling to top each time the itemIndex changes
+  // TODO: in future we might want to add scroll into view support for list view, but for now
+  //    we don't want list views scrolling to top each time the itemIndex changes
   const enableAutoScrollToTop = children?.props?.viewMode !== 'list'
 
   return (
