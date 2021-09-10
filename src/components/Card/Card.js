@@ -153,6 +153,7 @@ const Card = ({
   }
 
   const onPrevItem = () => {
+    console.log('hello')
     showSaveChangesPrompt(cardResourceId, setContent)
       .then(() => {
         const newIndex = itemIndex - 1
