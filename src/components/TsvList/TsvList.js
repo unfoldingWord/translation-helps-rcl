@@ -1,7 +1,28 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import useDeepCompareEffect from 'use-deep-compare-effect'
 
+const Container = styled.div`
+  overflow: auto;
+`
+
+const Table = styled.table`
+  border-spacing: 0.5rem;
+  padding: 0.3rem 0.2rem 1rem;
+  width: 100%;
+`
+const Input = styled.input`
+  width: 80px;
+  border: none;
+  letter-spacing: 0.25px;
+  color: ${props => (props.color ? props.color : '#000000')};
+  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
+  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
+  &:focus-visible {
+    outline: #38addf auto 1px;
+  }
+`
 export default function TsvList({
   items,
   filters,
@@ -11,6 +32,8 @@ export default function TsvList({
   onTsvEdit,
   selectedQuote,
 }) {
+  console.log('TsvList')
+  console.log('selectedQuote', selectedQuote)
   let filteredItems = []
   fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
 
@@ -30,6 +53,8 @@ export default function TsvList({
       }
     )
   }
+
+  console.log({ selectedQuote })
 
   return (
     <Container>
@@ -53,7 +78,6 @@ export default function TsvList({
         <tbody style={{ fontSize }}>
           {filteredItems &&
             filteredItems.map((item, i) => {
-              let selected = false
               let {
                 Quote,
                 TWLink,
@@ -65,48 +89,22 @@ export default function TsvList({
               SupportReference = SupportReference || TWLink
               const style = { cursor: setQuote ? 'pointer' : '' }
 
-              if (
-                selectedQuote?.quote === Quote &&
-                selectedQuote?.occurrence === Occurrence
-              ) {
-                selected = true
-                style.color = '#38ADDF'
-                style.fontWeight = 'bold'
-              }
-
               return (
-                <tr key={i} style={style}>
-                  {Object.keys(item).map(key => {
-                    if (editable && (key == 'Quote' || key == 'Occurrence')) {
-                      return (
-                        <EditableItem
-                          key={key}
-                          item={item}
-                          itemIndex={i}
-                          valueKey={key}
-                          tsvItem={items[i]}
-                          fontSize={fontSize}
-                          selected={selected}
-                          setQuote={setQuote}
-                          onTsvEdit={onTsvEdit}
-                          SupportReference={SupportReference}
-                        />
-                      )
-                    } else {
-                      return (
-                        <td
-                          key={key + i}
-                          style={{
-                            padding: '0.5rem 0rem',
-                            borderBottom: '1px solid lightgrey',
-                          }}
-                        >
-                          {item[key]}
-                        </td>
-                      )
-                    }
-                  })}
-                </tr>
+                <Row
+                  key={i}
+                  rowKey={i}
+                  item={item}
+                  style={style}
+                  items={items}
+                  Quote={Quote}
+                  editable={editable}
+                  fontSize={fontSize}
+                  setQuote={setQuote}
+                  onTsvEdit={onTsvEdit}
+                  Occurrence={Occurrence}
+                  selectedQuote={selectedQuote}
+                  SupportReference={SupportReference}
+                />
               )
             })}
         </tbody>
@@ -127,26 +125,118 @@ TsvList.propTypes = {
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
-const Container = styled.div`
-  overflow: auto;
-`
+function Row({
+  item,
+  style,
+  items,
+  Quote,
+  rowKey,
+  editable,
+  fontSize,
+  setQuote,
+  onTsvEdit,
+  Occurrence,
+  selectedQuote,
+  SupportReference,
+}) {
+  const [newQuote, setNewQuote] = useState(null)
+  // const [selected, setSelected] = useState(false)
+  let selected = false
 
-const Table = styled.table`
-  border-spacing: 0.5rem;
-  padding: 0.3rem 0.2rem 1rem;
-  width: 100%;
-`
-const Input = styled.input`
-  width: 80px;
-  border: none;
-  letter-spacing: 0.25px;
-  color: ${props => (props.color ? props.color : '#000000')};
-  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
-  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
-  &:focus-visible {
-    outline: #38addf auto 1px;
+  console.log({
+    selectedQuote,
+    newQuote,
+  })
+
+  // useDeepCompareEffect(() => {
+  //   if (
+  //     (selectedQuote?.quote === Quote &&
+  //       selectedQuote?.occurrence === Occurrence) ||
+  //     (selectedQuote?.quote === newQuote?.quote &&
+  //       selectedQuote?.occurrence === newQuote?.occurrence)
+  //   ) {
+  //     setSelected(true)
+  //   } else {
+  //     setSelected(false)
+  //   }
+  // }, [selectedQuote])
+
+  if (
+    (Quote &&
+      Occurrence &&
+      selectedQuote?.quote === Quote &&
+      selectedQuote?.occurrence === Occurrence) ||
+    (newQuote &&
+      selectedQuote?.quote === newQuote?.quote &&
+      selectedQuote?.occurrence === newQuote?.occurrence)
+  ) {
+    selected = true
+    style.color = '#38ADDF'
+    style.fontWeight = 'bold'
   }
-`
+
+  return (
+    <tr
+      key={rowKey}
+      style={style}
+      onClick={() => {
+        console.log({ newQuote })
+        if (setQuote && !selected) {
+          // const newQuote = {
+          //   quote: item.Quote,
+          //   occurrence: item.Occurrence,
+          //   SupportReference,
+          // }
+          // newQuote[selectedQuoteKey] = inputValue
+          if (newQuote) {
+            console.log('setQuote(newQuote)')
+            setQuote(newQuote)
+          } else {
+            setQuote({
+              quote: item.Quote,
+              occurrence: item.Occurrence,
+              SupportReference,
+            })
+          }
+        } else if (setQuote && selected) {
+          setQuote({})
+        }
+      }}
+    >
+      {Object.keys(item).map(key => {
+        if (editable && (key == 'Quote' || key == 'Occurrence')) {
+          return (
+            <EditableItem
+              key={key}
+              item={item}
+              itemIndex={rowKey}
+              valueKey={key}
+              tsvItem={items[rowKey]}
+              fontSize={fontSize}
+              selected={selected}
+              setQuote={setQuote}
+              onTsvEdit={onTsvEdit}
+              setNewQuote={setNewQuote}
+              SupportReference={SupportReference}
+            />
+          )
+        } else {
+          return (
+            <td
+              key={key + rowKey}
+              style={{
+                padding: '0.5rem 0rem',
+                borderBottom: '1px solid lightgrey',
+              }}
+            >
+              {item[key]}
+            </td>
+          )
+        }
+      })}
+    </tr>
+  )
+}
 
 function EditableItem({
   item,
@@ -157,6 +247,7 @@ function EditableItem({
   setQuote,
   onTsvEdit,
   itemIndex,
+  setNewQuote,
   SupportReference,
 }) {
   const [inputValue, setInputValue] = useState(null)
@@ -168,19 +259,6 @@ function EditableItem({
       style={{
         padding: '0.5rem 0rem',
         borderBottom: '1px solid lightgrey',
-      }}
-      onClick={() => {
-        if (setQuote && !selected) {
-          const newQuote = {
-            quote: item.Quote,
-            occurrence: item.Occurrence,
-            SupportReference,
-          }
-          newQuote[selectedQuoteKey] = inputValue
-          setQuote(newQuote)
-        } else if (setQuote && selected) {
-          setQuote({})
-        }
       }}
     >
       <Input
@@ -204,13 +282,14 @@ function EditableItem({
             delete newTsvItem.fetchResponse
 
             onTsvEdit(newTsvItem, itemIndex)
-            const newQuote = {
+            const updatedQuote = {
               quote: item.Quote,
               occurrence: item.Occurrence,
               SupportReference,
             }
-            newQuote[selectedQuoteKey] = inputValue
-            setQuote(newQuote)
+            updatedQuote[selectedQuoteKey] = inputValue
+            setNewQuote(updatedQuote)
+            setQuote(updatedQuote)
           }
         }}
       />
