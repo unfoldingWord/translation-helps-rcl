@@ -1,6 +1,10 @@
 {
   "name": "translation-helps-rcl",
+<<<<<<< HEAD
   "version": "3.1.0-rc2",
+=======
+  "version": "3.1.0-rc1",
+>>>>>>> parent of 9fe4d55... Revert "WIP: Adding unsaved changes prompt"
   "main": "dist",
   "homepage": "https://translation-helps-rcl.netlify.app/",
   "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
@@ -12,8 +16,7 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "prepublishOnly": "rm -rf ./dist && babel ./src --out-dir ./dist -s inline",
-    "postpublish": "git tag v$npm_package_version && git push origin v$npm_package_version"
+    "prepublishOnly": "rm -rf ./dist && babel ./src --out-dir ./dist -s inline"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.x",
@@ -52,6 +55,7 @@
     "deep-equal": "^2.0.5",
     "react-draggable": "^4.4.3",
     "styled-components": "^5.2.1",
+    "tsv": "^0.2.0",
     "use-deep-compare-effect": "^1.6.1"
   }
 }

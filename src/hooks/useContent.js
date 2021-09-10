@@ -80,6 +80,9 @@ const useContent = ({
   })
 
   const { items, tsvs, loading: loadingTSV } = useTsvItems({
+    httpConfig: config,
+    onResourceError,
+    ref: contentRef,
     fetchMarkdown,
     languageId,
     resourceId,
@@ -88,10 +91,7 @@ const useContent = ({
     chapter,
     server,
     owner,
-    ref: contentRef,
     verse,
-    onResourceError,
-    httpConfig: config,
   })
 
   const contentNotFoundError = !content
