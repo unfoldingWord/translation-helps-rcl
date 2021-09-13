@@ -32,8 +32,6 @@ export default function TsvList({
   onTsvEdit,
   selectedQuote,
 }) {
-  console.log('TsvList')
-  console.log('selectedQuote', selectedQuote)
   let filteredItems = []
   fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
 
@@ -53,8 +51,6 @@ export default function TsvList({
       }
     )
   }
-
-  console.log({ selectedQuote })
 
   return (
     <Container>
@@ -143,24 +139,6 @@ function Row({
   // const [selected, setSelected] = useState(false)
   let selected = false
 
-  console.log({
-    selectedQuote,
-    newQuote,
-  })
-
-  // useDeepCompareEffect(() => {
-  //   if (
-  //     (selectedQuote?.quote === Quote &&
-  //       selectedQuote?.occurrence === Occurrence) ||
-  //     (selectedQuote?.quote === newQuote?.quote &&
-  //       selectedQuote?.occurrence === newQuote?.occurrence)
-  //   ) {
-  //     setSelected(true)
-  //   } else {
-  //     setSelected(false)
-  //   }
-  // }, [selectedQuote])
-
   if (
     (Quote &&
       Occurrence &&
@@ -180,16 +158,8 @@ function Row({
       key={rowKey}
       style={style}
       onClick={() => {
-        console.log({ newQuote })
         if (setQuote && !selected) {
-          // const newQuote = {
-          //   quote: item.Quote,
-          //   occurrence: item.Occurrence,
-          //   SupportReference,
-          // }
-          // newQuote[selectedQuoteKey] = inputValue
           if (newQuote) {
-            console.log('setQuote(newQuote)')
             setQuote(newQuote)
           } else {
             setQuote({

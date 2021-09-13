@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 import getNoteLabel from '../../core/getNoteLabel'
+// import useDeepCompareEffect from 'use-deep-compare-effect'
 
 export default function TsvContent({
   id,
@@ -15,6 +16,16 @@ export default function TsvContent({
   selectedQuote,
   fontSize: _fontSize,
 }) {
+  // const [editedItem, setEditedItem] = useState(item)
+
+  // useDeepCompareEffect(() => {
+  //   setEditedItem(item)
+  // }, [item])
+
+  // const handleChange = (label, value) => {
+  //   setEditedItem({ ...editedItem, [label]: value })
+  // }
+
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
   const { Occurrence, SupportReference } = item
   const ordering = {
@@ -67,10 +78,12 @@ export default function TsvContent({
             setQuote={setQuote}
             editable={editable}
             onTsvEdit={onTsvEdit}
+            // editedItem={editedItem}
             Occurrence={Occurrence}
             valueId={`${id}_${label}`}
             markdownView={markdownView}
             selectedQuote={selectedQuote}
+            // handleChange={handleChange}
             SupportReference={SupportReference}
           />
         )
@@ -91,11 +104,15 @@ const Item = ({
   editable,
   onTsvEdit,
   Occurrence,
+  // editedItem,
   markdownView,
+  // handleChange,
   selectedQuote,
   SupportReference,
 }) => {
   const [inputValue, setInputValue] = useState(null)
+  // console.log({ editedItem })
+  // const inputValue = editedItem[label]
   const selected = selectedQuote?.quote === value
   const editableFields = [
     'OccurrenceNumber',
@@ -140,7 +157,7 @@ const Item = ({
           padding: '0px',
           margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
         }}
-        onEdit={markdown => onTsvEdit({ ...item, [markdownLabel]: markdown })}
+        onEdit={markdown => onTsvEdit({ [markdownLabel]: markdown })}
       />
     )
   } else if (isEditable) {
@@ -152,9 +169,10 @@ const Item = ({
         fontSize={fontSize}
         onBlur={event => {
           if (typeof inputValue == 'string') {
-            onTsvEdit({ ...item, [label]: event.target.value })
+            onTsvEdit({ [label]: event.target.value })
           }
         }}
+        // onChange={e => handleChange(label, e.target.value)}
         onChange={e => setInputValue(e.target.value)}
         clickable={!!setQuote}
         color={selected ? '#38ADDF' : null}
