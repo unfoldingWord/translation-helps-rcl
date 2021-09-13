@@ -58,7 +58,7 @@ export default function useTsvMerger({
 
   useDeepCompareEffect(() => {
     console.log('useDeepCompareEffect tsvs', tsvs)
-    console.log('useDeepCompareEffect cardResourceId', cardResourceId)
+    console.log('useDeepCompareEffect cardResourceId changed', cardResourceId)
     if (tsvs) {
       setTsvsState(Object.assign({}, { ...tsvs }))
     }
