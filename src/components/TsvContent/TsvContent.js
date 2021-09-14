@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 import getNoteLabel from '../../core/getNoteLabel'
-// import useDeepCompareEffect from 'use-deep-compare-effect'
 
 export default function TsvContent({
   id,
@@ -16,16 +15,6 @@ export default function TsvContent({
   selectedQuote,
   fontSize: _fontSize,
 }) {
-  // const [editedItem, setEditedItem] = useState(item)
-
-  // useDeepCompareEffect(() => {
-  //   setEditedItem(item)
-  // }, [item])
-
-  // const handleChange = (label, value) => {
-  //   setEditedItem({ ...editedItem, [label]: value })
-  // }
-
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
   const { Occurrence, SupportReference } = item
   const ordering = {
@@ -78,12 +67,10 @@ export default function TsvContent({
             setQuote={setQuote}
             editable={editable}
             onTsvEdit={onTsvEdit}
-            // editedItem={editedItem}
             Occurrence={Occurrence}
             valueId={`${id}_${label}`}
             markdownView={markdownView}
             selectedQuote={selectedQuote}
-            // handleChange={handleChange}
             SupportReference={SupportReference}
           />
         )
@@ -104,15 +91,11 @@ const Item = ({
   editable,
   onTsvEdit,
   Occurrence,
-  // editedItem,
   markdownView,
-  // handleChange,
   selectedQuote,
   SupportReference,
 }) => {
   const [inputValue, setInputValue] = useState(null)
-  // console.log({ editedItem })
-  // const inputValue = editedItem[label]
   const selected = selectedQuote?.quote === value
   const editableFields = [
     'OccurrenceNumber',
@@ -126,59 +109,9 @@ const Item = ({
     'Note',
   ]
   const isEditable = editable && editableFields.includes(label)
-  let labelContent = (
-    <Label
-      id={valueId}
-      bold={selected}
-      value={value}
-      fontSize={fontSize}
-      clickable={!!setQuote}
-      color={selected ? '#38ADDF' : null}
-    >
-      {value}
-    </Label>
-  )
-
-  if (
-    label === 'Annotation' ||
-    label === 'Note' ||
-    label === 'OccurrenceNote'
-  ) {
-    const { Note, Annotation, OccurrenceNote } = item
-    const rawMarkdown = Annotation || Note || OccurrenceNote
-    const markdownLabel = getNoteLabel({ Annotation, Note, OccurrenceNote })
-    labelContent = (
-      <BlockEditable
-        editable={isEditable}
-        fontSize={fontSize}
-        markdown={rawMarkdown}
-        preview={!markdownView}
-        style={{
-          padding: '0px',
-          margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
-        }}
-        onEdit={markdown => onTsvEdit({ [markdownLabel]: markdown })}
-      />
-    )
-  } else if (isEditable) {
-    labelContent = (
-      <Input
-        id={valueId}
-        bold={selected}
-        value={typeof inputValue == 'string' ? inputValue : value}
-        fontSize={fontSize}
-        onBlur={event => {
-          if (typeof inputValue == 'string') {
-            onTsvEdit({ [label]: event.target.value })
-          }
-        }}
-        // onChange={e => handleChange(label, e.target.value)}
-        onChange={e => setInputValue(e.target.value)}
-        clickable={!!setQuote}
-        color={selected ? '#38ADDF' : null}
-      />
-    )
-  }
+  const { Note, Annotation, OccurrenceNote } = item
+  const rawMarkdown = Annotation || Note || OccurrenceNote
+  const markdownLabel = getNoteLabel({ Annotation, Note, OccurrenceNote })
 
   return (
     <Fragment>
@@ -209,7 +142,48 @@ const Item = ({
         >
           {label}
         </Legend>
-        {labelContent}
+        {label === 'Annotation' ||
+        label === 'Note' ||
+        label === 'OccurrenceNote' ? (
+          <BlockEditable
+            id={valueId}
+            editable={isEditable}
+            fontSize={fontSize}
+            markdown={rawMarkdown}
+            preview={!markdownView}
+            style={{
+              padding: '0px',
+              margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
+            }}
+            onEdit={markdown => onTsvEdit({ [markdownLabel]: markdown })}
+          />
+        ) : isEditable ? (
+          <Input
+            id={valueId}
+            bold={selected}
+            value={typeof inputValue == 'string' ? inputValue : value}
+            fontSize={fontSize}
+            onBlur={event => {
+              if (typeof inputValue == 'string') {
+                onTsvEdit({ [label]: event.target.value })
+              }
+            }}
+            onChange={e => setInputValue(e.target.value)}
+            clickable={!!setQuote}
+            color={selected ? '#38ADDF' : null}
+          />
+        ) : (
+          <Label
+            id={valueId}
+            bold={selected}
+            value={value}
+            fontSize={fontSize}
+            clickable={!!setQuote}
+            color={selected ? '#38ADDF' : null}
+          >
+            {value}
+          </Label>
+        )}
       </Fieldset>
       {error ? (
         <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import parser from 'tsv'
 import useDeepCompareEffect from 'use-deep-compare-effect'
 
@@ -50,38 +50,23 @@ export default function useTsvMerger({
   chapter,
   verse,
   tsvs,
-  cardResourceId, // TODO
 }) {
   const [tsvsState, setTsvsState] = useState(null)
 
-  console.log('useTsvMerger tsvsState', tsvsState)
-
   useDeepCompareEffect(() => {
-    console.log('useDeepCompareEffect tsvs', tsvs)
-    console.log('useDeepCompareEffect cardResourceId changed', cardResourceId)
     if (tsvs) {
       setTsvsState(Object.assign({}, { ...tsvs }))
     }
-  }, [tsvs, chapter, verse])
+  }, [{ ...tsvs }, chapter, verse])
 
   function onTsvEdit(newItem, itemIndex) {
-    console.log('onTsvEdit')
-    console.log('tsvsState', tsvsState)
-    console.log('cardResourceId', cardResourceId)
-
     if (tsvsState) {
-      console.log('tsvsState = true')
-      console.log('newItem', newItem)
-      console.log('tsvsState', tsvsState)
       itemIndex = typeof itemIndex == 'number' ? itemIndex : defaultItemIndex
       const newTsvs = Object.assign({}, { ...tsvsState })
       // Updating item reference with edited item.
       const oldItem = { ...newTsvs[chapter][verse][itemIndex] }
-      console.log('oldItem', oldItem)
       newTsvs[chapter][verse][itemIndex] = { ...oldItem, ...newItem }
-      console.log('newTsvs', newTsvs)
       setTsvsState(newTsvs)
-      console.log(newTsvs[chapter][verse][itemIndex])
       const tsvItems = flattenObject(newTsvs)
       const lastTsvItem = tsvItems[tsvItems.length - 1]
       // Front is always at end of array thus move to beginning of array.
