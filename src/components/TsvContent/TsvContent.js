@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
@@ -15,6 +15,25 @@ export default function TsvContent({
   selectedQuote,
   fontSize: _fontSize,
 }) {
+  const [updatedItem, setUpdatedItemState] = useState({
+    quote: null,
+    occurrence: null,
+  })
+
+  useEffect(() => {
+    setUpdatedItemState({
+      quote: null,
+      occurrence: null,
+    })
+  }, [item])
+
+  const setUpdatedItem = (label, value) => {
+    setUpdatedItemState(prevState => ({
+      ...prevState,
+      [label]: value,
+    }))
+  }
+
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
   const { Occurrence, SupportReference } = item
   const ordering = {
@@ -68,9 +87,11 @@ export default function TsvContent({
             editable={editable}
             onTsvEdit={onTsvEdit}
             Occurrence={Occurrence}
+            updatedItem={updatedItem}
             valueId={`${id}_${label}`}
             markdownView={markdownView}
             selectedQuote={selectedQuote}
+            setUpdatedItem={setUpdatedItem}
             SupportReference={SupportReference}
           />
         )
@@ -91,12 +112,16 @@ const Item = ({
   editable,
   onTsvEdit,
   Occurrence,
+  updatedItem,
   markdownView,
   selectedQuote,
+  setUpdatedItem,
   SupportReference,
 }) => {
-  const [inputValue, setInputValue] = useState(null)
-  const selected = selectedQuote?.quote === value
+  const selected =
+    selectedQuote?.quote === value ||
+    (selectedQuote?.quote === updatedItem['quote'] &&
+      label.toLowerCase() == 'quote')
   const editableFields = [
     'OccurrenceNumber',
     'SupportReference',
@@ -112,6 +137,11 @@ const Item = ({
   const { Note, Annotation, OccurrenceNote } = item
   const rawMarkdown = Annotation || Note || OccurrenceNote
   const markdownLabel = getNoteLabel({ Annotation, Note, OccurrenceNote })
+  const updatedLabel = label.toLowerCase().includes('quote')
+    ? 'quote'
+    : label.toLowerCase().includes('occurrence')
+    ? 'occurrence'
+    : label
 
   return (
     <Fragment>
@@ -126,8 +156,8 @@ const Item = ({
             !selected
           )
             setQuote({
-              quote: value,
-              occurrence: Occurrence,
+              quote: updatedItem['quote'] || value,
+              occurrence: updatedItem['occurrence'] || Occurrence,
               SupportReference,
             })
           else if (setQuote && selected) setQuote(null)
@@ -161,14 +191,26 @@ const Item = ({
           <Input
             id={valueId}
             bold={selected}
-            value={typeof inputValue == 'string' ? inputValue : value}
+            value={
+              typeof updatedItem[updatedLabel] == 'string'
+                ? updatedItem[updatedLabel]
+                : value
+            }
             fontSize={fontSize}
             onBlur={event => {
-              if (typeof inputValue == 'string') {
+              if (typeof updatedItem[updatedLabel] == 'string') {
                 onTsvEdit({ [label]: event.target.value })
+
+                if (setQuote) {
+                  setQuote({
+                    quote: updatedItem['quote'] || value,
+                    occurrence: updatedItem['occurrence'] || Occurrence,
+                    SupportReference,
+                  })
+                }
               }
             }}
-            onChange={e => setInputValue(e.target.value)}
+            onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
             clickable={!!setQuote}
             color={selected ? '#38ADDF' : null}
           />
