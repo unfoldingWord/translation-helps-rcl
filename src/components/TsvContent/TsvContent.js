@@ -13,6 +13,7 @@ export default function TsvContent({
   onTsvEdit,
   markdownView,
   selectedQuote,
+  updateTaDetails,
   fontSize: _fontSize,
 }) {
   const [updatedItem, setUpdatedItemState] = useState({
@@ -92,6 +93,7 @@ export default function TsvContent({
             markdownView={markdownView}
             selectedQuote={selectedQuote}
             setUpdatedItem={setUpdatedItem}
+            updateTaDetails={updateTaDetails}
             SupportReference={SupportReference}
           />
         )
@@ -116,6 +118,7 @@ const Item = ({
   markdownView,
   selectedQuote,
   setUpdatedItem,
+  updateTaDetails,
   SupportReference,
 }) => {
   const selected =
@@ -201,12 +204,18 @@ const Item = ({
               if (typeof updatedItem[updatedLabel] == 'string') {
                 onTsvEdit({ [label]: event.target.value })
 
-                if (setQuote) {
+                if (
+                  setQuote &&
+                  (updatedLabel == 'quote' || updatedLabel == 'occurrence')
+                ) {
                   setQuote({
                     quote: updatedItem['quote'] || value,
                     occurrence: updatedItem['occurrence'] || Occurrence,
                     SupportReference,
                   })
+                }
+                if (label == 'SupportReference') {
+                  updateTaDetails(event.target.value)
                 }
               }
             }}

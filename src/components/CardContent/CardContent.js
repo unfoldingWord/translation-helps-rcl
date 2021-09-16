@@ -21,6 +21,7 @@ const CardContent = ({
   markdownView,
   errorMessage,
   selectedQuote,
+  updateTaDetails,
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
@@ -108,6 +109,7 @@ const CardContent = ({
         onTsvEdit={onTsvEdit}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        updateTaDetails={updateTaDetails}
       />
     )
   } else {
