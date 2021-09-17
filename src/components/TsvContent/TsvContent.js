@@ -19,12 +19,14 @@ export default function TsvContent({
   const [updatedItem, setUpdatedItemState] = useState({
     quote: null,
     occurrence: null,
+    markdown: null,
   })
 
   useEffect(() => {
     setUpdatedItemState({
       quote: null,
       occurrence: null,
+      markdown: null,
     })
   }, [item])
 
@@ -182,13 +184,16 @@ const Item = ({
             id={valueId}
             editable={isEditable}
             fontSize={fontSize}
-            markdown={rawMarkdown}
+            markdown={updatedItem['markdown'] || rawMarkdown}
             preview={!markdownView}
             style={{
               padding: '0px',
               margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
             }}
-            onEdit={markdown => onTsvEdit({ [markdownLabel]: markdown })}
+            onEdit={markdown => {
+              setUpdatedItem('markdown', markdown)
+              onTsvEdit({ [markdownLabel]: markdown })
+            }}
           />
         ) : isEditable ? (
           <Input
