@@ -99,7 +99,6 @@ export default function useTsvItems({
           setLoading(true)
           for (let i = 0; i < _items.length; i++) {
             const item = _items[i]
-            console.log({ item })
             const path =
               item.SupportReference || typeof item.SupportReference === 'string'
                 ? item.SupportReference.replace('rc://*/', '')
@@ -112,8 +111,6 @@ export default function useTsvItems({
             url = `${server}/api/v1/repos/${owner}/${languageId}_${resource}/contents/${filePath}?ref=${ref_}`
             let markdown = ''
             let fetchResponse = null
-
-            console.log('useTsvItems', { newRoutes, filename, filePath })
 
             if (path) {
               // only fetch data if we were able to get path for item

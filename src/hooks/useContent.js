@@ -79,8 +79,6 @@ const useContent = ({
     config,
   })
 
-  console.log({ content })
-
   const { items, tsvs, loading: loadingTSV } = useTsvItems({
     httpConfig: config,
     onResourceError,

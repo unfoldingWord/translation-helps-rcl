@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
 import CircularProgress from '../CircularProgress'
@@ -25,7 +25,6 @@ const CardContent = ({
   fontSize: _fontSize,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
-  console.log({ item })
 
   if (isLoading) {
     return <CircularProgress size={200} />
