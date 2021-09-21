@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import useDeepCompareEffect from 'use-deep-compare-effect'
 
 const Container = styled.div`
   overflow: auto;
@@ -136,7 +135,6 @@ function Row({
   SupportReference,
 }) {
   const [newQuote, setNewQuote] = useState(null)
-  // const [selected, setSelected] = useState(false)
   let selected = false
 
   if (
