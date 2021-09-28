@@ -153,9 +153,16 @@ const Card = ({
   }
 
   const onPrevItem = () => {
-    showSaveChangesPrompt(cardResourceId, setContent)
+    // TODO: Comment code below
+    let newIndex = itemIndex - 1
+    if (newIndex < 0) newIndex = items.length - 1
+    const curremtItem = items[itemIndex]
+    const previousItem = items[newIndex]
+    const sameSupportReference =
+      curremtItem?.SupportReference == previousItem?.SupportReference
+
+    showSaveChangesPrompt(cardResourceId, setContent, { sameSupportReference })
       .then(() => {
-        const newIndex = itemIndex - 1
         if (newIndex < 0) {
           setItemIndex(items.length - 1)
         } else {
@@ -168,9 +175,16 @@ const Card = ({
   }
 
   const onNextItem = () => {
-    showSaveChangesPrompt(cardResourceId, setContent)
+    // TODO: Comment code below
+    let newIndex = itemIndex + 1
+    if (newIndex > items.length - 1) newIndex = 0
+    const curremtItem = items[itemIndex]
+    const nextItem = items[newIndex]
+    const sameSupportReference =
+      curremtItem?.SupportReference == nextItem?.SupportReference
+
+    showSaveChangesPrompt(cardResourceId, setContent, { sameSupportReference })
       .then(() => {
-        const newIndex = itemIndex + 1
         if (newIndex > items.length - 1) {
           setItemIndex(0)
         } else {

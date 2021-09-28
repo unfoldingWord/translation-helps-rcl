@@ -18,11 +18,13 @@ const CardContent = ({
   editable,
   isLoading,
   onTsvEdit,
+  setContent,
   markdownView,
   errorMessage,
   selectedQuote,
   updateTaDetails,
   fontSize: _fontSize,
+  showSaveChangesPrompt,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
@@ -77,7 +79,9 @@ const CardContent = ({
         setQuote={setQuote}
         editable={editable}
         onTsvEdit={onTsvEdit}
+        setContent={setContent}
         selectedQuote={selectedQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     )
   } else if (

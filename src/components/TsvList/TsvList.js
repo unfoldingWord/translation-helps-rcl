@@ -29,7 +29,9 @@ export default function TsvList({
   setQuote,
   editable,
   onTsvEdit,
+  setContent,
   selectedQuote,
+  showSaveChangesPrompt,
 }) {
   let filteredItems = []
   fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
@@ -97,8 +99,10 @@ export default function TsvList({
                   setQuote={setQuote}
                   onTsvEdit={onTsvEdit}
                   Occurrence={Occurrence}
+                  setContent={setContent}
                   selectedQuote={selectedQuote}
                   SupportReference={SupportReference}
+                  showSaveChangesPrompt={showSaveChangesPrompt}
                 />
               )
             })}
@@ -131,8 +135,10 @@ function Row({
   setQuote,
   onTsvEdit,
   Occurrence,
+  setContent,
   selectedQuote,
   SupportReference,
+  showSaveChangesPrompt,
 }) {
   const [newQuote, setNewQuote] = useState(null)
   let selected = false
@@ -156,19 +162,22 @@ function Row({
       key={rowKey}
       style={style}
       onClick={() => {
-        if (setQuote && !selected) {
-          if (newQuote) {
-            setQuote(newQuote)
-          } else {
-            setQuote({
-              quote: item.Quote,
-              occurrence: item.Occurrence,
-              SupportReference,
-            })
+        // Check if tw has been edited in order to not lose unsaved changes when selecting a twl item.
+        showSaveChangesPrompt('tw', setContent).then(() => {
+          if (setQuote && !selected) {
+            if (newQuote) {
+              setQuote(newQuote)
+            } else {
+              setQuote({
+                quote: item.Quote,
+                occurrence: item.Occurrence,
+                SupportReference,
+              })
+            }
+          } else if (setQuote && selected) {
+            setQuote({})
           }
-        } else if (setQuote && selected) {
-          setQuote({})
-        }
+        })
       }}
     >
       {Object.keys(item).map(key => {
