@@ -22,6 +22,7 @@ const CardContent = ({
   markdownView,
   errorMessage,
   selectedQuote,
+  cardResourceId,
   updateTaDetails,
   fontSize: _fontSize,
   showSaveChangesPrompt,
@@ -111,9 +112,12 @@ const CardContent = ({
         editable={editable}
         fontSize={_fontSize}
         onTsvEdit={onTsvEdit}
+        setContent={setContent}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        cardResourceId={cardResourceId}
         updateTaDetails={updateTaDetails}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     )
   } else {

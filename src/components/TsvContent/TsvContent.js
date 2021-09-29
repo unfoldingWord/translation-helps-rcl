@@ -11,10 +11,13 @@ export default function TsvContent({
   editable,
   setQuote,
   onTsvEdit,
+  setContent,
   markdownView,
   selectedQuote,
+  cardResourceId,
   updateTaDetails,
   fontSize: _fontSize,
+  showSaveChangesPrompt,
 }) {
   const [updatedItem, setUpdatedItemState] = useState({
     quote: null,
@@ -90,13 +93,16 @@ export default function TsvContent({
             editable={editable}
             onTsvEdit={onTsvEdit}
             Occurrence={Occurrence}
+            setContent={setContent}
             updatedItem={updatedItem}
             valueId={`${id}_${label}`}
             markdownView={markdownView}
             selectedQuote={selectedQuote}
             setUpdatedItem={setUpdatedItem}
+            cardResourceId={cardResourceId}
             updateTaDetails={updateTaDetails}
             SupportReference={SupportReference}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
         )
       })}
@@ -116,12 +122,15 @@ const Item = ({
   editable,
   onTsvEdit,
   Occurrence,
+  setContent,
   updatedItem,
   markdownView,
   selectedQuote,
   setUpdatedItem,
+  cardResourceId,
   updateTaDetails,
   SupportReference,
+  showSaveChangesPrompt,
 }) => {
   const selected =
     selectedQuote?.quote === value ||
@@ -147,6 +156,25 @@ const Item = ({
     : label.toLowerCase().includes('occurrence')
     ? 'occurrence'
     : label
+  const onBlur = event => {
+    if (typeof updatedItem[updatedLabel] == 'string') {
+      onTsvEdit({ [label]: event.target.value })
+
+      if (
+        setQuote &&
+        (updatedLabel == 'quote' || updatedLabel == 'occurrence')
+      ) {
+        setQuote({
+          quote: updatedItem['quote'] || value,
+          occurrence: updatedItem['occurrence'] || Occurrence,
+          SupportReference,
+        })
+      }
+      if (label == 'SupportReference') {
+        updateTaDetails(event.target.value)
+      }
+    }
+  }
 
   return (
     <Fragment>
@@ -206,22 +234,13 @@ const Item = ({
             }
             fontSize={fontSize}
             onBlur={event => {
-              if (typeof updatedItem[updatedLabel] == 'string') {
-                onTsvEdit({ [label]: event.target.value })
-
-                if (
-                  setQuote &&
-                  (updatedLabel == 'quote' || updatedLabel == 'occurrence')
-                ) {
-                  setQuote({
-                    quote: updatedItem['quote'] || value,
-                    occurrence: updatedItem['occurrence'] || Occurrence,
-                    SupportReference,
-                  })
-                }
-                if (label == 'SupportReference') {
-                  updateTaDetails(event.target.value)
-                }
+              // When editing the SupportReference in the tn card we should check for unsaved changes in the ta resource card.
+              if (cardResourceId == 'tn' && label == 'SupportReference') {
+                showSaveChangesPrompt('ta', setContent)
+                  .then(() => onBlur(event))
+                  .catch(() => setUpdatedItem(updatedLabel, null))
+              } else {
+                onBlur(event)
               }
             }}
             onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
