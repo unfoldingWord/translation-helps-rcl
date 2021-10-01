@@ -40,22 +40,11 @@ const useCardState = ({
   useEffect(() => {
     if (items && typeof SupportReference === 'string') {
       const index = items.findIndex(
-        ({
-          Quote,
-          TWLink,
-          OrigWords,
-          Occurrence,
-          SupportReference: itemSupportReference,
-        }) => {
+        ({ TWLink, SupportReference: itemSupportReference }) => {
           // Support new TWL column headers (OrigWords & TWLink)
           itemSupportReference = itemSupportReference || TWLink
-          Quote = Quote || OrigWords
 
-          return (
-            itemSupportReference?.includes(SupportReference) &&
-            quote === Quote &&
-            occurrence === Occurrence
-          )
+          return itemSupportReference?.includes(SupportReference)
         }
       )
 
