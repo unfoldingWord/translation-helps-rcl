@@ -59,6 +59,7 @@ const useCardState = ({
         }
       )
 
+      // When the quote or occurrence is changed in the twl we want to find the item index using the TWLink field
       if (index == -1) {
         index = items.findIndex(
           ({ TWLink, SupportReference: itemSupportReference }) => {
