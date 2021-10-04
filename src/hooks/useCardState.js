@@ -9,6 +9,7 @@ const useCardState = ({
   chapter,
   setQuote,
   projectId,
+  resourceId,
   selectedQuote = {},
   useUserLocalStorage,
 }) => {
@@ -60,7 +61,7 @@ const useCardState = ({
       )
 
       // When the quote or occurrence is changed in the twl we want to find the item index using the TWLink field
-      if (index == -1) {
+      if (index == -1 && resourceId == 'tw') {
         index = items.findIndex(
           ({ TWLink, SupportReference: itemSupportReference }) => {
             // Support new TWL column headers (TWLink)
