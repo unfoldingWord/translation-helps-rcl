@@ -59,6 +59,17 @@ const useCardState = ({
         }
       )
 
+      if (index == -1) {
+        index = items.findIndex(
+          ({ TWLink, SupportReference: itemSupportReference }) => {
+            // Support new TWL column headers (TWLink)
+            itemSupportReference = itemSupportReference || TWLink
+
+            return itemSupportReference?.includes(SupportReference)
+          }
+        )
+      }
+
       if (index >= 0 && index !== itemIndex) {
         setItemIndex(index)
       }
