@@ -9,6 +9,7 @@ const useCardState = ({
   chapter,
   setQuote,
   projectId,
+  resourceId,
   selectedQuote = {},
   useUserLocalStorage,
 }) => {
@@ -39,7 +40,7 @@ const useCardState = ({
 
   useEffect(() => {
     if (items && typeof SupportReference === 'string') {
-      const index = items.findIndex(
+      let index = items.findIndex(
         ({
           Quote,
           TWLink,
@@ -58,6 +59,18 @@ const useCardState = ({
           )
         }
       )
+
+      // When the quote or occurrence is changed in the twl we want to find the item index using the TWLink field
+      if (index == -1 && resourceId == 'tw') {
+        index = items.findIndex(
+          ({ TWLink, SupportReference: itemSupportReference }) => {
+            // Support new TWL column headers (TWLink)
+            itemSupportReference = itemSupportReference || TWLink
+
+            return itemSupportReference?.includes(SupportReference)
+          }
+        )
+      }
 
       if (index >= 0 && index !== itemIndex) {
         setItemIndex(index)

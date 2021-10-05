@@ -111,17 +111,20 @@ const Card = ({
   closeable,
   setFilters,
   onSaveEdit,
+  setContent,
   setFontSize,
+  onMenuClose,
   markdownView,
   setItemIndex,
   onRemoveCard,
-  onMenuClose,
   disableFilters,
+  cardResourceId,
   setMarkdownView,
   disableNavigation,
-  disableSettingsButton,
   hideMarkdownToggle,
   getCustomComponent,
+  disableSettingsButton,
+  showSaveChangesPrompt,
   settingsTitle: settingsTitle_,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
@@ -150,27 +153,53 @@ const Card = ({
   }
 
   const onPrevItem = () => {
-    const newIndex = itemIndex - 1
-    if (newIndex < 0) {
-      setItemIndex(items.length - 1)
-    } else {
-      setItemIndex(newIndex)
-    }
+    // TODO: Comment code below
+    let newIndex = itemIndex - 1
+    if (newIndex < 0) newIndex = items.length - 1
+    const curremtItem = items[itemIndex]
+    const previousItem = items[newIndex]
+    const sameSupportReference =
+      curremtItem?.SupportReference == previousItem?.SupportReference
+
+    showSaveChangesPrompt(cardResourceId, setContent, { sameSupportReference })
+      .then(() => {
+        if (newIndex < 0) {
+          setItemIndex(items.length - 1)
+        } else {
+          setItemIndex(newIndex)
+        }
+      })
+      .catch(() => {
+        // User won't navigate to new item in order to save changes
+      })
   }
 
   const onNextItem = () => {
-    const newIndex = itemIndex + 1
-    if (newIndex > items.length - 1) {
-      setItemIndex(0)
-    } else {
-      setItemIndex(newIndex)
-    }
+    // TODO: Comment code below
+    let newIndex = itemIndex + 1
+    if (newIndex > items.length - 1) newIndex = 0
+    const curremtItem = items[itemIndex]
+    const nextItem = items[newIndex]
+    const sameSupportReference =
+      curremtItem?.SupportReference == nextItem?.SupportReference
+
+    showSaveChangesPrompt(cardResourceId, setContent, { sameSupportReference })
+      .then(() => {
+        if (newIndex > items.length - 1) {
+          setItemIndex(0)
+        } else {
+          setItemIndex(newIndex)
+        }
+      })
+      .catch(() => {
+        // User won't navigate to new item in order to save changes
+      })
   }
 
   const cardMenuId = id ? `${id}_card_menu` : 'card_menu'
 
-  // TODO: in future we might want to add scroll into view support for list view, but for now
-  //    we don't want list views scrolling to top each time the itemIndex changes
+  // TODO: In future we might want to add scroll into view support for list view, but for now
+  // we don't want list views scrolling to top each time the itemIndex changes
   const enableAutoScrollToTop = children?.props?.viewMode !== 'list'
 
   return (

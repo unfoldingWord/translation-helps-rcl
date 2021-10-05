@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { BlockEditable } from 'markdown-translatable'
+import CircularProgress from '../CircularProgress'
 import TsvContent from '../TsvContent'
 import TsvList from '../TsvList'
-import CircularProgress from '../CircularProgress'
+import TqContent from '../TqContent'
 
 const CardContent = ({
   id,
@@ -16,10 +17,15 @@ const CardContent = ({
   setQuote,
   editable,
   isLoading,
+  onTsvEdit,
+  setContent,
   markdownView,
   errorMessage,
   selectedQuote,
+  cardResourceId,
+  updateTaDetails,
   fontSize: _fontSize,
+  showSaveChangesPrompt,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
@@ -72,7 +78,11 @@ const CardContent = ({
         filters={filters}
         fontSize={fontSize}
         setQuote={setQuote}
+        editable={editable}
+        onTsvEdit={onTsvEdit}
+        setContent={setContent}
         selectedQuote={selectedQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     )
   } else if (
@@ -80,28 +90,13 @@ const CardContent = ({
     viewMode === 'question' &&
     (item.Annotation || item.Question)
   ) {
-    let question, answer
-
-    if (item.Annotation) {
-      const text = item.Annotation.replace('', '')
-      const chunks = text.split('?')
-      question = chunks[0]
-      answer = chunks[1].split('> ')[1]
-    } else {
-      question = item.Question
-      answer = item.Response || ''
-    }
-
-    const markdown = `# ${question}? \n\n${answer.trim()}`
-
     return (
-      <BlockEditable
-        onEdit={onEdit}
-        markdown={markdown}
-        editable={editable}
+      <TqContent
+        item={item}
         fontSize={fontSize}
-        preview={!markdownView}
-        style={{ display: 'block', padding: '0px' }}
+        editable={editable}
+        onTsvEdit={onTsvEdit}
+        markdownView={markdownView}
       />
     )
   } else if (
@@ -112,13 +107,17 @@ const CardContent = ({
       <TsvContent
         id={id}
         item={item}
-        onEdit={onEdit}
         filters={filters}
         setQuote={setQuote}
         editable={editable}
         fontSize={_fontSize}
+        onTsvEdit={onTsvEdit}
+        setContent={setContent}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        cardResourceId={cardResourceId}
+        updateTaDetails={updateTaDetails}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     )
   } else {

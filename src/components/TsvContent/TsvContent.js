@@ -1,8 +1,296 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
-import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
+import getNoteLabel from '../../core/getNoteLabel'
+
+export default function TsvContent({
+  id,
+  item,
+  filters,
+  editable,
+  setQuote,
+  onTsvEdit,
+  setContent,
+  markdownView,
+  selectedQuote,
+  cardResourceId,
+  updateTaDetails,
+  fontSize: _fontSize,
+  showSaveChangesPrompt,
+}) {
+  const [updatedItem, setUpdatedItemState] = useState({
+    quote: null,
+    occurrence: null,
+    markdown: null,
+  })
+
+  useEffect(() => {
+    setUpdatedItemState({
+      quote: null,
+      occurrence: null,
+      markdown: null,
+    })
+  }, [item])
+
+  const setUpdatedItem = (label, value) => {
+    setUpdatedItemState(prevState => ({
+      ...prevState,
+      [label]: value,
+    }))
+  }
+
+  const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
+  const { Occurrence, SupportReference } = item
+  const ordering = {
+    Book: 14,
+    Chapter: 13,
+    Verse: 12,
+    Reference: 11,
+    ID: 10,
+    Occurrence: 9,
+    SupportReference: 8,
+    Quote: 7,
+    Tags: 6,
+    Note: 5,
+    Annotation: 5,
+    Question: 5,
+    Annotation2: 4,
+    Response: 4,
+    OrigQuote: 3,
+    GLQuote: 2,
+    OccurrenceNote: 0,
+  }
+
+  filters = filters
+    .sort((a, b) => {
+      if (ordering[a] < ordering[b]) {
+        return -1
+      }
+      if (ordering[a] > ordering[b]) {
+        return 1
+      }
+
+      return ordering[a] - ordering[b]
+    })
+    .reverse()
+
+  return (
+    <Container>
+      {filters.map((label, i) => {
+        const value = item[label]
+
+        return (
+          <Item
+            key={label + i}
+            item={item}
+            label={label}
+            value={value}
+            error={false}
+            caution={false}
+            fontSize={fontSize}
+            setQuote={setQuote}
+            editable={editable}
+            onTsvEdit={onTsvEdit}
+            Occurrence={Occurrence}
+            setContent={setContent}
+            updatedItem={updatedItem}
+            valueId={`${id}_${label}`}
+            markdownView={markdownView}
+            selectedQuote={selectedQuote}
+            setUpdatedItem={setUpdatedItem}
+            cardResourceId={cardResourceId}
+            updateTaDetails={updateTaDetails}
+            SupportReference={SupportReference}
+            showSaveChangesPrompt={showSaveChangesPrompt}
+          />
+        )
+      })}
+    </Container>
+  )
+}
+
+const Item = ({
+  item,
+  label,
+  value,
+  error,
+  valueId,
+  caution,
+  fontSize,
+  setQuote,
+  editable,
+  onTsvEdit,
+  Occurrence,
+  setContent,
+  updatedItem,
+  markdownView,
+  selectedQuote,
+  setUpdatedItem,
+  cardResourceId,
+  updateTaDetails,
+  SupportReference,
+  showSaveChangesPrompt,
+}) => {
+  const selected =
+    selectedQuote?.quote === value ||
+    (selectedQuote?.quote === updatedItem['quote'] &&
+      label.toLowerCase() == 'quote')
+  const editableFields = [
+    'OccurrenceNumber',
+    'SupportReference',
+    'Original Quote',
+    'OccurrenceNote',
+    'Occurrence',
+    'Annotation',
+    'OrigQuote',
+    'Quote',
+    'Note',
+  ]
+  const isEditable = editable && editableFields.includes(label)
+  const { Note, Annotation, OccurrenceNote } = item
+  const rawMarkdown = Annotation || Note || OccurrenceNote
+  const markdownLabel = getNoteLabel({ Annotation, Note, OccurrenceNote })
+  const updatedLabel = label.toLowerCase().includes('quote')
+    ? 'quote'
+    : label.toLowerCase().includes('occurrence')
+    ? 'occurrence'
+    : label
+  const onBlur = event => {
+    if (typeof updatedItem[updatedLabel] == 'string') {
+      onTsvEdit({ [label]: event.target.value })
+
+      if (
+        setQuote &&
+        (updatedLabel == 'quote' || updatedLabel == 'occurrence')
+      ) {
+        setQuote({
+          quote: updatedItem['quote'] || value,
+          occurrence: updatedItem['occurrence'] || Occurrence,
+          SupportReference,
+        })
+      }
+      if (label == 'SupportReference') {
+        updateTaDetails(event.target.value)
+      }
+    }
+  }
+
+  return (
+    <Fragment>
+      <Fieldset
+        label={label}
+        caution={caution}
+        error={error}
+        onClick={() => {
+          if (
+            setQuote &&
+            (label === 'Quote' || label === 'OrigQuote') &&
+            !selected
+          )
+            setQuote({
+              quote: updatedItem['quote'] || value,
+              occurrence: updatedItem['occurrence'] || Occurrence,
+              SupportReference,
+            })
+          else if (setQuote && selected) setQuote(null)
+        }}
+      >
+        <Legend
+          error={error}
+          label={label}
+          color='#424242'
+          caution={caution}
+          fontSize={fontSize === 'inherit' ? '14px' : fontSize}
+        >
+          {label}
+        </Legend>
+        {label === 'Annotation' ||
+        label === 'Note' ||
+        label === 'OccurrenceNote' ? (
+          <BlockEditable
+            id={valueId}
+            editable={isEditable}
+            fontSize={fontSize}
+            markdown={updatedItem['markdown'] || rawMarkdown}
+            preview={!markdownView}
+            style={{
+              padding: '0px',
+              margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
+            }}
+            onEdit={markdown => {
+              setUpdatedItem('markdown', markdown)
+              onTsvEdit({ [markdownLabel]: markdown })
+            }}
+          />
+        ) : isEditable ? (
+          <Input
+            id={valueId}
+            bold={selected}
+            value={
+              typeof updatedItem[updatedLabel] == 'string'
+                ? updatedItem[updatedLabel]
+                : value
+            }
+            fontSize={fontSize}
+            onBlur={event => {
+              // When editing the SupportReference in the tn card we should check for unsaved changes in the ta resource card.
+              if (cardResourceId == 'tn' && label == 'SupportReference') {
+                showSaveChangesPrompt('ta', setContent)
+                  .then(() => onBlur(event))
+                  .catch(() => setUpdatedItem(updatedLabel, null))
+              } else {
+                onBlur(event)
+              }
+            }}
+            onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
+            clickable={!!setQuote}
+            color={selected ? '#38ADDF' : null}
+          />
+        ) : (
+          <Label
+            id={valueId}
+            bold={selected}
+            value={value}
+            fontSize={fontSize}
+            clickable={!!setQuote}
+            color={selected ? '#38ADDF' : null}
+          >
+            {value}
+          </Label>
+        )}
+      </Fieldset>
+      {error ? (
+        <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
+          <span style={{ color: '#FF1A1A', marginTop: '10px' }}>
+            Warning: Something is wrong
+          </span>
+        </Label>
+      ) : (
+        caution && (
+          <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
+            <span style={{ color: '#FF8400', marginTop: '10px' }}>
+              Caution: Something is wrong
+            </span>
+          </Label>
+        )
+      )}
+    </Fragment>
+  )
+}
+
+TsvContent.defaultProps = {
+  fontSize: 100,
+  id: '',
+}
+
+TsvContent.propTypes = {
+  id: PropTypes.string,
+  item: PropTypes.object.isRequired,
+  filters: PropTypes.array.isRequired,
+  markdownView: PropTypes.bool.isRequired,
+  fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+}
 
 const Container = styled.div`
   display: grid;
@@ -58,189 +346,18 @@ const Label = styled.label`
   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
   font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
   cursor: ${props => (props.clickable ? 'pointer' : 'inherit')};
+  &:focus-visible {
+    outline: #38addf auto 1px;
+  }
 `
 
-const Item = ({
-  valueId,
-  label,
-  value,
-  error,
-  fontSize,
-  caution,
-  setQuote,
-  Occurrence,
-  selectedQuote,
-  SupportReference,
-}) => {
-  const selected = selectedQuote?.quote === value
-
-  return (
-    <Fragment>
-      <Fieldset
-        label={label}
-        caution={caution}
-        error={error}
-        onClick={() => {
-          if (
-            setQuote &&
-            (label === 'Quote' || label === 'OrigQuote') &&
-            !selected
-          )
-            setQuote({
-              quote: value,
-              occurrence: Occurrence,
-              SupportReference,
-            })
-          else if (setQuote && selected) setQuote(null)
-        }}
-      >
-        <Legend
-          error={error}
-          label={label}
-          color='#424242'
-          caution={caution}
-          fontSize={fontSize === 'inherit' ? '14px' : fontSize}
-        >
-          {label}
-        </Legend>
-        <Label
-          id={valueId}
-          color={selected ? '#38ADDF' : null}
-          bold={selected}
-          fontSize={fontSize}
-          clickable={!!setQuote}
-        >
-          {value}
-        </Label>
-      </Fieldset>
-      {error ? (
-        <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
-          <span style={{ color: '#FF1A1A', marginTop: '10px' }}>
-            Warning: Something is wrong
-          </span>
-        </Label>
-      ) : (
-        caution && (
-          <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
-            <span style={{ color: '#FF8400', marginTop: '10px' }}>
-              Caution: Something is wrong
-            </span>
-          </Label>
-        )
-      )}
-    </Fragment>
-  )
-}
-
-const TsvContent = ({
-  id,
-  item,
-  onEdit,
-  editable,
-  filters,
-  setQuote,
-  markdownView,
-  selectedQuote,
-  fontSize: _fontSize,
-}) => {
-  const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
-  const {
-    Note,
-    Annotation,
-    OccurrenceNote,
-    Occurrence,
-    SupportReference,
-  } = item
-  const rawMarkdown = stripReferenceLinksFromMarkdown(
-    Annotation || Note || OccurrenceNote
-  )
-  const markdown = (
-    <BlockEditable
-      onEdit={onEdit}
-      editable={editable}
-      fontSize={fontSize}
-      markdown={rawMarkdown}
-      preview={!markdownView}
-      style={{
-        padding: '0px',
-        margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
-      }}
-    />
-  )
-
-  const ordering = {
-    Book: 14,
-    Chapter: 13,
-    Verse: 12,
-    Reference: 11,
-    ID: 10,
-    Occurrence: 9,
-    SupportReference: 8,
-    Quote: 7,
-    Tags: 6,
-    Note: 5,
-    Annotation: 5,
-    Question: 5,
-    Annotation2: 4,
-    Response: 4,
-    OrigQuote: 3,
-    GLQuote: 2,
-    OccurrenceNote: 0,
+const Input = styled.input`
+  border: none;
+  letter-spacing: 0.25px;
+  color: ${props => (props.color ? props.color : '#000000')};
+  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
+  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
+  &:focus-visible {
+    outline: #38addf auto 1px;
   }
-
-  filters = filters
-    .sort((a, b) => {
-      if (ordering[a] < ordering[b]) {
-        return -1
-      }
-      if (ordering[a] > ordering[b]) {
-        return 1
-      }
-
-      return ordering[a] - ordering[b]
-    })
-    .reverse()
-
-  return (
-    <Container>
-      {filters.map(label => {
-        const value =
-          label === 'Annotation' ||
-          label === 'Note' ||
-          label === 'OccurrenceNote'
-            ? markdown
-            : item[label]
-        return (
-          <Item
-            key={label}
-            label={label}
-            valueId={`${id}_${label}`}
-            value={value}
-            error={false}
-            caution={false}
-            fontSize={fontSize}
-            setQuote={setQuote}
-            Occurrence={Occurrence}
-            selectedQuote={selectedQuote}
-            SupportReference={SupportReference}
-          />
-        )
-      })}
-    </Container>
-  )
-}
-
-TsvContent.defaultProps = {
-  fontSize: 100,
-  id: '',
-}
-
-TsvContent.propTypes = {
-  id: PropTypes.string,
-  item: PropTypes.object.isRequired,
-  filters: PropTypes.array.isRequired,
-  markdownView: PropTypes.bool.isRequired,
-  fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-}
-
-export default TsvContent
+`
