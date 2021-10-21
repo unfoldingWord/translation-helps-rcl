@@ -4,7 +4,7 @@ import CardContent from '../CardContent'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
-const Card1 = ({ selectedQuote, setQuote }) => {
+const Card1 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
   const viewMode = 'list'
   const {
     items,
@@ -43,6 +43,7 @@ const Card1 = ({ selectedQuote, setQuote }) => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
       disableFilters
       disableNavigation
       hideMarkdownToggle
@@ -58,12 +59,13 @@ const Card1 = ({ selectedQuote, setQuote }) => {
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )
 }
 
-const Card2 = ({ selectedQuote, setQuote }) => {
+const Card2 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
   const {
     items,
     markdown,
@@ -101,6 +103,7 @@ const Card2 = ({ selectedQuote, setQuote }) => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
       disableFilters
       hideMarkdownToggle
     >
@@ -115,6 +118,7 @@ const Card2 = ({ selectedQuote, setQuote }) => {
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )
@@ -122,11 +126,24 @@ const Card2 = ({ selectedQuote, setQuote }) => {
 
 export default function TwNavigationDemo() {
   const [selectedQuote, setQuote] = useState(null)
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   return (
     <div style={{ display: 'flex' }}>
-      <Card1 selectedQuote={selectedQuote} setQuote={setQuote} />
-      <Card2 selectedQuote={selectedQuote} setQuote={setQuote} />
+      <Card1
+        selectedQuote={selectedQuote}
+        setQuote={setQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
+      />
+      <Card2
+        selectedQuote={selectedQuote}
+        setQuote={setQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
+      />
     </div>
   )
 }
