@@ -39,6 +39,11 @@ function Component() {
   } = useCardState({
     items,
   })
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   if (item) {
     return (
@@ -54,6 +59,7 @@ function Component() {
         setItemIndex={setItemIndex}
         markdownView={markdownView}
         setMarkdownView={setMarkdownView}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       >
         <TsvContent
           item={item}
@@ -62,6 +68,7 @@ function Component() {
           markdownView={markdownView}
           selectedQuote={selectedQuote}
           setQuote={setQuote}
+          showSaveChangesPrompt={showSaveChangesPrompt}
         />
       </Card>
     )
