@@ -42,6 +42,11 @@ const Component = () => {
   } = useCardState({
     items,
   })
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   return (
     <Card
@@ -56,6 +61,7 @@ const Component = () => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
       disableFilters
       disableNavigation
       hideMarkdownToggle
@@ -67,6 +73,7 @@ const Component = () => {
         markdownView={markdownView}
         selectedQuote={selectedQuote}
         setQuote={setQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )

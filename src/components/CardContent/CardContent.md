@@ -43,6 +43,11 @@ const Component = () => {
   } = useCardState({
     items,
   })
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   return (
     <Card
@@ -57,6 +62,7 @@ const Component = () => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
         item={item}
@@ -68,6 +74,7 @@ const Component = () => {
         markdownView={markdownView}
         selectedQuote={selectedQuote}
         setQuote={setQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )
@@ -116,6 +123,11 @@ const Component = () => {
   } = useCardState({
     items,
   })
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   return (
     <Card
@@ -130,6 +142,7 @@ const Component = () => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
         item={item}
@@ -139,6 +152,7 @@ const Component = () => {
         isLoading={isLoading}
         languageId={languageId}
         markdownView={markdownView}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )
@@ -186,6 +200,11 @@ const Component = () => {
   } = useCardState({
     items,
   })
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   return (
     <Card
@@ -200,6 +219,7 @@ const Component = () => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
         item={item}
@@ -210,6 +230,7 @@ const Component = () => {
         isLoading={isLoading}
         languageId={languageId}
         markdownView={markdownView}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )
@@ -258,6 +279,11 @@ const Component = () => {
   } = useCardState({
     items,
   })
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   return (
     <Card
@@ -272,6 +298,7 @@ const Component = () => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
         item={item}
@@ -284,6 +311,7 @@ const Component = () => {
         markdownView={markdownView}
         selectedQuote={selectedQuote}
         setQuote={setQuote}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )
@@ -332,6 +360,11 @@ const Component = () => {
   } = useCardState({
     items,
   })
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   return (
     <Card
@@ -346,6 +379,7 @@ const Component = () => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
         item={item}
@@ -355,6 +389,7 @@ const Component = () => {
         isLoading={isLoading}
         languageId={languageId}
         markdownView={markdownView}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )
@@ -403,6 +438,11 @@ const Component = () => {
   } = useCardState({
     items,
   })
+  const showSaveChangesPrompt = () => {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
+  }
 
   return (
     <Card
@@ -417,6 +457,7 @@ const Component = () => {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
         item={item}
@@ -427,6 +468,7 @@ const Component = () => {
         isLoading={isLoading}
         languageId={languageId}
         markdownView={markdownView}
+        showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
   )
