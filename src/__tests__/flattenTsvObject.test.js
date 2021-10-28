@@ -12,12 +12,13 @@ describe('flattenTsvObject', () => {
     resultWithVerseSpans = flattenTsvObject(tsvsObjectWithVerseSpan)
   })
 
-  it('front reference should go at the very top of the array', () => {
+  it('Front reference should go at the very top of the array', () => {
     expect(result[0].Reference).toBe('front:intro')
     expect(resultWithVerseSpans[0].Reference).toBe('front:intro')
   })
 
   it('The first item at the biginning of each chapter should have intro as a verse reference', () => {
+    // find returns the first value that matches the condition thus will make sure the first chapter value will be returned, which should include intro.
     const chapter1VerseValue = result.find(
       ({ Reference }) => Reference.split(':')[0] == '1'
     )
@@ -33,9 +34,14 @@ describe('flattenTsvObject', () => {
     expect(chapter3VerseValue.Reference).toBe('3:intro')
   })
 
-  // it('verse spans should not affect tsvs order', () => {
-  //   const result = flattenTsvObject(tsvsObject)
+  it('Verse spans are sorted correctly', () => {
+    const verseSpanIndex = resultWithVerseSpans.findIndex(
+      ({ Reference }) => Reference == '1:1-2'
+    )
 
-  //   expect(result[0].Reference).toBe('front:intro')
-  // })
+    // 1:1 should go before 1:1-2
+    expect(resultWithVerseSpans[verseSpanIndex - 1].Reference).toBe('1:1')
+    // 1:2 should go after 1:1-2
+    expect(resultWithVerseSpans[verseSpanIndex + 1].Reference).toBe('1:2')
+  })
 })
