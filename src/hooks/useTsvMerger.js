@@ -24,6 +24,7 @@ export default function useTsvMerger({
       const newTsvs = Object.assign({}, { ...tsvsState })
       // Updating item reference with edited item.
       const oldItem = { ...newTsvs[chapter][verse][itemIndex] }
+      console.log('onTsvEdit newItem', newItem)
       newTsvs[chapter][verse][itemIndex] = { ...oldItem, ...newItem }
       setTsvsState(newTsvs)
       const tsvItems = flattenObject(newTsvs)
