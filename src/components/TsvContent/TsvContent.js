@@ -220,8 +220,6 @@ const Item = ({
               margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
             }}
             onEdit={markdown => {
-              console.log('markdown', markdown)
-              console.log('clean markdown', cleanMarkdownLineBreak(markdown))
               setUpdatedItem('markdown', cleanMarkdownLineBreak(markdown))
               onTsvEdit({ [markdownLabel]: cleanMarkdownLineBreak(markdown) })
             }}
