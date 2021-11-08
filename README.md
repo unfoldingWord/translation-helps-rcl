@@ -1,6 +1,9 @@
 # translation-helps-rcl
 
 [![Netlify](https://www.netlify.com/img/global/badges/netlify-color-accent.svg)](https://www.netlify.com)
+[![Actions Status](https://github.com/unfoldingWord/translation-helps-rcl/workflows/CI/badge.svg)](https://github.com/unfoldingWord/translation-helps-rcl/actions)
+[![Current Verison](https://img.shields.io/github/tag/unfoldingWord/translation-helps-rcl.svg)](https://github.com/unfoldingWord/translation-helps-rcl/tags)
+[![View this project on NPM](https://img.shields.io/npm/v/translation-helps-rcl)](https://www.npmjs.com/package/translation-helps-rcl)
 
 ## Peer Dependencies
 
