@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 import getNoteLabel from '../../core/getNoteLabel'
+import cleanMarkdownLineBreak from '../../core/cleanMarkdownLineBreak'
 
 export default function TsvContent({
   id,
@@ -219,8 +220,8 @@ const Item = ({
               margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
             }}
             onEdit={markdown => {
-              setUpdatedItem('markdown', markdown)
-              onTsvEdit({ [markdownLabel]: markdown })
+              setUpdatedItem('markdown', cleanMarkdownLineBreak(markdown))
+              onTsvEdit({ [markdownLabel]: cleanMarkdownLineBreak(markdown) })
             }}
           />
         ) : isEditable ? (
