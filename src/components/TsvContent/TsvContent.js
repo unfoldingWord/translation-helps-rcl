@@ -4,10 +4,12 @@ import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 import getNoteLabel from '../../core/getNoteLabel'
 import cleanMarkdownLineBreak from '../../core/cleanMarkdownLineBreak'
+import { Grid } from '@material-ui/core'
 
 export default function TsvContent({
   id,
   item,
+  sourceItem,
   filters,
   editable,
   setQuote,
@@ -77,16 +79,31 @@ export default function TsvContent({
     .reverse()
 
   return (
-    <Container>
+    <Fragment>
       {filters.map((label, i) => {
         const value = item[label]
+        let sourceValue = sourceItem[label];
+        if (!sourceValue) {
+          switch (label) {
+            case 'OrigQuote':
+              sourceValue = sourceItem['Quote'];
+              break;
+            case 'OccurrenceNote':
+              sourceValue = sourceItem['Note'];
+              break;
+            default:
+              break;
+          }
+        }
 
         return (
           <Item
             key={label + i}
             item={item}
+            sourceItem={sourceItem}
             label={label}
             value={value}
+            sourceValue={sourceValue}
             error={false}
             caution={false}
             fontSize={fontSize}
@@ -107,14 +124,16 @@ export default function TsvContent({
           />
         )
       })}
-    </Container>
+    </Fragment>
   )
 }
 
 const Item = ({
   item,
+  sourceItem,
   label,
   value,
+  sourceValue,
   error,
   valueId,
   caution,
@@ -155,8 +174,8 @@ const Item = ({
   const updatedLabel = label.toLowerCase().includes('quote')
     ? 'quote'
     : label.toLowerCase().includes('occurrence')
-    ? 'occurrence'
-    : label
+      ? 'occurrence'
+      : label
   const onBlur = event => {
     if (typeof updatedItem[updatedLabel] == 'string') {
       onTsvEdit({ [label]: event.target.value })
@@ -179,88 +198,89 @@ const Item = ({
 
   return (
     <Fragment>
-      <Fieldset
-        label={label}
-        caution={caution}
-        error={error}
-        onClick={() => {
-          if (
-            setQuote &&
-            (label === 'Quote' || label === 'OrigQuote') &&
-            !selected
-          )
-            setQuote({
-              quote: updatedItem['quote'] || value,
-              occurrence: updatedItem['occurrence'] || Occurrence,
-              SupportReference,
-            })
-          else if (setQuote && selected) setQuote(null)
-        }}
-      >
-        <Legend
-          error={error}
-          label={label}
-          color='#424242'
-          caution={caution}
-          fontSize={fontSize === 'inherit' ? '14px' : fontSize}
-        >
-          {label}
-        </Legend>
-        {label === 'Annotation' ||
-        label === 'Note' ||
-        label === 'OccurrenceNote' ? (
-          <BlockEditable
-            id={valueId}
-            editable={isEditable}
-            fontSize={fontSize}
-            markdown={updatedItem['markdown'] || rawMarkdown}
-            preview={!markdownView}
-            style={{
-              padding: '0px',
-              margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
-            }}
-            onEdit={markdown => {
-              setUpdatedItem('markdown', cleanMarkdownLineBreak(markdown))
-              onTsvEdit({ [markdownLabel]: cleanMarkdownLineBreak(markdown) })
-            }}
-          />
-        ) : isEditable ? (
-          <Input
+      <Grid container>
+        <Grid item xs={4} >
+          <Fragment
+            error={error}
+            label={label}
+            color='#424242'
+            caution={caution}
+            fontSize={fontSize === 'inherit' ? '14px' : fontSize}
+          >
+            {label}
+          </Fragment>
+        </Grid>
+        <Grid item xs={4} >
+          <Fragment
             id={valueId}
             bold={selected}
-            value={
-              typeof updatedItem[updatedLabel] == 'string'
-                ? updatedItem[updatedLabel]
-                : value
-            }
-            fontSize={fontSize}
-            onBlur={event => {
-              // When editing the SupportReference in the tn card we should check for unsaved changes in the ta resource card.
-              if (cardResourceId == 'tn' && label == 'SupportReference') {
-                showSaveChangesPrompt('ta', setContent)
-                  .then(() => onBlur(event))
-                  .catch(() => setUpdatedItem(updatedLabel, null))
-              } else {
-                onBlur(event)
-              }
-            }}
-            onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
-            clickable={!!setQuote}
-            color={selected ? '#38ADDF' : null}
-          />
-        ) : (
-          <Label
-            id={valueId}
-            bold={selected}
-            value={value}
+            value={sourceValue}
             fontSize={fontSize}
             clickable={!!setQuote}
             color={selected ? '#38ADDF' : null}
           >
-            {value}
-          </Label>
-        )}
-      </Fieldset>
+            {sourceValue}
+          </Fragment>
+        </Grid>
+        <Grid item xs={4} >
+          {label === 'Annotation' ||
+            label === 'Note' ||
+            label === 'OccurrenceNote' ? (
+            <BlockEditable
+              id={valueId}
+              editable={isEditable}
+              fontSize={fontSize}
+              markdown={updatedItem['markdown'] || rawMarkdown}
+              preview={!markdownView}
+              style={{
+                padding: '0px',
+                margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
+              }}
+              onEdit={markdown => {
+                setUpdatedItem('markdown', cleanMarkdownLineBreak(markdown))
+                onTsvEdit({ [markdownLabel]: cleanMarkdownLineBreak(markdown) })
+              }}
+            />
+          ) : isEditable ? (
+            <Input
+              id={valueId}
+              bold={selected}
+              value={
+                typeof updatedItem[updatedLabel] == 'string'
+                  ? updatedItem[updatedLabel]
+                  : value
+              }
+              fontSize={fontSize}
+              onBlur={event => {
+                // When editing the SupportReference in the tn card we should check for unsaved changes in the ta resource card.
+                if (cardResourceId == 'tn' && label == 'SupportReference') {
+                  showSaveChangesPrompt('ta', setContent)
+                    .then(() => onBlur(event))
+                    .catch(() => setUpdatedItem(updatedLabel, null))
+                } else {
+                  onBlur(event)
+                }
+              }}
+              onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
+              clickable={!!setQuote}
+              color={selected ? '#38ADDF' : null}
+            />
+          ) : (
+            // <Grid item xs={4} >
+            <Fragment
+              id={valueId}
+              bold={selected}
+              value={sourceValue}
+              fontSize={fontSize}
+              clickable={!!setQuote}
+              color={selected ? '#38ADDF' : null}
+            >
+              {sourceValue}
+            </Fragment>
+
+          )}
+        </Grid>
+      </Grid>
       {error ? (
         <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
           <span style={{ color: '#FF1A1A', marginTop: '10px' }}>
@@ -311,8 +331,8 @@ const Fieldset = styled.fieldset`
     label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
       ? 'span 3 / span 3'
       : label === 'GLQuote'
-      ? 'span 2 / span 2'
-      : 'span 1 / span 1'};
+        ? 'span 2 / span 2'
+        : 'span 1 / span 1'};
   flex-direction: column;
   padding: 0px;
   padding-inline-end: 0px;

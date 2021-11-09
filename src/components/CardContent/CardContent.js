@@ -10,6 +10,7 @@ const CardContent = ({
   id,
   item,
   items,
+  sourceItem,
   onEdit,
   filters,
   markdown,
@@ -107,6 +108,7 @@ const CardContent = ({
       <TsvContent
         id={id}
         item={item}
+        sourceItem={sourceItem}
         filters={filters}
         setQuote={setQuote}
         editable={editable}
@@ -145,7 +147,7 @@ CardContent.defaultProps = {
   fontSize: 100,
   editable: false,
   isLoading: false,
-  onEdit: () => {},
+  onEdit: () => { },
   viewMode: 'default',
 }
 
