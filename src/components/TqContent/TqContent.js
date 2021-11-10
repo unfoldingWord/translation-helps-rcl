@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { BlockEditable } from 'markdown-translatable'
+import cleanMarkdownLineBreak from '../../core/cleanMarkdownLineBreak'
 
 export default function TsvContent({
   item,
@@ -37,7 +38,8 @@ export default function TsvContent({
 
   const handleEdit = (field, edit) => {
     // Remove markdown that was added for view only
-    const newEdit = edit?.replace('#', '')
+    let newEdit = edit?.replace('#', '')
+    newEdit = cleanMarkdownLineBreak(edit)
 
     setTqValue(prevState => ({
       ...prevState,
