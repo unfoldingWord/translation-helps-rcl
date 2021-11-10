@@ -1,37 +1,44 @@
 # TsvTranslate
 
-Renders TSV data.
+This component helps to dispaly the source and the target of translation notes. 
 
 ```jsx
 import React, { useState } from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
-function Component() {
+const Component = () => {
   const [selectedQuote, setQuote] = useState({})
-  const { markdown, items } = useContent({
+  const languageId = 'en'
+  
+  const { markdown, items, isLoading } = useContent({
     verse: 1,
     chapter: 1,
+    languageId,
     projectId: 'tit',
     ref: 'master',
-    languageId: 'hi',
     resourceId: 'tn',
     owner: 'test_org',
     server: 'https://git.door43.org',
   })
 
-const { markdown: sourceMarkdown , items: sourceItems } = useContent({
+
+const { 
+  markdown: sourceMarkdown, 
+  items: sourceItems 
+  } = useContent({
     verse: 1,
     chapter: 1,
+    languageId,
     projectId: 'tit',
     ref: 'master',
-    languageId: 'en',
     resourceId: 'tn',
     owner: 'test_org',
     server: 'https://git.door43.org',
   })
-  
+
   const {
     state: {
       item,
@@ -50,52 +57,55 @@ const { markdown: sourceMarkdown , items: sourceItems } = useContent({
   } = useCardState({
     items,
   })
-
-  let sourceItem = {};
-  console.log({sourceItems, itemIndex})
-
-  if(sourceItems && typeof itemIndex == 'number'){
-    sourceItem = sourceItems[itemIndex];
-  }
-
   const showSaveChangesPrompt = () => {
     return new Promise((resolve, reject) => {
       resolve()
     })
   }
 
-  if (item) {
+
+
+  let sourceItem = {};
+  if(sourceItems && typeof itemIndex == 'number'){
+    sourceItem = sourceItems[itemIndex];
+  }
+
+  if(item){
     return (
-      <Card
-        items={items}
-        headers={headers}
+    <Card
+      items={items}
+      title={'Notes'}
+      headers={headers}
+      filters={filters}
+      fontSize={fontSize}
+      itemIndex={itemIndex}
+      setFilters={setFilters}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      markdownView={markdownView}
+      setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
+    >
+      <TsvTranslate
+        item={item}
+        sourceItem={sourceItem}
         filters={filters}
         fontSize={fontSize}
-        itemIndex={itemIndex}
-        setFilters={setFilters}
-        title={'Notes'}
-        setFontSize={setFontSize}
-        setItemIndex={setItemIndex}
+        markdown={markdown}
+        isLoading={isLoading}
+        languageId={languageId}
         markdownView={markdownView}
-        setMarkdownView={setMarkdownView}
+        selectedQuote={selectedQuote}
+        setQuote={setQuote}
         showSaveChangesPrompt={showSaveChangesPrompt}
-      >
-        <TsvTranslate
-          item={item}
-          sourceItem={sourceItem}
-          filters={filters}
-          fontSize={fontSize}
-          markdownView={markdownView}
-          selectedQuote={selectedQuote}
-          setQuote={setQuote}
-          showSaveChangesPrompt={showSaveChangesPrompt}
-        />
-      </Card>
-    )
-  } else {
+      />
+    </Card>
+   )
+  }else{
     return null
   }
 }
 
-<Component />
+<Component/>
+
 ```

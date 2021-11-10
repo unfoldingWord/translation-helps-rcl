@@ -1,9 +1,11 @@
+
 import React, { Fragment, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 import getNoteLabel from '../../core/getNoteLabel'
-import { Typography, Grid } from '@material-ui/core'
+import cleanMarkdownLineBreak from '../../core/cleanMarkdownLineBreak'
+import { Grid } from '@material-ui/core'
 
 export default function TsvTranslate({
     id,
@@ -76,7 +78,7 @@ export default function TsvTranslate({
             return ordering[a] - ordering[b]
         })
         .reverse()
-    console.log("TCCCCCCCCCC", sourceItem)
+
     return (
         <Fragment>
             {filters.map((label, i) => {
@@ -94,6 +96,7 @@ export default function TsvTranslate({
                             break;
                     }
                 }
+
                 return (
                     <Item
                         key={label + i}
@@ -196,25 +199,7 @@ const Item = ({
 
     return (
         <Fragment>
-            {/* <Fieldset
-                label={label}
-                caution={caution}
-                error={error}
-                onClick={() => {
-                    if (
-                        setQuote &&
-                        (label === 'Quote' || label === 'OrigQuote') &&
-                        !selected
-                    )
-                        setQuote({
-                            quote: updatedItem['quote'] || value,
-                            occurrence: updatedItem['occurrence'] || Occurrence,
-                            SupportReference,
-                        })
-                    else if (setQuote && selected) setQuote(null)
-                }}
-            > */}
-            <Grid container spacing={2}>
+            <Grid container>
                 <Grid item xs={4} >
                     <Fragment
                         error={error}
@@ -253,12 +238,12 @@ const Item = ({
                                 margin: markdownView ? '10px 0px 0px' : '-5px 0px 0px',
                             }}
                             onEdit={markdown => {
-                                setUpdatedItem('markdown', markdown)
-                                onTsvEdit({ [markdownLabel]: markdown })
+                                setUpdatedItem('markdown', cleanMarkdownLineBreak(markdown))
+                                onTsvEdit({ [markdownLabel]: cleanMarkdownLineBreak(markdown) })
                             }}
                         />
                     ) : isEditable ? (
-                        <Fragment
+                        <Input
                             id={valueId}
                             bold={selected}
                             value={
@@ -282,33 +267,34 @@ const Item = ({
                             color={selected ? '#38ADDF' : null}
                         />
                     ) : (
+                        // <Grid item xs={4} >
                         <Fragment
                             id={valueId}
                             bold={selected}
-                            value={value}
+                            value={sourceValue}
                             fontSize={fontSize}
                             clickable={!!setQuote}
                             color={selected ? '#38ADDF' : null}
                         >
-                            {value}
+                            {sourceValue}
                         </Fragment>
+
                     )}
                 </Grid>
             </Grid>
-            {/* </Fieldset> */}
             {error ? (
-                <Fragment fontSize={fontSize} style={{ padding: '5px 6px' }}>
+                <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
                     <span style={{ color: '#FF1A1A', marginTop: '10px' }}>
                         Warning: Something is wrong
                     </span>
-                </Fragment>
+                </Label>
             ) : (
                 caution && (
-                    <Fragment fontSize={fontSize} style={{ padding: '5px 6px' }}>
+                    <Label fontSize={fontSize} style={{ padding: '5px 6px' }}>
                         <span style={{ color: '#FF8400', marginTop: '10px' }}>
                             Caution: Something is wrong
                         </span>
-                    </Fragment>
+                    </Label>
                 )
             )}
         </Fragment>
@@ -337,63 +323,3 @@ const Container = styled.div`
   padding: 0px;
   margin: 7px 0px 0px;
 `
-
-// const Fieldset = styled.fieldset`
-//   display: flex;
-//   word-break: break-word;
-//   width: 100%;
-//   grid-column: ${({ label }) =>
-//         label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
-//             ? 'span 3 / span 3'
-//             : label === 'GLQuote'
-//                 ? 'span 2 / span 2'
-//                 : 'span 1 / span 1'};
-//   flex-direction: column;
-//   padding: 0px;
-//   padding-inline-end: 0px;
-//   padding-inline-start: 0px;
-//   margin: 0px;
-//   margin-bottom: 0px;
-//   margin-inline-start: 0px;
-//   margin-inline-end: 0px;
-//   border-radius: 4px;
-//   border-width: 1px;
-//   border-style: solid;
-//   border-color: ${props =>
-//         props.error ? '#FF1A1A' : props.caution ? '#FF8400' : 'transparent'};
-// `
-
-// const Legend = styled.legend`
-//   margin-bottom: ${({ label }) =>
-//         label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
-//             ? '0px'
-//             : '7px'};
-//   padding-inline-start: ${props =>
-//         props.error || props.caution ? '2px' : '0px'};
-//   padding-inline-end: ${props =>
-//         props.error || props.caution ? '2px' : '0px'};
-//   color: ${props => (props.color ? props.color : '#000000')};
-//   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
-// `
-
-// const Label = styled.label`
-//   letter-spacing: 0.25px;
-//   color: ${props => (props.color ? props.color : '#000000')};
-//   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
-//   font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
-//   cursor: ${props => (props.clickable ? 'pointer' : 'inherit')};
-//   &:focus-visible {
-//     outline: #38addf auto 1px;
-//   }
-// `
-
-// const Input = styled.input`
-//   border: none;
-//   letter-spacing: 0.25px;
-//   color: ${props => (props.color ? props.color : '#000000')};
-//   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
-//   font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
-//   &:focus-visible {
-//     outline: #38addf auto 1px;
-//   }
-// `
