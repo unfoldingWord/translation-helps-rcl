@@ -315,12 +315,12 @@ const Item = ({
     )
 }
 
-TsvModified.defaultProps = {
+TsvTranslate.defaultProps = {
     fontSize: 100,
     id: '',
 }
 
-TsvModified.propTypes = {
+TsvTranslate.propTypes = {
     id: PropTypes.string,
     item: PropTypes.object.isRequired,
     filters: PropTypes.array.isRequired,
