@@ -39,7 +39,7 @@ export default function TsvContent({
   const handleEdit = (field, edit) => {
     // Remove markdown that was added for view only
     let newEdit = edit?.replace('#', '')
-    newEdit = cleanMarkdownLineBreak(edit)
+    newEdit = cleanMarkdownLineBreak(newEdit)
 
     setTqValue(prevState => ({
       ...prevState,
