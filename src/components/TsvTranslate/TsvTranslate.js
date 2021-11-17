@@ -83,17 +83,20 @@ export default function TsvTranslate({
         <Fragment>
             {filters.map((label, i) => {
                 const value = item[label]
-                let sourceValue = sourceItem[label];
-                if (!sourceValue) {
-                    switch (label) {
-                        case 'OrigQuote':
-                            sourceValue = sourceItem['Quote'];
-                            break;
-                        case 'OccurrenceNote':
-                            sourceValue = sourceItem['Note'];
-                            break;
-                        default:
-                            break;
+                let sourceValue = ''
+                if (sourceItem) {
+                    sourceValue = sourceItem[label];
+                    if (!sourceValue) {
+                        switch (label) {
+                            case 'Quote':
+                                sourceValue = sourceItem['OrigQuote'];
+                                break;
+                            case 'Note':
+                                sourceValue = sourceItem['OccurrenceNote'];
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
 
