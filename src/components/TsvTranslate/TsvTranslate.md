@@ -8,6 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
+import { Grid } from '@material-ui/core'
 
 const Component = () => {
   const [selectedQuote, setQuote] = useState({})
@@ -86,6 +87,15 @@ const {
       setMarkdownView={setMarkdownView}
       showSaveChangesPrompt={showSaveChangesPrompt}
     >
+    <Grid container spacing={2}>
+
+<Grid item xs={2} md={2} style={{fontWeight: 'bolder', textAlign: 'center'}}>Sub-head</Grid>
+
+<Grid item xs={5} md={5} style={{fontWeight: 'bolder', textAlign: 'center'}}>Source</Grid>
+
+<Grid item xs={5} md={5} style={{fontWeight: 'bolder', textAlign: 'center'}}>Target</Grid>
+
+</Grid>
       <TsvTranslate
         item={item}
         sourceItem={sourceItem}

@@ -200,37 +200,38 @@ const Item = ({
     return (
         <Fragment>
             <Grid container spacing={2}>
-                <Grid item xs={4} md={4} style={{
-                    padding: '21px 0px 0px 11px',
+                <Grid item xs={2} md={2} style={{
+                    padding: '6px 0px 0px 11px',
                 }}>
                     <Legend
                         error={error}
                         label={label}
-                        color='#424242'
                         caution={caution}
+                        style={{ color: '#b82e8a' }}
                         fontSize={fontSize === 'inherit' ? '14px' : fontSize}
                     >
                         {label}
                     </Legend>
                 </Grid>
-                <Grid item xs={4} md={4}>
+                <Grid item xs={5} md={5} style={{
+                    background: '#f2f2f2',
+                    padding: '12px 0px 0px 30px'
+                }}>
                     <BlockEditable
                         id={valueId}
+                        editable={false}
                         fontSize={fontSize}
                         markdown={sourceValue}
                         preview={!markdownView}
                         style={{
-                            padding: '0px',
-                            margin: markdownView ? '14px 0px 0px -70px' : '-10px 0px 0px -60px',
-                        }}
-                        onEdit={markdown => {
-                            setUpdatedItem('sourceValue', cleanMarkdownLineBreak(sourceValue))
-                            onTsvEdit({ [sourceValueLabel]: cleanMarkdownLineBreak(sourceValue) })
+                            padding: '3px',
+                            margin: markdownView ? '-5px 0px 0px -25px' : '-19px 0px 0px -25px',
                         }}
                     />
                 </Grid>
-                <Grid item xs={4} md={4} style={{
-                    padding: '15px 0px 0px 11px',
+                <Grid item xs={5} md={5} style={{
+                    padding: '3px',
+                    zIndex: '100%'
                 }}>
                     {label === 'Annotation' ||
                         label === 'Note' ||
@@ -243,7 +244,7 @@ const Item = ({
                             preview={!markdownView}
                             style={{
                                 padding: '0px',
-                                margin: markdownView ? '10px 0px 0px' : '-12px 0px 0px',
+                                margin: markdownView ? '-5px 0px 0px -3px' : '-19px 0px 0px -3px',
                             }}
                             onEdit={markdown => {
                                 setUpdatedItem('markdown', cleanMarkdownLineBreak(markdown))
@@ -320,6 +321,41 @@ TsvTranslate.propTypes = {
     markdownView: PropTypes.bool.isRequired,
     fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
+
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: 1.5rem;
+  column-gap: 1rem;
+  width: 100%;
+  padding: 0px;
+  margin: 7px 0px 0px;
+`
+
+const Fieldset = styled.fieldset`
+  display: flex;
+  word-break: break-word;
+  width: 100%;
+  grid-column: ${({ label }) =>
+        label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
+            ? 'span 3 / span 3'
+            : label === 'GLQuote'
+                ? 'span 2 / span 2'
+                : 'span 1 / span 1'};
+  flex-direction: column;
+  padding: 0px;
+  padding-inline-end: 0px;
+  padding-inline-start: 0px;
+  margin: 0px;
+  margin-bottom: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: ${props =>
+        props.error ? '#FF1A1A' : props.caution ? '#FF8400' : 'transparent'};
+`
 
 const Legend = styled.legend`
   margin-bottom: ${({ label }) =>
