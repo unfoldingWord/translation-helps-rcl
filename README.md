@@ -1,8 +1,9 @@
+
 # translation-helps-rcl
 
-A React Component Library for rendering and editing scripture translation resources.
-
 [![Netlify](https://www.netlify.com/img/global/badges/netlify-color-accent.svg)](https://www.netlify.com)
+
+A React Component Library for rendering and editing scripture translation resources.
 
 ## Peer Dependencies
 
