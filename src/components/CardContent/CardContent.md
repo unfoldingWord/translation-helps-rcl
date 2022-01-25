@@ -15,13 +15,13 @@ const Component = () => {
   const [selectedQuote, setQuote] = useState({})
   const languageId = 'en'
   const { markdown, items, isLoading } = useContent({
-    verse: 1,
     chapter: 1,
+    verse: 2,
     languageId,
-    projectId: 'tit',
+    projectId: 'luk',
     ref: 'master',
     resourceId: 'tn',
-    owner: 'test_org',
+    owner: 'unfoldingWord',
     server: 'https://git.door43.org',
   })
 
@@ -48,6 +48,8 @@ const Component = () => {
       resolve()
     })
   }
+
+  console.log({ item, selectedQuote })
 
   return (
     <Card
