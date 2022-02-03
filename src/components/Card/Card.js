@@ -403,7 +403,7 @@ Card.propTypes = {
   setMarkdownView: PropTypes.func,
   /** function to get a custom component to add to settings card (optional) */
   getCustomComponent: PropTypes.func,
-  /** function to minimize a card (optional) */
+  /** function to minimize the card (optional) */
   onMinimize: PropTypes.func,
 }
 
