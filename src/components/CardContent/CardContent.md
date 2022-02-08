@@ -49,8 +49,6 @@ const Component = () => {
     })
   }
 
-  console.log({ item, selectedQuote })
-
   return (
     <Card
       items={items}
