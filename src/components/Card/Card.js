@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton'
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
+import MinimizeIcon from '@material-ui/icons/Minimize';
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
 import Scrollable from '../Scrollable'
@@ -112,6 +113,7 @@ const Card = ({
   setFilters,
   onSaveEdit,
   setContent,
+  onMinimize,
   setFontSize,
   onMenuClose,
   markdownView,
@@ -224,7 +226,7 @@ const Card = ({
           <FlexDiv>
             {alert && (
               <IconButton
-                aria-label='save'
+                aria-label='warning'
                 onClick={onAlertClick}
                 className={classes.margin}
               >
@@ -233,6 +235,16 @@ const Card = ({
                 </Badge>
               </IconButton>
             )}
+            {!!onMinimize ? (
+              <IconButton
+                title='Minimize'
+                aria-label='Minimize'
+                onClick={() => onMinimize()}
+                className={classes.margin}
+              >
+                <MinimizeIcon id='minimize_icon' htmlColor='#000' />
+              </IconButton>
+            ) : null}
             {!hideMarkdownToggle ? (
               <IconButton
                 title={markdownView ? 'Preview' : 'Markdown'}
@@ -391,6 +403,8 @@ Card.propTypes = {
   setMarkdownView: PropTypes.func,
   /** function to get a custom component to add to settings card (optional) */
   getCustomComponent: PropTypes.func,
+  /** function to minimize the card (optional) */
+  onMinimize: PropTypes.func,
 }
 
 export default Card
