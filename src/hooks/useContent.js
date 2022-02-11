@@ -79,6 +79,7 @@ const useContent = ({
     config,
   })
 
+  // items in a specific note within verse and tsvs includes the entire file
   const { items, tsvs, loading: loadingTSV } = useTsvItems({
     httpConfig: config,
     onResourceError,
