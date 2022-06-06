@@ -51,6 +51,7 @@
     "webpack": "4.44.0"
   },
   "dependencies": {
+    "@gwdevs/extensible-rcl": "^1.0.0",
     "axios": "^0.21.1",
     "deep-equal": "^2.0.5",
     "react-draggable": "^4.4.3",

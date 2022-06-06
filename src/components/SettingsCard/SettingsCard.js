@@ -7,6 +7,7 @@ import FormGroup from '@material-ui/core/FormGroup'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import { Extensible } from '@gwdevs/extensible-rcl'
 import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
@@ -98,6 +99,7 @@ const SettingsCard = ({
   onRemoveCard,
   onShowMarkdown,
   disableFilters,
+  onRenderSettings,
   hideMarkdownToggle,
   getCustomComponent,
 }) => {
@@ -132,71 +134,73 @@ const SettingsCard = ({
           dragIndicator: 'draggable-dialog-title',
         }}
       >
-        <FormGroup row classes={{ row: classes.formGroup }}>
-          {!hideMarkdownToggle && (
-            <FormControlLabel
-              control={
-                <BlueSwitch
-                  name='markdownView'
-                  checked={markdownView}
-                  onClick={() => onShowMarkdown(!markdownView)}
-                />
-              }
-              classes={{ label: classes.switchLabel }}
-              label='Markdown View'
-              labelPlacement='bottom'
-            />
-          )}
-          {!!getCustomComponent && getCustomComponent()}
-        </FormGroup>
-        <Divider />
-        <div className={classes.fontSlider}>
-          <FontSizeSlider value={fontSize} onChange={setFontSize} />
-        </div>
-        {!disableFilters && headers && headers.length > 0 && (
-          <Fragment>
-            <Divider />
-            <div className={classes.section}>
-              <div className={classes.columns}>
-                <Typography
-                  classes={{ root: classes.typography }}
-                  variant='caption'
-                  display='block'
-                  gutterBottom
-                >
-                  Show Columns
-                </Typography>
-                <div className={classes.checkboxes}>
-                  {headers.map((header, i) => (
-                    <FormControlLabel
-                      key={`${i}-${header}`}
-                      label={header}
-                      classes={{ root: classes.label }}
-                      control={
-                        <BlueCheckbox
-                          name={header}
-                          color='primary'
-                          onClick={handleCheckboxClick}
-                          checked={filters.includes(header)}
-                        />
-                      }
-                    />
-                  ))}
+        <Extensible onRenderItems={onRenderSettings}>
+          <FormGroup row classes={{ row: classes.formGroup }}>
+            {!hideMarkdownToggle && (
+              <FormControlLabel
+                control={
+                  <BlueSwitch
+                    name='markdownView'
+                    checked={markdownView}
+                    onClick={() => onShowMarkdown(!markdownView)}
+                  />
+                }
+                classes={{ label: classes.switchLabel }}
+                label='Markdown View'
+                labelPlacement='bottom'
+              />
+            )}
+            {!!getCustomComponent && getCustomComponent()}
+          </FormGroup>
+          <Divider />
+          <div className={classes.fontSlider}>
+            <FontSizeSlider value={fontSize} onChange={setFontSize} />
+          </div>
+          {!disableFilters && headers && headers.length > 0 && (
+            <Fragment>
+              <Divider />
+              <div className={classes.section}>
+                <div className={classes.columns}>
+                  <Typography
+                    classes={{ root: classes.typography }}
+                    variant='caption'
+                    display='block'
+                    gutterBottom
+                  >
+                    Show Columns
+                  </Typography>
+                  <div className={classes.checkboxes}>
+                    {headers.map((header, i) => (
+                      <FormControlLabel
+                        key={`${i}-${header}`}
+                        label={header}
+                        classes={{ root: classes.label }}
+                        control={
+                          <BlueCheckbox
+                            name={header}
+                            color='primary'
+                            onClick={handleCheckboxClick}
+                            checked={filters.includes(header)}
+                          />
+                        }
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Fragment>
-        )}
-        {!!onRemoveCard && (
-          <>
-            <Divider />
-            <div className={classes.cardRemovalSection}>
-              <div className={classes.removeText} onClick={onRemoveCard}>
-                Remove Resource Card
+            </Fragment>
+          )}
+          {!!onRemoveCard && (
+            <>
+              <Divider />
+              <div className={classes.cardRemovalSection}>
+                <div className={classes.removeText} onClick={onRemoveCard}>
+                  Remove Resource Card
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </Extensible>
       </Card>
     </DraggableModal>
   )
