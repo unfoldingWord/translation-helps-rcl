@@ -82,3 +82,53 @@ const Component = () => {
 
 <Component/>
 ```
+
+## Customizing settings card and Card toolbar
+
+The content of the Card toolbar and the Card settings can be customized using the **onRenderSettings** and **onRenderToolbar** props.
+
+**Examples:**
+
+```js
+const CustomToolbarButton = ({onClick}) => {
+  return <button onClick={onClick}>Custom Toolbar Button</button>
+}
+
+const CustomSettingComponent = () => {
+  return (
+    <>
+      <h4>Custom setting</h4>
+      <input type="range" min="1" step="1" max="100" defaultValue="50"/>
+    </>
+  );
+}
+
+const CustomCard = () => {
+
+  const onRenderSettings = ({items}) => {
+    const slicedItems = items.slice(-1); //Slice or filter desired items.
+    return <><CustomSettingComponent/>{slicedItems}</>//Example returning jsx
+  }
+
+  const onRenderToolbar = ({items}) => [
+    ...items,
+    <CustomToolbarButton onClick={ () => alert("Custom Toolbar Button clicked") }/>
+  ] //Example returning array
+
+  return (
+    <Card
+      title="Custom card"
+      alert
+      onRenderToolbar={onRenderToolbar}
+      onRenderSettings={onRenderSettings}
+      //...other required props
+    >
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+    </Card>
+  )
+}
+
+<CustomCard/>
+```
+
+<small>*Note: Both **onRenderSettings** and **onRenderToolbar** callback functions can return either jsx or an array of children for their respective parents*</small>

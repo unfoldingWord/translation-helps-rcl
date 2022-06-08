@@ -379,10 +379,16 @@ Card.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   /** The title settings popup.  Optional, if not given, it will be created from title */
   settingsTitle: PropTypes.string,
+  /** callback function to customize the the body of the settings card */
+  onRenderSettings: PropTypes.func,
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func,
   /** Function called when menu is closed */
   onMenuClose: PropTypes.func,
+  /** callback function to customize the the body of the card toolbar.
+   * @return {element}
+   */
+  onRenderToolbar: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
   /** Array of TSV header filters (this is array of header items that are currently selected) */
