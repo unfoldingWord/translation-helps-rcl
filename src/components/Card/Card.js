@@ -233,6 +233,7 @@ const Card = ({
                   aria-label='warning'
                   onClick={onAlertClick}
                   className={classes.margin}
+                  key='alert-button'
                 >
                   <Badge color='secondary' variant='dot'>
                     <AnnouncementIcon htmlColor='#000' />
@@ -242,6 +243,7 @@ const Card = ({
               {!!onMinimize ? (
                 <IconButton
                   title='Minimize'
+                  key='minimize-button'
                   aria-label='Minimize'
                   onClick={() => onMinimize()}
                   className={classes.margin}
@@ -252,6 +254,7 @@ const Card = ({
               {!hideMarkdownToggle ? (
                 <IconButton
                   title={markdownView ? 'Preview' : 'Markdown'}
+                  key='preview-button'
                   aria-label={markdownView ? 'Preview' : 'Markdown'}
                   onClick={() => setMarkdownView(!markdownView)}
                   className={classes.margin}
@@ -267,6 +270,7 @@ const Card = ({
                 <IconButton
                   disabled={saved}
                   className={classes.margin}
+                  key='save-button'
                   onClick={() => onSaveEdit()}
                   title={saved ? 'Saved' : 'Save'}
                   aria-label={saved ? 'Saved' : 'Save'}

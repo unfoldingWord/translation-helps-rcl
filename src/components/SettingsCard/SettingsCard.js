@@ -135,7 +135,11 @@ const SettingsCard = ({
         }}
       >
         <Extensible onRenderItems={onRenderSettings}>
-          <FormGroup row classes={{ row: classes.formGroup }}>
+          <FormGroup
+            row
+            key='markdown-view-setting'
+            classes={{ row: classes.formGroup }}
+          >
             {!hideMarkdownToggle && (
               <FormControlLabel
                 control={
@@ -152,12 +156,12 @@ const SettingsCard = ({
             )}
             {!!getCustomComponent && getCustomComponent()}
           </FormGroup>
-          <Divider />
-          <div className={classes.fontSlider}>
+          <Divider key='divider' />
+          <div className={classes.fontSlider} key='font-slider-setting'>
             <FontSizeSlider value={fontSize} onChange={setFontSize} />
           </div>
           {!disableFilters && headers && headers.length > 0 && (
-            <Fragment>
+            <Fragment key='filters-setting'>
               <Divider />
               <div className={classes.section}>
                 <div className={classes.columns}>
@@ -191,14 +195,14 @@ const SettingsCard = ({
             </Fragment>
           )}
           {!!onRemoveCard && (
-            <>
+            <Fragment key='remove-resource-setting'>
               <Divider />
               <div className={classes.cardRemovalSection}>
                 <div className={classes.removeText} onClick={onRemoveCard}>
                   Remove Resource Card
                 </div>
               </div>
-            </>
+            </Fragment>
           )}
         </Extensible>
       </Card>
