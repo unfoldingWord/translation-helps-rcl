@@ -14,10 +14,11 @@ import IconButton from '@material-ui/core/IconButton'
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
-import MinimizeIcon from '@material-ui/icons/Minimize';
+import MinimizeIcon from '@material-ui/icons/Minimize'
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
 import Scrollable from '../Scrollable'
+import { Extensible } from '@gwdevs/extensible-rcl'
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -122,6 +123,8 @@ const Card = ({
   disableFilters,
   cardResourceId,
   setMarkdownView,
+  onRenderToolbar,
+  onRenderSettings,
   disableNavigation,
   hideMarkdownToggle,
   getCustomComponent,
@@ -224,57 +227,63 @@ const Card = ({
           />
         ) : (
           <FlexDiv>
-            {alert && (
-              <IconButton
-                aria-label='warning'
-                onClick={onAlertClick}
-                className={classes.margin}
-              >
-                <Badge color='secondary' variant='dot'>
-                  <AnnouncementIcon htmlColor='#000' />
-                </Badge>
-              </IconButton>
-            )}
-            {!!onMinimize ? (
-              <IconButton
-                title='Minimize'
-                aria-label='Minimize'
-                onClick={() => onMinimize()}
-                className={classes.margin}
-              >
-                <MinimizeIcon id='minimize_icon' htmlColor='#000' />
-              </IconButton>
-            ) : null}
-            {!hideMarkdownToggle ? (
-              <IconButton
-                title={markdownView ? 'Preview' : 'Markdown'}
-                aria-label={markdownView ? 'Preview' : 'Markdown'}
-                onClick={() => setMarkdownView(!markdownView)}
-                className={classes.margin}
-              >
-                {markdownView ? (
-                  <VisibilityOffIcon id='visibility_icon' htmlColor='#000' />
-                ) : (
-                  <VisibilityIcon id='visibility_icon' htmlColor='#000' />
-                )}
-              </IconButton>
-            ) : null}
-            {editable ? (
-              <IconButton
-                disabled={saved}
-                className={classes.margin}
-                onClick={() => onSaveEdit()}
-                title={saved ? 'Saved' : 'Save'}
-                aria-label={saved ? 'Saved' : 'Save'}
-                style={{ cursor: saved ? 'none' : 'pointer ' }}
-              >
-                {saved ? (
-                  <SaveOutlinedIcon id='saved_icon' />
-                ) : (
-                  <SaveIcon id='save_icon' htmlColor='#000' />
-                )}
-              </IconButton>
-            ) : null}
+            <Extensible onRenderItems={onRenderToolbar}>
+              {alert && (
+                <IconButton
+                  aria-label='warning'
+                  onClick={onAlertClick}
+                  className={classes.margin}
+                  key='alert-button'
+                >
+                  <Badge color='secondary' variant='dot'>
+                    <AnnouncementIcon htmlColor='#000' />
+                  </Badge>
+                </IconButton>
+              )}
+              {!!onMinimize ? (
+                <IconButton
+                  title='Minimize'
+                  key='minimize-button'
+                  aria-label='Minimize'
+                  onClick={() => onMinimize()}
+                  className={classes.margin}
+                >
+                  <MinimizeIcon id='minimize_icon' htmlColor='#000' />
+                </IconButton>
+              ) : null}
+              {!hideMarkdownToggle ? (
+                <IconButton
+                  title={markdownView ? 'Preview' : 'Markdown'}
+                  key='preview-button'
+                  aria-label={markdownView ? 'Preview' : 'Markdown'}
+                  onClick={() => setMarkdownView(!markdownView)}
+                  className={classes.margin}
+                >
+                  {markdownView ? (
+                    <VisibilityOffIcon id='visibility_icon' htmlColor='#000' />
+                  ) : (
+                    <VisibilityIcon id='visibility_icon' htmlColor='#000' />
+                  )}
+                </IconButton>
+              ) : null}
+              {editable ? (
+                <IconButton
+                  disabled={saved}
+                  className={classes.margin}
+                  key='save-button'
+                  onClick={() => onSaveEdit()}
+                  title={saved ? 'Saved' : 'Save'}
+                  aria-label={saved ? 'Saved' : 'Save'}
+                  style={{ cursor: saved ? 'none' : 'pointer ' }}
+                >
+                  {saved ? (
+                    <SaveOutlinedIcon id='saved_icon' />
+                  ) : (
+                    <SaveIcon id='save_icon' htmlColor='#000' />
+                  )}
+                </IconButton>
+              ) : null}
+            </Extensible>
             {showMenu && (
               <SettingsCard
                 title={settingsTitle}
@@ -289,6 +298,7 @@ const Card = ({
                 onRemoveCard={onRemoveCard}
                 disableFilters={disableFilters}
                 onShowMarkdown={setMarkdownView}
+                onRenderSettings={onRenderSettings}
                 hideMarkdownToggle={hideMarkdownToggle}
                 getCustomComponent={getCustomComponent}
               />
@@ -373,10 +383,16 @@ Card.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   /** The title settings popup.  Optional, if not given, it will be created from title */
   settingsTitle: PropTypes.string,
+  /** callback function to customize the the body of the settings card */
+  onRenderSettings: PropTypes.func,
   /** Function fired when the close (x) icon is clicked */
   onClose: PropTypes.func,
   /** Function called when menu is closed */
   onMenuClose: PropTypes.func,
+  /** callback function to customize the the body of the card toolbar.
+   * @return {element}
+   */
+  onRenderToolbar: PropTypes.func,
   /** Content/jsx render in the body of the card */
   children: PropTypes.node.isRequired,
   /** Array of TSV header filters (this is array of header items that are currently selected) */
