@@ -57,6 +57,7 @@
     "react-draggable": "^4.4.3",
     "styled-components": "^5.2.1",
     "tsv": "^0.2.0",
-    "use-deep-compare-effect": "^1.6.1"
+    "use-deep-compare-effect": "^1.6.1",
+    "uw-proskomma": "^0.7.0"
   }
 }
