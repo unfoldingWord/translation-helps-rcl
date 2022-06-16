@@ -1,13 +1,13 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import BlockEditable from 'markdown-translatable/dist/components/block-editable'
 import styled from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
 import useBoundsUpdater from '../../hooks/useBoundsUpdater'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
-import {Backdrop} from "@material-ui/core";
+import {Backdrop} from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   card: {

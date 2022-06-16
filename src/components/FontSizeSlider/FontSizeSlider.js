@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Grid from '@material-ui/core/Grid'
-import Slider from '@material-ui/core/Slider'
-import { makeStyles } from '@material-ui/core/styles'
-import TextFieldsIcon from '@material-ui/icons/TextFields'
+import Grid from '@mui/material/Grid'
+import Slider from '@mui/material/Slider'
+import { makeStyles } from '@mui/styles'
+import TextFieldsIcon from '@mui/icons-material/TextFields'
 
 const useStyles = makeStyles({
   gridItem: { cursor: 'pointer' },
