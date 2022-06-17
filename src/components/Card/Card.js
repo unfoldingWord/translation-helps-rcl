@@ -7,16 +7,19 @@ import {
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { makeStyles } from '@mui/styles'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import AnnouncementIcon from '@mui/icons-material/Announcement'
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import SaveIcon from '@mui/icons-material/Save'
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import MinimizeIcon from '@mui/icons-material/Minimize'
+import {
+  MoreVert as MoreVertIcon,
+  Announcement as AnnouncementIcon,
+  DragIndicator as DragIndicatorIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Save as SaveIcon,
+  SaveOutlined as SaveOutlinedIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+  Minimize as MinimizeIcon,
+} from '@mui/icons-material'
+
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
 import Scrollable from '../Scrollable'
