@@ -40,6 +40,7 @@
     "@mui/styles": "^5.8.4",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "babel-jest": "^27.3.1",
     "babel-loader": "^8.2.2",
     "gitea-react-toolkit": "^2.1.2",
