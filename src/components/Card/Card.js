@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styledComponents from 'styled-components'
 import {
   Badge,
   IconButton
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { makeStyles } from '@mui/styles'
 import {
   MoreVert as MoreVertIcon,
   Announcement as AnnouncementIcon,
@@ -25,8 +25,19 @@ import SettingsCard from '../SettingsCard'
 import Scrollable from '../Scrollable'
 import { Extensible } from '@gwdevs/extensible-rcl'
 
-const useStyles = makeStyles(() => ({
-  title: {
+const PREFIX = 'Card';
+
+const classes = {
+  title: `${PREFIX}-title`,
+  dragIcon: `${PREFIX}-dragIcon`,
+  chevronIcon: `${PREFIX}-chevronIcon`,
+  pointerIcon: `${PREFIX}-pointerIcon`,
+  children: `${PREFIX}-children`,
+  paddingRight: `${PREFIX}-paddingRight`
+};
+
+const StyledPaper = styled(Paper)(() => ({
+  [`& .${classes.title}`]: {
     fontSize: '16px',
     fontWeight: 'bold',
     fontFamily: `Noto Sans`,
@@ -35,40 +46,45 @@ const useStyles = makeStyles(() => ({
     lineHeight: '14px',
     wordBreak: 'break-word',
   },
-  dragIcon: {
+
+  [`& .${classes.dragIcon}`]: {
     color: '#ECECEC',
     margin: '0px',
     cursor: props => (props.dragging ? 'grabbing' : 'grab'),
   },
-  chevronIcon: {
+
+  [`& .${classes.chevronIcon}`]: {
     margin: '0px 12px',
     cursor: 'pointer',
   },
-  pointerIcon: {
+
+  [`& .${classes.pointerIcon}`]: {
     cursor: 'pointer',
   },
-  children: {
+
+  [`& .${classes.children}`]: {
     height: '100%',
     overflow: 'auto',
     textAlign: 'start',
     padding: '0px 6px',
   },
-  paddingRight: {
-    padding: '0px 15px 0px 0px',
-  },
-}))
 
-const FlexDiv = styled.div`
+  [`& .${classes.paddingRight}`]: {
+    padding: '0px 15px 0px 0px',
+  }
+}));
+
+const FlexDiv = styledComponents.div`
   display: flex;
   align-items: center;
 `
 
-const FlexSpacedDiv = styled.div`
+const FlexSpacedDiv = styledComponents.div`
   display: flex;
   justify-content: space-between;
 `
 
-const NavigationFlexDiv = styled.div`
+const NavigationFlexDiv = styledComponents.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -139,7 +155,7 @@ const Card = ({
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
-  const classes = useStyles({ dragging })
+
 
   let settingsTitle = settingsTitle_
   if (!settingsTitle) {
@@ -213,7 +229,7 @@ const Card = ({
   const enableAutoScrollToTop = children?.props?.viewMode !== 'list'
 
   return (
-    <Paper id={id} ref={dragRef} className={root}>
+    <StyledPaper id={id} ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
         <FlexDiv>
           <DragIndicatorIcon
@@ -338,8 +354,8 @@ const Card = ({
         itemIndex={itemIndex}
         enableAutoScrollToTop={enableAutoScrollToTop}
       />
-    </Paper>
-  )
+    </StyledPaper>
+  );
 }
 
 Card.defaultProps = {

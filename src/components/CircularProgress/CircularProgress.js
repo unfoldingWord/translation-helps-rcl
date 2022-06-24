@@ -1,9 +1,15 @@
 import React from 'react'
-import { makeStyles } from '@mui/styles'
+import { styled } from '@mui/material/styles';
 import CircularProgressUI from '@mui/material/CircularProgress'
 
-const useStyles = makeStyles(() => ({
-  root: {
+const PREFIX = 'CircularProgress';
+
+const classes = {
+  root: `${PREFIX}-root`
+};
+
+const Root = styled('div')(() => ({
+  [`&.${classes.root}`]: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -11,17 +17,17 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '100%',
     padding: '3rem',
-  },
-}))
+  }
+}));
 
 function CircularProgress({ size }) {
-  const classes = useStyles()
+
 
   return (
-    <div className={classes.root}>
+    <Root className={classes.root}>
       <CircularProgressUI size={size} />
-    </div>
-  )
+    </Root>
+  );
 }
 
 export default CircularProgress

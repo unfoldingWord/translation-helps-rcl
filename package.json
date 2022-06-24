@@ -34,8 +34,6 @@
     "@babel/plugin-proposal-optional-chaining": "^7.12.7",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
-    "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.9.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.86",
@@ -63,6 +61,10 @@
     "react-draggable": "^4.4.3",
     "styled-components": "^5.2.1",
     "tsv": "^0.2.0",
-    "use-deep-compare-effect": "^1.6.1"
+    "use-deep-compare-effect": "^1.6.1",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+  },
+  "resolutions": {
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   }
 }
