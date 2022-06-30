@@ -1,25 +1,36 @@
 import React from 'react'
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
-import Grid from '@material-ui/core/Grid'
-import Slider from '@material-ui/core/Slider'
-import { makeStyles } from '@material-ui/core/styles'
-import TextFieldsIcon from '@material-ui/icons/TextFields'
+import Grid from '@mui/material/Grid'
+import Slider from '@mui/material/Slider'
+import TextFieldsIcon from '@mui/icons-material/TextFields'
 
-const useStyles = makeStyles({
-  gridItem: { cursor: 'pointer' },
-  smallFont: {
+const PREFIX = 'FontSizeSlider';
+
+const classes = {
+  gridItem: `${PREFIX}-gridItem`,
+  smallFont: `${PREFIX}-smallFont`,
+  largeFont: `${PREFIX}-largeFont`,
+  sliderRoot: `${PREFIX}-sliderRoot`,
+  sliderMark: `${PREFIX}-sliderMark`,
+  valueLabel: `${PREFIX}-valueLabel`
+};
+
+const StyledGrid = styled(Grid)({
+  [`& .${classes.gridItem}`]: { cursor: 'pointer' },
+  [`& .${classes.smallFont}`]: {
     display: 'flex',
     margin: '0px',
     fontSize: '16px',
   },
-  largeFont: {
+  [`& .${classes.largeFont}`]: {
     margin: '0px',
     cursor: 'pointer',
     fontSize: '22px',
   },
-  sliderRoot: { color: '#38ADDF' },
-  sliderMark: { backgroundColor: '#38ADDF' },
-  valueLabel: {
+  [`& .${classes.sliderRoot}`]: { color: '#38ADDF' },
+  [`& .${classes.sliderMark}`]: { backgroundColor: '#38ADDF' },
+  [`& .${classes.valueLabel}`]: {
     top: -14,
     fontSize: '10px',
     fontWeight: 'bold',
@@ -29,10 +40,10 @@ const useStyles = makeStyles({
       color: '#38ADDF',
     },
   },
-})
+});
 
 function FontSizeSlider({ min, max, step, marks, value, onChange }) {
-  const classes = useStyles()
+
 
   const handleChange = (_, newValue) => {
     if (newValue >= min) {
@@ -53,7 +64,7 @@ function FontSizeSlider({ min, max, step, marks, value, onChange }) {
   }
 
   return (
-    <Grid container spacing={2} alignItems='center'>
+    <StyledGrid container spacing={2} alignItems='center'>
       <Grid item onClick={handleDecrease} classes={{ root: classes.gridItem }}>
         <TextFieldsIcon fontSize='small' htmlColor='#38ADDF' />
       </Grid>
@@ -77,8 +88,8 @@ function FontSizeSlider({ min, max, step, marks, value, onChange }) {
       <Grid item onClick={handleIncrease} classes={{ root: classes.gridItem }}>
         <TextFieldsIcon fontSize='large' htmlColor='#38ADDF' />
       </Grid>
-    </Grid>
-  )
+    </StyledGrid>
+  );
 }
 
 FontSizeSlider.defaultProps = {

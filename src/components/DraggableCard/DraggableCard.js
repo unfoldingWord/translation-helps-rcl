@@ -1,27 +1,39 @@
 import React, { useRef } from 'react'
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles'
 import BlockEditable from 'markdown-translatable/dist/components/block-editable'
-import styled from 'styled-components'
+import styledComponents from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
 import useBoundsUpdater from '../../hooks/useBoundsUpdater'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
-import {Backdrop} from "@material-ui/core";
+import {Backdrop} from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
-  card: {
+const PREFIX = 'DraggableCard';
+
+const classes = {
+  card: `${PREFIX}-card`,
+  backdrop: `${PREFIX}-backdrop`
+};
+
+const StyledBackdrop = styled(Backdrop)((
+  {
+    theme
+  }
+) => ({
+  [`& .${classes.card}`]: {
     margin: '0px !important',
     minWidth: '400px',
     backgroundColor: '#ffffff',
   },
-   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
-  },
-}))
 
-const Message = styled.div`
+  [`&.${classes.backdrop}`]: {
+   zIndex: theme.zIndex.drawer + 1,
+   color: '#fff',
+ }
+}));
+
+const Message = styledComponents.div`
   height: 100%;
   display: flex;
   justify-content: center;
@@ -47,7 +59,7 @@ export default function DraggableCard({
   updateBounds,
   dimBackground,
 }) {
-  const classes = useStyles()
+
   const cardRef = useRef(null)
   const displayState = {
     content,
@@ -133,14 +145,14 @@ export default function DraggableCard({
   }
 
   return dimBackground ?
-    <Backdrop
+    <StyledBackdrop
       className={classes.backdrop}
       open={open}
     >
       {getDraggableModal()}
-    </Backdrop>
+    </StyledBackdrop>
     :
-    getDraggableModal()
+    getDraggableModal();
 }
 
 DraggableCard.defaultProps = {

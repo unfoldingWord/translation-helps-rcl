@@ -22,8 +22,8 @@
     "gitea-react-toolkit": "^1.10.0",
     "markdown-translatable": "^1.x",
     "prop-types": "^15.x",
-    "react": "^17.x",
-    "react-dom": "^17.x",
+    "react": "^17.x || ^18.x ",
+    "react-dom": "^17.x || ^18.x",
     "scripture-resources-rcl": "^5.x"
   },
   "devDependencies": {
@@ -34,21 +34,25 @@
     "@babel/plugin-proposal-optional-chaining": "^7.12.7",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/lab": "^5.0.0-alpha.86",
+    "@mui/material": "^5.8.4",
+    "@mui/styles": "^5.8.4",
     "babel-jest": "^27.3.1",
     "babel-loader": "^8.2.2",
-    "gitea-react-toolkit": "1.10.0",
+    "gitea-react-toolkit": "^2.1.2",
     "jest": "^27.3.1",
-    "markdown-translatable": "^1.3.0",
+    "markdown-translatable": "^1.3.1",
     "prettier": "^2.1.2",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-styleguidist": "^11.1.1",
-    "scripture-resources-rcl": "5.1.0",
-    "webpack": "4.44.0"
+    "scripture-resources-rcl": "^5.2.1",
+    "tc-ui-toolkit": "^5.3.3",
+    "webpack": "4.44.0",
+    "word-aligner": "^1.0.0"
   },
   "dependencies": {
     "@gwdevs/extensible-rcl": "^1.0.0",
@@ -57,6 +61,10 @@
     "react-draggable": "^4.4.3",
     "styled-components": "^5.2.1",
     "tsv": "^0.2.0",
-    "use-deep-compare-effect": "^1.6.1"
+    "use-deep-compare-effect": "^1.6.1",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+  },
+  "resolutions": {
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   }
 }

@@ -6,7 +6,7 @@ Card Content component. Automagically detects MD or TSV content and renders it r
 
 ```jsx
 import React, { useState } from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
@@ -87,7 +87,7 @@ const Component = () => {
 
 ```jsx
 import React, { useState } from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
@@ -165,7 +165,7 @@ const Component = () => {
 
 ```jsx
 import React, { useState } from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
@@ -243,7 +243,7 @@ const Component = () => {
 
 ```jsx
 import React, { useState } from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
@@ -324,7 +324,7 @@ const Component = () => {
 
 ```jsx
 import React, { useState } from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
@@ -402,7 +402,7 @@ const Component = () => {
 
 ```jsx
 import React, { useState } from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import Card from '../Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'

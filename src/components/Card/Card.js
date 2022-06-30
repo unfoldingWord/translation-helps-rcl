@@ -1,27 +1,43 @@
 import React, { useState } from 'react'
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import Badge from '@material-ui/core/Badge'
-import CloseIcon from '@material-ui/icons/Close'
-import { makeStyles } from '@material-ui/core/styles'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import AnnouncementIcon from '@material-ui/icons/Announcement'
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import SaveIcon from '@material-ui/icons/Save'
-import IconButton from '@material-ui/core/IconButton'
-import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined'
-import VisibilityIcon from '@material-ui/icons/Visibility'
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
-import MinimizeIcon from '@material-ui/icons/Minimize'
+import styledComponents from 'styled-components'
+import {
+  Badge,
+  IconButton
+} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import {
+  MoreVert as MoreVertIcon,
+  Announcement as AnnouncementIcon,
+  DragIndicator as DragIndicatorIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Save as SaveIcon,
+  SaveOutlined as SaveOutlinedIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+  Minimize as MinimizeIcon,
+} from '@mui/icons-material'
+
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
 import Scrollable from '../Scrollable'
 import { Extensible } from '@gwdevs/extensible-rcl'
 
-const useStyles = makeStyles(() => ({
-  title: {
+const PREFIX = 'Card';
+
+const classes = {
+  title: `${PREFIX}-title`,
+  dragIcon: `${PREFIX}-dragIcon`,
+  chevronIcon: `${PREFIX}-chevronIcon`,
+  pointerIcon: `${PREFIX}-pointerIcon`,
+  children: `${PREFIX}-children`,
+  paddingRight: `${PREFIX}-paddingRight`
+};
+
+const StyledPaper = styled(Paper)(() => ({
+  [`& .${classes.title}`]: {
     fontSize: '16px',
     fontWeight: 'bold',
     fontFamily: `Noto Sans`,
@@ -30,40 +46,45 @@ const useStyles = makeStyles(() => ({
     lineHeight: '14px',
     wordBreak: 'break-word',
   },
-  dragIcon: {
+
+  [`& .${classes.dragIcon}`]: {
     color: '#ECECEC',
     margin: '0px',
     cursor: props => (props.dragging ? 'grabbing' : 'grab'),
   },
-  chevronIcon: {
+
+  [`& .${classes.chevronIcon}`]: {
     margin: '0px 12px',
     cursor: 'pointer',
   },
-  pointerIcon: {
+
+  [`& .${classes.pointerIcon}`]: {
     cursor: 'pointer',
   },
-  children: {
+
+  [`& .${classes.children}`]: {
     height: '100%',
     overflow: 'auto',
     textAlign: 'start',
     padding: '0px 6px',
   },
-  paddingRight: {
-    padding: '0px 15px 0px 0px',
-  },
-}))
 
-const FlexDiv = styled.div`
+  [`& .${classes.paddingRight}`]: {
+    padding: '0px 15px 0px 0px',
+  }
+}));
+
+const FlexDiv = styledComponents.div`
   display: flex;
   align-items: center;
 `
 
-const FlexSpacedDiv = styled.div`
+const FlexSpacedDiv = styledComponents.div`
   display: flex;
   justify-content: space-between;
 `
 
-const NavigationFlexDiv = styled.div`
+const NavigationFlexDiv = styledComponents.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -134,7 +155,7 @@ const Card = ({
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
-  const classes = useStyles({ dragging })
+
 
   let settingsTitle = settingsTitle_
   if (!settingsTitle) {
@@ -208,7 +229,7 @@ const Card = ({
   const enableAutoScrollToTop = children?.props?.viewMode !== 'list'
 
   return (
-    <Paper id={id} ref={dragRef} className={root}>
+    <StyledPaper id={id} ref={dragRef} className={root}>
       <FlexSpacedDiv className={header}>
         <FlexDiv>
           <DragIndicatorIcon
@@ -333,8 +354,8 @@ const Card = ({
         itemIndex={itemIndex}
         enableAutoScrollToTop={enableAutoScrollToTop}
       />
-    </Paper>
-  )
+    </StyledPaper>
+  );
 }
 
 Card.defaultProps = {

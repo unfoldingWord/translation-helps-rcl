@@ -1,90 +1,110 @@
 import React, { Fragment } from 'react'
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
-import Switch from '@material-ui/core/Switch'
-import Divider from '@material-ui/core/Divider'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormGroup from '@material-ui/core/FormGroup'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@mui/material/Switch'
+import Divider from '@mui/material/Divider'
+import Checkbox from '@mui/material/Checkbox'
+import FormGroup from '@mui/material/FormGroup'
+import Typography from '@mui/material/Typography'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import { Extensible } from '@gwdevs/extensible-rcl'
 import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
 
-const useStyles = makeStyles(theme => ({
-  root: {
+const PREFIX = 'SettingsCard';
+
+const classes = {
+  switchBase: `${PREFIX}-switchBase`,
+  checked: `${PREFIX}-checked`,
+  track: `${PREFIX}-track`,
+  root: `${PREFIX}-root`,
+  checked2: `${PREFIX}-checked2`,
+  root2: `${PREFIX}-root2`,
+  card: `${PREFIX}-card`,
+  switchLabel: `${PREFIX}-switchLabel`,
+  fontSlider: `${PREFIX}-fontSlider`,
+  section: `${PREFIX}-section`,
+  typography: `${PREFIX}-typography`,
+  formGroup: `${PREFIX}-formGroup`,
+  columns: `${PREFIX}-columns`,
+  label: `${PREFIX}-label`,
+  checkboxes: `${PREFIX}-checkboxes`,
+  cardRemovalSection: `${PREFIX}-cardRemovalSection`,
+  removeText: `${PREFIX}-removeText`,
+  formControl: `${PREFIX}-formControl`
+};
+
+const StyledDraggableModal = styled(DraggableModal)((
+  {
+    theme
+  }
+) => ({
+  [`& .${classes.root2}`]: {
     width: '100%',
   },
-  card: {
+
+  [`& .${classes.card}`]: {
     margin: '35px !important',
     minWidth: '400px',
     backgroundColor: '#ffffff',
   },
-  switchLabel: {
+
+  [`& .${classes.switchLabel}`]: {
     color: '#666666',
     fontSize: '14px',
   },
-  fontSlider: {
+
+  [`& .${classes.fontSlider}`]: {
     padding: '15px 15px',
   },
-  section: {
+
+  [`& .${classes.section}`]: {
     padding: '15px 0px',
   },
-  typography: {
+
+  [`& .${classes.typography}`]: {
     color: '#666666',
   },
-  formGroup: {
+
+  [`& .${classes.formGroup}`]: {
     padding: '15px 0px',
   },
-  columns: {
+
+  [`& .${classes.columns}`]: {
     padding: '0px 15px 0px',
   },
-  label: {
+
+  [`& .${classes.label}`]: {
     color: '#424242',
   },
-  checkboxes: {
+
+  [`& .${classes.checkboxes}`]: {
     display: 'flex',
     flexDirection: 'column',
     padding: '0px 5px 0px',
   },
-  cardRemovalSection: {
+
+  [`& .${classes.cardRemovalSection}`]: {
     display: 'flex',
     padding: '15px 5px 4px 0px',
     justifyContent: 'flex-end',
   },
-  removeText: {
+
+  [`& .${classes.removeText}`]: {
     color: '#FF4444',
     cursor: 'pointer',
   },
-  formControl: {
+
+  [`& .${classes.formControl}`]: {
     margin: theme.spacing(1),
     minWidth: 120,
-  },
-}))
+  }
+}));
 
-const BlueSwitch = withStyles({
-  switchBase: {
-    '&$checked': {
-      color: '#38ADDF',
-    },
-    '&$checked + $track': {
-      backgroundColor: '#38ADDF',
-    },
-  },
-  checked: {},
-  track: {},
-})(Switch)
+const BlueSwitch = Switch
 
-const BlueCheckbox = withStyles({
-  root: {
-    color: '#000000',
-    '&$checked': {
-      color: '#38ADDF',
-    },
-  },
-  checked: {},
-})(props => <Checkbox color='default' {...props} />)
+const BlueCheckbox = (props => <Checkbox color='default' {...props} />)
 
 const SettingsCard = ({
   open,
@@ -103,7 +123,7 @@ const SettingsCard = ({
   hideMarkdownToggle,
   getCustomComponent,
 }) => {
-  const classes = useStyles()
+
 
   const handleCheckboxClick = event => {
     event.preventDefault()
@@ -119,7 +139,7 @@ const SettingsCard = ({
   }
 
   return (
-    <DraggableModal
+    <StyledDraggableModal
       id='settings_card'
       open={open}
       title={title}
@@ -147,7 +167,11 @@ const SettingsCard = ({
                     name='markdownView'
                     checked={markdownView}
                     onClick={() => onShowMarkdown(!markdownView)}
-                  />
+                    classes={{
+                      switchBase: classes.switchBase,
+                      checked: classes.checked,
+                      track: classes.track
+                    }} />
                 }
                 classes={{ label: classes.switchLabel }}
                 label='Markdown View'
@@ -185,7 +209,10 @@ const SettingsCard = ({
                             color='primary'
                             onClick={handleCheckboxClick}
                             checked={filters.includes(header)}
-                          />
+                            classes={{
+                              root: classes.root,
+                              checked: classes.checked2
+                            }} />
                         }
                       />
                     ))}
@@ -206,8 +233,8 @@ const SettingsCard = ({
           )}
         </Extensible>
       </Card>
-    </DraggableModal>
-  )
+    </StyledDraggableModal>
+  );
 }
 
 SettingsCard.defaultProps = {
