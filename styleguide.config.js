@@ -1,5 +1,6 @@
 const { name, version, repository } = require('./package.json')
 const { styles, theme } = require('./styleguide.styles')
+const webpack = require('webpack')
 
 module.exports = {
   title: `${name} v${version}`,
@@ -20,5 +21,10 @@ module.exports = {
         },
       ],
     },
+    plugins: [
+      new webpack.DefinePlugin({
+        process: { env: {} },
+      }),
+    ],
   },
 }
