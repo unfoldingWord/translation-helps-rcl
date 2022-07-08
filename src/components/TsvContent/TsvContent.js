@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { BlockEditable } from 'markdown-translatable'
 import getNoteLabel from '../../core/getNoteLabel'
 import cleanMarkdownLineBreak from '../../core/cleanMarkdownLineBreak'
+import { TextareaAutosize } from '@mui/material'
 
 export default function TsvContent({
   id,
@@ -159,7 +160,7 @@ const Item = ({
     : label
   const onBlur = event => {
     if (typeof updatedItem[updatedLabel] == 'string') {
-      onTsvEdit({ [label]: event.target.value })
+      onTsvEdit && onTsvEdit({ [label]: event.target.value })
 
       if (
         setQuote &&
@@ -221,14 +222,15 @@ const Item = ({
             }}
             onEdit={markdown => {
               setUpdatedItem('markdown', cleanMarkdownLineBreak(markdown))
-              onTsvEdit({ [markdownLabel]: cleanMarkdownLineBreak(markdown) })
+              onTsvEdit &&
+                onTsvEdit({ [markdownLabel]: cleanMarkdownLineBreak(markdown) })
             }}
           />
         ) : isEditable ? (
-          <Input
+          <TextareaAutosize
             id={valueId}
-            bold={selected}
-            value={
+            bold={selected.toString()}
+            defaultValue={
               typeof updatedItem[updatedLabel] == 'string'
                 ? updatedItem[updatedLabel]
                 : value
@@ -245,7 +247,7 @@ const Item = ({
               }
             }}
             onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
-            clickable={!!setQuote}
+            clickable={setQuote && 'true'}
             color={selected ? '#38ADDF' : null}
           />
         ) : (
@@ -347,17 +349,6 @@ const Label = styled.label`
   font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
   font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
   cursor: ${props => (props.clickable ? 'pointer' : 'inherit')};
-  &:focus-visible {
-    outline: #38addf auto 1px;
-  }
-`
-
-const Input = styled.input`
-  border: none;
-  letter-spacing: 0.25px;
-  color: ${props => (props.color ? props.color : '#000000')};
-  font-size: ${props => (props.fontSize ? props.fontSize : 'inherit')};
-  font-weight: ${props => (props.bold ? 'bold' : 'inherit')};
   &:focus-visible {
     outline: #38addf auto 1px;
   }
