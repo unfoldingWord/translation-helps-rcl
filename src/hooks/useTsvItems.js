@@ -47,8 +47,6 @@ export default function useTsvItems({
 
   useEffect(() => {
     async function getTsvItems() {
-// !!! Need to await immediately
-
       const tsvItems = Array.isArray(content) ? content : []
       const tn = {}
       const book = projectId?.toLowerCase() || 'list'
