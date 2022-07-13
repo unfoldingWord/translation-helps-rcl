@@ -15,6 +15,7 @@ export default function TsvContent({
   onTsvEdit,
   setContent,
   markdownView,
+
   selectedQuote,
   cardResourceId,
   updateTaDetails,
@@ -158,6 +159,7 @@ const Item = ({
     : label.toLowerCase().includes('occurrence')
     ? 'occurrence'
     : label
+  const [isFocused, setIsFocused] = useState(false)
   const onBlur = event => {
     if (typeof updatedItem[updatedLabel] == 'string') {
       onTsvEdit && onTsvEdit({ [label]: event.target.value })
@@ -235,8 +237,14 @@ const Item = ({
                 ? updatedItem[updatedLabel]
                 : value
             }
-            fontSize={fontSize}
+            style={{
+              fontSize: fontSize,
+              resize: 'none',
+              color: isFocused ? '#38ADDF' : null,
+            }}
+            onFocus={event => setIsFocused(true)}
             onBlur={event => {
+              setIsFocused(false)
               // When editing the SupportReference in the tn card we should check for unsaved changes in the ta resource card.
               if (cardResourceId == 'tn' && label == 'SupportReference') {
                 showSaveChangesPrompt('ta', setContent)
@@ -248,7 +256,6 @@ const Item = ({
             }}
             onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
             clickable={setQuote && 'true'}
-            color={selected ? '#38ADDF' : null}
           />
         ) : (
           <Label
@@ -321,6 +328,7 @@ const Fieldset = styled.fieldset`
   padding-inline-start: 0px;
   margin: 0px;
   margin-bottom: 0px;
+  min-inline-size: auto;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   border-radius: 4px;
