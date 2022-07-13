@@ -241,6 +241,8 @@ const Item = ({
               fontSize: fontSize,
               resize: 'none',
               color: isFocused ? '#38ADDF' : null,
+              border: 'none',
+              letterSpacing: '0.25px',
             }}
             onFocus={event => setIsFocused(true)}
             onBlur={event => {
