@@ -85,7 +85,6 @@ export default function useTsvItems({
         tn[projectId] && tn[projectId][chapter] && tn[projectId][chapter][verse]
           ? tn[projectId][chapter][verse]
           : null
-
       if (
         _items &&
         Array.isArray(_items) &&
@@ -159,12 +158,27 @@ export default function useTsvItems({
             newItems.push({ ...item, markdown, fetchResponse, filePath })
             item.markdown = markdown
           }
+
           _items = newItems
           setLoading(false)
         }
       }
+      // Make sure that all Qoutes are adapted (check for ellipsis and replace with ampersand)
+      const adaptedQuoteItems =
+        _items &&
+        _items.map(item => {
+          const adaptedItem = {}
+          if (item.GLQuote) {
+            adaptedItem.GLQuote = item.GLQuote.replace(/( ?… ?)+/g, ' & ')
+          }
+          if (item.OrigQuote) {
+            adaptedItem.OrigQuote = item.OrigQuote.replace(/( ?… ?)+/g, ' & ')
+          }
+          return { ...item, ...adaptedItem }
+        })
+
       setState({
-        items: _items,
+        items: adaptedQuoteItems,
         tsvs: tn[book] || null,
       })
     }
