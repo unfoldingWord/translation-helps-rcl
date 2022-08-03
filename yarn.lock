@@ -8513,8 +8513,10 @@ schema-utils@^3.0.0, schema-utils@^3.1.0, schema-utils@^3.1.1:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-"scripture-resources-rcl@file:.yalc/scripture-resources-rcl":
-  version "5.2.2-alpha3"
+scripture-resources-rcl@^5.2.2-alpha:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.2.2.tgz#663e12a29d0d37b5ff9451656365c3d378999468"
+  integrity sha512-1573I2jgyMDELwbqmoCWapdHni8FOLcNdqbJFxwFtfPCpPMYGVKvar9VSl/PIJ374RnVaYl3IxWN5BSo/4C4zQ==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.11.1-rc.1"
