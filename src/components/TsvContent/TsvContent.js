@@ -237,11 +237,19 @@ const Item = ({
                 ? updatedItem[updatedLabel]
                 : value
             }
-            style={{
-              fontSize: fontSize,
-              resize: 'none',
-              color: isFocused ? '#38ADDF' : null,
-            }}
+            style={
+              isFocused
+                ? {
+                    fontSize: fontSize,
+                    resize: 'none',
+                    color: '#38ADDF',
+                  }
+                : {
+                    fontSize: fontSize,
+                    resize: 'none',
+                    border: 'none',
+                  }
+            }
             onFocus={event => setIsFocused(true)}
             onBlur={event => {
               setIsFocused(false)
