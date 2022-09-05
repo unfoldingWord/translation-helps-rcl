@@ -1,6 +1,6 @@
 {
   "name": "translation-helps-rcl",
-  "version": "3.3.2-alpha",
+  "version": "3.3.3-alpha",
   "main": "dist",
   "homepage": "https://translation-helps-rcl.netlify.app/",
   "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
@@ -62,6 +62,7 @@
     "@gwdevs/extensible-rcl": "^1.0.0",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "axios": "^0.27.2",
+    "bible-reference-range": "^1.0.1",
     "deep-equal": "^2.0.5",
     "react-draggable": "^4.4.3",
     "styled-components": "^5.2.1",

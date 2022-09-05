@@ -5,6 +5,81 @@ import {
   processUnknownError,
 } from '../core/network'
 import { get } from 'gitea-react-toolkit'
+import { parseReferenceToList } from 'bible-reference-range'
+
+/**
+ * helper function to push item into a hierarcical bcv tree
+ * -> requirement:
+ * item must have these fields: Book, Chapter and Verse
+ * */
+const pushToBcvTree = (tree, book, ch, v, item) => {
+  if (item) {
+    if (book) {
+      if (!tree[book]) tree[book] = {}
+      if (ch) {
+        if (!tree[book][ch]) tree[book][ch] = {}
+        if (v) {
+          if (!tree[book][ch][v]) tree[book][ch][v] = []
+          tree[book][ch][v].push(item)
+        }
+      }
+    }
+  }
+}
+
+/**
+ * helper function to push item into a hierarcical bcv tree
+ * -> requirement:
+ * item must have these fields: Book, Chapter and Verse
+ * */
+const pushNoteToBcvTree = (tree, note) => {
+  if (note) {
+    const book = note.Book
+    if (book) {
+      const ch = note.Chapter
+      if (ch) {
+        const v = note.Verse
+        if (v) {
+          pushToBcvTree(tree, book, ch, v, note)
+        }
+      }
+    }
+  }
+}
+
+/**
+ * helper function to push item into a hierarcical bcv tree
+ * based on reference chunks
+ * -> requirements:
+ * item must have this field specified: Book
+ * each entry in the chunks array must have the following format:
+ * {chapter, verse, endChapter, endVerse}
+ * */
+const pushToBcvTreeBasedOnChunks = (tree, chunks, item) => {
+  if (item && chunks) {
+    const book = item.Book
+    if (book) {
+      chunks.forEach(chunk => {
+        // Skip verse ranges across chapters -> not yet implemented
+        if (!chunk.endChapter || chunk.endChapter === chunk.chapter) {
+          const ch = chunk.chapter
+          if (ch) {
+            const itemCopy = { Chapter: ch, ...item }
+            if (chunk.endVerse) {
+              for (let i = chunk.verse; i <= chunk.endVerse; i++) {
+                itemCopy.Verse = i
+                pushToBcvTree(tree, book, ch, i, itemCopy)
+              }
+            } else if (chunk.verse) {
+              itemCopy.Verse = chunk.verse
+              pushToBcvTree(tree, book, ch, chunk.verse, itemCopy)
+            }
+          }
+        }
+      })
+    }
+  }
+}
 
 /**
  * hook for loading translation helps resources listed in content
@@ -53,9 +128,9 @@ export default function useTsvItems({
 
       for (let index = 0; index < tsvItems.length; index++) {
         const note = tsvItems[index]
-        const referenceChunks = note?.Reference?.split(':')
-        const Chapter = referenceChunks ? referenceChunks[0] : null
-        const Verse = referenceChunks ? referenceChunks[1] : null
+        const splitRef = note?.Reference?.split(':')
+        const Chapter = splitRef ? splitRef[0] : null
+        const Verse = splitRef ? splitRef[1] : null
 
         if (Chapter && Verse && book) {
           note.Chapter = Chapter
@@ -64,20 +139,18 @@ export default function useTsvItems({
         }
 
         if (
-          tn[book] &&
-          tn[book][note.Chapter] &&
-          tn[book][note.Chapter][note.Verse]
+          Verse &&
+          (Verse.includes('-') || Verse.includes(',') || Verse.includes(';'))
         ) {
-          tn[book][note.Chapter][note.Verse].push(note)
-        } else if (tn[book] && tn[book][note.Chapter]) {
-          tn[book][note.Chapter][note.Verse] = [note]
-        } else if (tn[book]) {
-          tn[book][note.Chapter] = {}
-          tn[book][note.Chapter][note.Verse] = [note]
+          // remove the optional reference fields
+          // and instead get these filled out
+          // dynamically inside createBcvQueryBasedOnChunks
+          delete note.Verse
+          delete note.Chapter
+          const referenceChunks = parseReferenceToList(note?.Reference)
+          pushToBcvTreeBasedOnChunks(tn, referenceChunks, note)
         } else {
-          tn[book] = {}
-          tn[book][note.Chapter] = {}
-          tn[book][note.Chapter][note.Verse] = [note]
+          pushNoteToBcvTree(tn, note)
         }
       }
 
@@ -155,7 +228,6 @@ export default function useTsvItems({
               filePath = ''
               fetchResponse = null
             }
-
             newItems.push({ ...item, markdown, fetchResponse, filePath })
             item.markdown = markdown
           }
