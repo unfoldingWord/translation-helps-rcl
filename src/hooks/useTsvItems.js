@@ -9,8 +9,6 @@ import { parseReferenceToList } from 'bible-reference-range'
 
 /**
  * helper function to push item into a hierarcical bcv tree
- * -> requirement:
- * item must have these fields: Book, Chapter and Verse
  * */
 const pushToBcvTree = (tree, book, ch, v, item) => {
   if (item) {
@@ -61,6 +59,7 @@ const pushToBcvTreeBasedOnChunks = (tree, chunks, item) => {
     if (book) {
       chunks.forEach(chunk => {
         // Skip verse ranges across chapters -> not yet implemented
+        // TODO: lg - would first have to get bookData here
         if (!chunk.endChapter || chunk.endChapter === chunk.chapter) {
           const ch = chunk.chapter
           if (ch) {

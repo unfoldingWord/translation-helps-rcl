@@ -9552,10 +9552,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@^5.2.2:
-  version "5.2.2"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.2.2.tgz#663e12a29d0d37b5ff9451656365c3d378999468"
-  integrity sha512-1573I2jgyMDELwbqmoCWapdHni8FOLcNdqbJFxwFtfPCpPMYGVKvar9VSl/PIJ374RnVaYl3IxWN5BSo/4C4zQ==
+scripture-resources-rcl@^5.2.3-alpha2:
+  version "5.2.3-alpha2"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.2.3-alpha2.tgz#29492ca5d643e36f14698d4dde8ebd208ac97c93"
+  integrity sha512-ReiB4lhhygZVqAHGGFG43P5HYczhNLEJu41ja4yXeaINhN86d+LXGMPpqmJfzZyu1NFdlWYvIn/R0TULQHgwqg==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.11.1-rc.1"
@@ -9566,7 +9566,7 @@ scripture-resources-rcl@^5.2.2:
     prop-types "^15.7.2"
     react-waypoint "^9.0.2"
     string-punctuation-tokenizer "2.1.2"
-    use-deep-compare-effect "^1.3.1"
+    use-deep-compare-effect "^1.8.1"
     usfm-js "3.4.0"
 
 select-hose@^2.0.0:
@@ -10857,7 +10857,7 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-use-deep-compare-effect@^1.3.1, use-deep-compare-effect@^1.6.1:
+use-deep-compare-effect@^1.3.1, use-deep-compare-effect@^1.6.1, use-deep-compare-effect@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/use-deep-compare-effect/-/use-deep-compare-effect-1.8.1.tgz#ef0ce3b3271edb801da1ec23bf0754ef4189d0c6"
   integrity sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q==
