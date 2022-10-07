@@ -105,9 +105,8 @@ const Navigation = ({
       id={`${baseId}_prev`}
       onClick={onPrevItem}
     />
-    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${
-      items.length
-    }`}</FlexDiv>
+    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${items.length
+      }`}</FlexDiv>
     <ChevronRightIcon
       className={classes.chevronIcon}
       id={`${baseId}_next`}
@@ -240,72 +239,76 @@ const Card = ({
             {title}
           </div>
         </FlexDiv>
-        {closeable ? (
-          <CloseIcon
-            id='settings_card_close'
-            className={classes.pointerIcon}
-            onClick={onClose}
-          />
-        ) : (
-          <FlexDiv>
-            <Extensible onRenderItems={onRenderToolbar}>
-              {alert && (
-                <IconButton
-                  aria-label='warning'
-                  onClick={onAlertClick}
-                  className={classes.margin}
-                  key='alert-button'
-                >
-                  <Badge color='secondary' variant='dot'>
-                    <AnnouncementIcon htmlColor='#000' />
-                  </Badge>
-                </IconButton>
-              )}
-              {!!onMinimize ? (
-                <IconButton
-                  title='Minimize'
-                  key='minimize-button'
-                  aria-label='Minimize'
-                  onClick={() => onMinimize()}
-                  className={classes.margin}
-                >
-                  <MinimizeIcon id='minimize_icon' htmlColor='#000' />
-                </IconButton>
-              ) : null}
-              {!hideMarkdownToggle ? (
-                <IconButton
-                  title={markdownView ? 'Preview' : 'Markdown'}
-                  key='preview-button'
-                  aria-label={markdownView ? 'Preview' : 'Markdown'}
-                  onClick={() => setMarkdownView(!markdownView)}
-                  className={classes.margin}
-                >
-                  {markdownView ? (
-                    <VisibilityOffIcon id='visibility_icon' htmlColor='#000' />
-                  ) : (
-                    <VisibilityIcon id='visibility_icon' htmlColor='#000' />
-                  )}
-                </IconButton>
-              ) : null}
-              {editable ? (
-                <IconButton
-                  disabled={saved}
-                  className={classes.margin}
-                  key='save-button'
-                  onClick={() => onSaveEdit()}
-                  title={saved ? 'Saved' : 'Save'}
-                  aria-label={saved ? 'Saved' : 'Save'}
-                  style={{ cursor: saved ? 'none' : 'pointer ' }}
-                >
-                  {saved ? (
-                    <SaveOutlinedIcon id='saved_icon' />
-                  ) : (
-                    <SaveIcon id='save_icon' htmlColor='#000' />
-                  )}
-                </IconButton>
-              ) : null}
-            </Extensible>
-            {showMenu && (
+        <FlexDiv>
+          {onRenderToolbar &&
+            (
+              <Extensible onRenderItems={onRenderToolbar}>
+                {alert && (
+                  <IconButton
+                    aria-label='warning'
+                    onClick={onAlertClick}
+                    className={classes.margin}
+                    key='alert-button'
+                  >
+                    <Badge color='secondary' variant='dot'>
+                      <AnnouncementIcon htmlColor='#000' />
+                    </Badge>
+                  </IconButton>
+                )}
+                {!!onMinimize ? (
+                  <IconButton
+                    title='Minimize'
+                    key='minimize-button'
+                    aria-label='Minimize'
+                    onClick={() => onMinimize()}
+                    className={classes.margin}
+                  >
+                    <MinimizeIcon id='minimize_icon' htmlColor='#000' />
+                  </IconButton>
+                ) : null}
+                {!hideMarkdownToggle ? (
+                  <IconButton
+                    title={markdownView ? 'Preview' : 'Markdown'}
+                    key='preview-button'
+                    aria-label={markdownView ? 'Preview' : 'Markdown'}
+                    onClick={() => setMarkdownView(!markdownView)}
+                    className={classes.margin}
+                  >
+                    {markdownView ? (
+                      <VisibilityOffIcon id='visibility_icon' htmlColor='#000' />
+                    ) : (
+                      <VisibilityIcon id='visibility_icon' htmlColor='#000' />
+                    )}
+                  </IconButton>
+                ) : null}
+                {editable ? (
+                  <IconButton
+                    disabled={saved}
+                    className={classes.margin}
+                    key='save-button'
+                    onClick={() => onSaveEdit()}
+                    title={saved ? 'Saved' : 'Save'}
+                    aria-label={saved ? 'Saved' : 'Save'}
+                    style={{ cursor: saved ? 'none' : 'pointer ' }}
+                  >
+                    {saved ? (
+                      <SaveOutlinedIcon id='saved_icon' />
+                    ) : (
+                      <SaveIcon id='save_icon' htmlColor='#000' />
+                    )}
+                  </IconButton>
+                ) : null}
+              </Extensible>
+            )}
+          {closeable ? (
+            <CloseIcon
+              id='settings_card_close'
+              className={classes.pointerIcon}
+              onClick={onClose}
+            />
+          )
+            :
+            (
               <SettingsCard
                 title={settingsTitle}
                 open={showMenu}
@@ -324,15 +327,14 @@ const Card = ({
                 getCustomComponent={getCustomComponent}
               />
             )}
-            {!disableSettingsButton && (
-              <MoreVertIcon
-                id={cardMenuId}
-                className={classes.pointerIcon}
-                onClick={onMenuClick}
-              />
-            )}
-          </FlexDiv>
-        )}
+          {!disableSettingsButton && (
+            <MoreVertIcon
+              id={cardMenuId}
+              className={classes.pointerIcon}
+              onClick={onMenuClick}
+            />
+          )}
+        </FlexDiv>
       </FlexSpacedDiv>
       <FlexSpacedDiv className={header}>
         <NavigationFlexDiv>
