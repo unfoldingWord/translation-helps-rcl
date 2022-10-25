@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import isEqual from 'deep-equal'
-import useDeepCompareEffect from "use-deep-compare-effect"
+import useDeepCompareEffect from 'use-deep-compare-effect'
 import {
   addGlQuotesTo,
   getGlAlignmentBibles,
   getGlAlignmentBiblesList,
-} from "../core"
+} from '../core'
 
 /**
  * hook for loading extra content to specific translation helps resources.
@@ -51,61 +51,100 @@ const useExtraContent = ({
   onResourceError,
   reference,
 }) => {
-  const twlListView = (resourceId === 'twl') && (viewMode === 'list')
+  const twlListView = resourceId === 'twl' && viewMode === 'list'
   const [loadingGlData, setLoadingGlData] = useState(false)
-  const [glBiblesList, setGlBiblesList] = useTwlListViewUserLocalStorage('gl_bible_list', null)
+  const [glBiblesList, setGlBiblesList] = useTwlListViewUserLocalStorage(
+    'gl_bible_list',
+    null
+  )
   const [glBibles, setGlBibles] = useState(null)
   const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
   const [processedItems, setProcessedItems] = useState(null)
 
-  useDeepCompareEffect(async () => { // load GL bibles in resource manifest
-    if (twlListView) { // we only need to load gl quotes if we are showing list view
-      if (initialized && !loading && !error && !loadingGlData) {
-        setLoadingGlData(true)
-        const currentGlRepo = `${owner}/${languageId}`;
-        let glBibles_ = glBibles
-        let glBiblesList_ = glBiblesList
+  useDeepCompareEffect(() => {
+    // Fix for React 18 error message: useEffect must not return anything besides a function, which is used for clean-up.
+    const loadGlBibles = async () => {
+      // load GL bibles in resource manifest
+      if (twlListView) {
+        // we only need to load gl quotes if we are showing list view
+        if (initialized && !loading && !error && !loadingGlData) {
+          setLoadingGlData(true)
+          const currentGlRepo = `${owner}/${languageId}`
+          let glBibles_ = glBibles
+          let glBiblesList_ = glBiblesList
 
-        if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
-          setGlBibles(null)
-          glBibles_ = null
-          setProcessedItems(null)
-        }
+          if (glBibles_ && glLoadedProjectId !== projectId) {
+            // if we have changed books of the bible need to load new book of the bible
+            setGlBibles(null)
+            glBibles_ = null
+            setProcessedItems(null)
+          }
 
-        if (glBiblesList_ && (glBiblesList_.repo !== currentGlRepo)) { // if we have don't have alignment bibles list for current GL
-          setGlBiblesList(null)
-          glBiblesList_ = null
-          setProcessedItems(null)
-        }
+          if (glBiblesList_ && glBiblesList_.repo !== currentGlRepo) {
+            // if we have don't have alignment bibles list for current GL
+            setGlBiblesList(null)
+            glBiblesList_ = null
+            setProcessedItems(null)
+          }
 
-        if (!glBiblesList_) { // see if we have alignment bibles list for current GL
-          setProcessedItems(null)
-          setGlBibles(null)
-          const newGlBiblesList = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
-          glBiblesList_ = {
-            repo: currentGlRepo,
-            bibles: newGlBiblesList
-          };
-          setGlBiblesList(glBiblesList_)
-          glBibles_ = null
-        }
+          if (!glBiblesList_) {
+            // see if we have alignment bibles list for current GL
+            setProcessedItems(null)
+            setGlBibles(null)
+            const newGlBiblesList = await getGlAlignmentBiblesList(
+              languageId,
+              httpConfig,
+              server,
+              owner
+            )
+            glBiblesList_ = {
+              repo: currentGlRepo,
+              bibles: newGlBiblesList,
+            }
+            setGlBiblesList(glBiblesList_)
+            glBibles_ = null
+          }
 
-        if (!glBibles_ && glBiblesList_) {
-          setProcessedItems(null)
-          glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_.bibles)
-          setGlBibles(glBibles_)
-          setGlLoadedProjectId(projectId)
+          if (!glBibles_ && glBiblesList_) {
+            setProcessedItems(null)
+            glBibles_ = await getGlAlignmentBibles(
+              languageId,
+              httpConfig,
+              server,
+              owner,
+              reference,
+              glBiblesList_.bibles
+            )
+            setGlBibles(glBibles_)
+            setGlLoadedProjectId(projectId)
+          }
+          setLoadingGlData(false)
         }
-        setLoadingGlData(false)
       }
     }
-  }, [{initialized, loading, error, loadingGlData, projectId, glBibles, glBiblesList, reference, languageId, owner}])
+    loadGlBibles()
+  }, [
+    {
+      initialized,
+      loading,
+      error,
+      loadingGlData,
+      projectId,
+      glBibles,
+      glBiblesList,
+      reference,
+      languageId,
+      owner,
+    },
+  ])
 
-  useDeepCompareEffect(() => { // get gl quotes if we have aligned bibles
-    if (twlListView) { // we only need to load gl quotes if we are showing list view
+  useDeepCompareEffect(() => {
+    // get gl quotes if we have aligned bibles
+    if (twlListView) {
+      // we only need to load gl quotes if we are showing list view
       if (initialized && !loading && !error && !loadingGlData) {
         if (glBibles && items?.length) {
-          const newItems = addGlQuotesTo(chapter, verse, items, glBibles);
+          const newItems = addGlQuotesTo(chapter, verse, items, glBibles)
           if (!isEqual(processedItems, newItems)) {
             setProcessedItems(newItems)
           }
@@ -116,7 +155,7 @@ const useExtraContent = ({
         setProcessedItems(null)
       }
     }
-  }, [{initialized, loading, error, loadingGlData, glBibles, items}])
+  }, [{ initialized, loading, error, loadingGlData, glBibles, items }])
 
   /**
    * persist user state only for twl list view
@@ -133,7 +172,7 @@ const useExtraContent = ({
   }
 
   return {
-    processedItems
+    processedItems,
   }
 }
 

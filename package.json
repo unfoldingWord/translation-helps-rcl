@@ -43,25 +43,26 @@
     "@mui/lab": "^5.0.0-alpha.89",
     "@mui/material": "^5.8.7",
     "@mui/styles": "^5.8.7",
-    "babel-jest": "^27.3.1",
+    "babel-jest": "^28.1.2",
     "babel-loader": "^8.2.2",
     "gitea-react-toolkit": "^2.1.2",
-    "jest": "^27.3.1",
+    "jest": "^28.1.2",
     "markdown-translatable": "^2.1.1",
     "prettier": "^2.1.2",
     "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-styleguidist": "^11.1.1",
     "scripture-resources-rcl": "^5.2.2",
-    "tc-ui-toolkit": "^5.3.3",
-    "webpack": "4.44.0",
+    "tc-ui-toolkit": "^6.1.2",
+    "webpack": "5.73.0",
     "word-aligner": "^1.0.0"
   },
   "dependencies": {
     "@gwdevs/extensible-rcl": "^1.0.0",
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@^5.8.0",
     "axios": "^0.27.2",
+    "buffer": "^6.0.3",
     "deep-equal": "^2.0.5",
     "react-draggable": "^4.4.3",
     "styled-components": "^5.2.1",
@@ -69,6 +70,6 @@
     "use-deep-compare-effect": "^1.6.1"
   },
   "resolutions": {
-    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@^5.8.0"
   }
 }

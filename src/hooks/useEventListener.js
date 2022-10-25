@@ -18,7 +18,10 @@ export default function useEventListener(eventName, handler, element = window) {
       const isSupported = element && element.addEventListener
 
       if (!isSupported) {
-        return
+        // React 18 generates error message: useEffect must not return anything besides a function, which is used for clean-up.
+        return () => {
+          console.warn(`element does not support addEventListener`)
+        }
       }
 
       // Create event listener that calls handler function stored in ref
@@ -32,6 +35,6 @@ export default function useEventListener(eventName, handler, element = window) {
         element.removeEventListener(eventName, eventListener)
       }
     },
-    [eventName, element], // Re-run if eventName or element changes
+    [eventName, element] // Re-run if eventName or element changes
   )
 }
