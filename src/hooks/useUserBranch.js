@@ -177,10 +177,12 @@ const useUserBranch = ({
     }
     updateStatus().catch(console.error)
   }, [
-    ref,
-    languageId,
-    server,
-    owner,
+    {
+      ref,
+      languageId,
+      server,
+      owner,
+    }
   ])
 
   return {

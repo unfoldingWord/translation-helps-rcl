@@ -102,7 +102,7 @@ const useExtraContent = ({
       }
     }
     loadGLBibles().catch(console.error)
-  }, [initialized, loading, error, loadingGlData, projectId, glBibles, glBiblesList, reference, languageId, owner])
+  }, [{initialized, loading, error, loadingGlData, projectId, glBibles, glBiblesList, reference, languageId, owner}])
 
   useDeepCompareEffect(() => { // get gl quotes if we have aligned bibles
     if (twlListView) { // we only need to load gl quotes if we are showing list view
@@ -119,7 +119,7 @@ const useExtraContent = ({
         setProcessedItems(null)
       }
     }
-  }, [initialized, loading, error, loadingGlData, glBibles, items])
+  }, [{initialized, loading, error, loadingGlData, glBibles, items}])
 
   /**
    * persist user state only for twl list view
