@@ -58,48 +58,51 @@ const useExtraContent = ({
   const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
   const [processedItems, setProcessedItems] = useState(null)
 
-  useDeepCompareEffect(async () => { // load GL bibles in resource manifest
-    if (twlListView) { // we only need to load gl quotes if we are showing list view
-      if (initialized && !loading && !error && !loadingGlData) {
-        setLoadingGlData(true)
-        const currentGlRepo = `${owner}/${languageId}`;
-        let glBibles_ = glBibles
-        let glBiblesList_ = glBiblesList
+  useDeepCompareEffect(() => {
+    const loadGLBibles = async () => { // load GL bibles in resource manifest
+      if (twlListView) { // we only need to load gl quotes if we are showing list view
+        if (initialized && !loading && !error && !loadingGlData) {
+          setLoadingGlData(true)
+          const currentGlRepo = `${owner}/${languageId}`;
+          let glBibles_ = glBibles
+          let glBiblesList_ = glBiblesList
 
-        if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
-          setGlBibles(null)
-          glBibles_ = null
-          setProcessedItems(null)
-        }
+          if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
+            setGlBibles(null)
+            glBibles_ = null
+            setProcessedItems(null)
+          }
 
-        if (glBiblesList_ && (glBiblesList_.repo !== currentGlRepo)) { // if we have don't have alignment bibles list for current GL
-          setGlBiblesList(null)
-          glBiblesList_ = null
-          setProcessedItems(null)
-        }
+          if (glBiblesList_ && (glBiblesList_.repo !== currentGlRepo)) { // if we have don't have alignment bibles list for current GL
+            setGlBiblesList(null)
+            glBiblesList_ = null
+            setProcessedItems(null)
+          }
 
-        if (!glBiblesList_) { // see if we have alignment bibles list for current GL
-          setProcessedItems(null)
-          setGlBibles(null)
-          const newGlBiblesList = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
-          glBiblesList_ = {
-            repo: currentGlRepo,
-            bibles: newGlBiblesList
-          };
-          setGlBiblesList(glBiblesList_)
-          glBibles_ = null
-        }
+          if (!glBiblesList_) { // see if we have alignment bibles list for current GL
+            setProcessedItems(null)
+            setGlBibles(null)
+            const newGlBiblesList = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
+            glBiblesList_ = {
+              repo: currentGlRepo,
+              bibles: newGlBiblesList
+            };
+            setGlBiblesList(glBiblesList_)
+            glBibles_ = null
+          }
 
-        if (!glBibles_ && glBiblesList_) {
-          setProcessedItems(null)
-          glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_.bibles)
-          setGlBibles(glBibles_)
-          setGlLoadedProjectId(projectId)
+          if (!glBibles_ && glBiblesList_) {
+            setProcessedItems(null)
+            glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_.bibles)
+            setGlBibles(glBibles_)
+            setGlLoadedProjectId(projectId)
+          }
+          setLoadingGlData(false)
         }
-        setLoadingGlData(false)
       }
     }
-  }, [{initialized, loading, error, loadingGlData, projectId, glBibles, glBiblesList, reference, languageId, owner}])
+    loadGLBibles().catch(console.error)
+  }, [initialized, loading, error, loadingGlData, projectId, glBibles, glBiblesList, reference, languageId, owner])
 
   useDeepCompareEffect(() => { // get gl quotes if we have aligned bibles
     if (twlListView) { // we only need to load gl quotes if we are showing list view
@@ -116,7 +119,7 @@ const useExtraContent = ({
         setProcessedItems(null)
       }
     }
-  }, [{initialized, loading, error, loadingGlData, glBibles, items}])
+  }, [initialized, loading, error, loadingGlData, glBibles, items])
 
   /**
    * persist user state only for twl list view

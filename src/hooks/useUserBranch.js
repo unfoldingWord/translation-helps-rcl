@@ -145,41 +145,42 @@ const useUserBranch = ({
     }
   }
 
-  useDeepCompareEffect(async () => {
-    let newListRef, newContentRef
-    const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
+  useDeepCompareEffect(() => {
+    const updateStatus = async () => {
+      let newListRef, newContentRef
+      const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
 
-    // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
-    switch (cardResourceId) {
-      case 'tw':
-        newContentRef = currentResourceRef
-        newListRef = await getWorkingBranchForResource('twl')
-        break
+      // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
+      switch (cardResourceId) {
+        case 'tw':
+          newContentRef = currentResourceRef
+          newListRef = await getWorkingBranchForResource('twl')
+          break
 
-      case 'twl':
-        newListRef = currentResourceRef
-        newContentRef = await getWorkingBranchForResource('tw')
-        break
+        case 'twl':
+          newListRef = currentResourceRef
+          newContentRef = await getWorkingBranchForResource('tw')
+          break
 
-      default:
-        newListRef = newContentRef = currentResourceRef
+        default:
+          newListRef = newContentRef = currentResourceRef
+      }
+
+      // update states
+      if (currentResourceRef !== ref) {
+        setRef(currentResourceRef)
+      }
+
+      setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
+      updateRef(listRef, newListRef, setListRef)
+      updateRef(contentRef, newContentRef, setContentRef)
     }
-
-    // update states
-    if (currentResourceRef !== ref) {
-      setRef(currentResourceRef)
-    }
-
-    setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
-    updateRef(listRef, newListRef, setListRef)
-    updateRef(contentRef, newContentRef, setContentRef)
+    updateStatus().catch(console.error)
   }, [
-    {
-      ref,
-      languageId,
-      server,
-      owner,
-    },
+    ref,
+    languageId,
+    server,
+    owner,
   ])
 
   return {
