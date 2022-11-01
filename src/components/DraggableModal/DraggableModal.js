@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Dialog from '@mui/material/Dialog'
 import Draggable from 'react-draggable'
@@ -13,7 +13,7 @@ export default function DraggableModal({
   initialPosition,
  }) {
 
-  function PaperComponent(props) {
+  const PaperComponent = useCallback( (props) => {
     function onStart(e) {
       if (onStartDrag) {
         return onStartDrag(e)
@@ -32,7 +32,7 @@ export default function DraggableModal({
         <div {...props} />
       </Draggable>
     )
-  }
+  }, [onStartDrag, bounds, initialPosition])
 
   return (
     <Dialog
