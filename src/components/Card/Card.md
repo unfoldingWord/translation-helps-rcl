@@ -91,7 +91,7 @@ The content of the Card toolbar and the Card settings can be customized using th
 
 ```js
 import useCardState from '../../hooks/useCardState.js'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 
 const CustomToolbarButton = ({onClick}) => {
   return <Button variant="contained" onClick={onClick}>🔍 Custom Button</Button>

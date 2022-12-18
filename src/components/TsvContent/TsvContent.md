@@ -63,6 +63,7 @@ function Component() {
       >
         <TsvContent
           item={item}
+          editable
           filters={filters}
           fontSize={fontSize}
           markdownView={markdownView}

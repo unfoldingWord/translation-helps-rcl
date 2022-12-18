@@ -4,15 +4,20 @@ Draggable Modal.
 
 ```jsx
 import React, { useState } from 'react'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import Card from '../Card'
 
 const Component = () => {
   const [showModal, setShowModal] = useState(false)
+  const [value, setValue] = useState('')
 
   const handleClickClose = () => setShowModal(false)
   const handleClickOpen = () => setShowModal(true)
 
+  const onChangeHandler = event => {
+	  setValue(event.target.value)
+  }
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -33,6 +38,7 @@ const Component = () => {
           <div style={{ padding: '45px', fontWeight: 'bold' }}>
             Hello! You can drag me by holding on the drag icon.
           </div>
+          <TextField label="TextField should not loose focus" type="url" value={value} onChange={onChangeHandler} />
         </Card>
       </DraggableModal>
     </div>
