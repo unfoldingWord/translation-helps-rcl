@@ -1,7 +1,7 @@
 import { DOOR43_CATALOG } from "../common";
 import { core } from "scripture-resources-rcl";
 import { searchCatalogForRepos } from "./network";
-import { UWProskomma } from "uw-proskomma";
+import UWProskomma from "uw-proskomma";
 
 const ELLIPSIS = '…';
 const DEFAULT_SEPARATOR = ' ';
