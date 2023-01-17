@@ -53,7 +53,7 @@ const useExtraContent = ({
 }) => {
   const twlListView = (resourceId === 'twl') && (viewMode === 'list')
   const [loadingGlData, setLoadingGlData] = useState(false)
-  const [glBiblesList, setGlBiblesList] = useTwlListViewUserLocalStorage('gl_bible_list', null)
+  const [glBiblesList, setGlBiblesList] = useState(null)
   const [glBibles, setGlBibles] = useState(null)
   const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
   const [processedItems, setProcessedItems] = useState(null)
@@ -91,7 +91,7 @@ const useExtraContent = ({
             glBibles_ = null
           }
 
-          if (!glBibles_ && glBiblesList_) {
+          if (!glBibles_?.length && glBiblesList_) {
             setProcessedItems(null)
             glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_.bibles)
             setGlBibles(glBibles_)

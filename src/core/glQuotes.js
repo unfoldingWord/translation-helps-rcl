@@ -12,11 +12,11 @@ const DEFAULT_SEPARATOR = ' ';
  * @returns {string}
  */
 export function getAlignedTextFromBible(contextId, bible) {
-  if (bible && contextId && contextId.reference &&
-    bible[contextId.reference.chapter] && bible[contextId.reference.chapter][contextId.reference.verse] &&
-    bible[contextId.reference.chapter][contextId.reference.verse].verseObjects) {
-    const verseObjects = bible[contextId.reference.chapter][contextId.reference.verse].verseObjects;
-    return getAlignedText(verseObjects, contextId.quote, contextId.occurrence);
+  if (bible && contextId?.reference?.chapter && contextId?.reference?.verse) {
+    const verseObjects = bible?.[contextId.reference.chapter]?.[contextId.reference.verse]?.verseObjects;
+    if (verseObjects) {
+      return getAlignedText(verseObjects, contextId.quote, contextId.occurrence);
+    }
   }
 }
 
@@ -230,7 +230,8 @@ export async function getGlAlignmentBiblesList(languageId, httpConfig, server, o
     const tsv_relations = results?.manifest?.dublin_core?.relation
     if (tsv_relations) {
       for (const repo of tsv_relations) {
-        const [langId, bible] = repo.split('/')
+        const [langAndBible] = repo.split('?') 
+        const [langId, bible] = langAndBible.split('/')
         const repoName = `${langId}_${bible}`
         if ((langId === languageId) && (bible !== 'obs')) { // if GL bible
           alignmentBibles.push(repoName)
