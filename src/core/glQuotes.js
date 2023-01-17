@@ -12,11 +12,11 @@ const DEFAULT_SEPARATOR = ' ';
  * @returns {string}
  */
 export function getAlignedTextFromBible(contextId, bible) {
-  if (bible && contextId && contextId.reference &&
-    bible[contextId.reference.chapter] && bible[contextId.reference.chapter][contextId.reference.verse] &&
-    bible[contextId.reference.chapter][contextId.reference.verse].verseObjects) {
-    const verseObjects = bible[contextId.reference.chapter][contextId.reference.verse].verseObjects;
-    return getAlignedText(verseObjects, contextId.quote, contextId.occurrence);
+  if (bible && contextId?.reference?.chapter && contextId?.reference?.verse) {
+    const verseObjects = bible?.[contextId.reference.chapter]?.[contextId.reference.verse]?.verseObjects;
+    if (verseObjects) {
+      return getAlignedText(verseObjects, contextId.quote, contextId.occurrence);
+    }
   }
 }
 
@@ -140,9 +140,12 @@ export async function getGlAlignmentBibles(languageId, httpConfig, server, owner
   delete reference_.chapter
   delete reference_.verse
   for (const glBible of glBibleList || []) {
+    console.log(`getGlAlignmentBibles() - loading `, {glBible, config, reference_})
     const bible = await loadGlBible(glBible, config, 'master', reference_)
     if (bible) {
       glBibles_.push(bible)
+    } else {
+      console.error(`getGlAlignmentBibles() - failed to load `, {glBible, config, reference_})
     }
   }
   return glBibles_
@@ -230,7 +233,8 @@ export async function getGlAlignmentBiblesList(languageId, httpConfig, server, o
     const tsv_relations = results?.manifest?.dublin_core?.relation
     if (tsv_relations) {
       for (const repo of tsv_relations) {
-        const [langId, bible] = repo.split('/')
+        const [langAndBible] = repo.split('?')
+        const [langId, bible] = langAndBible.split('/')
         const repoName = `${langId}_${bible}`
         if ((langId === languageId) && (bible !== 'obs')) { // if GL bible
           alignmentBibles.push(repoName)
@@ -270,12 +274,16 @@ export function addGlQuotesTo(chapter, verse, items, glBibles) {
       glQuote: '',
     }
     newItems.push(newItem)
+    console.log(`useExtraContent() - fetching alignment`, contextId)
     for (const glBible of glBibles) {
       const glText = getAlignedTextFromBible(contextId, glBible?.json?.chapters)
       if (glText) {
         newItem.glQuote = glText
         break
       }
+    }
+    if (!newItem.glQuote) {
+      console.log(`useExtraContent() - no GL found for`, contextId)
     }
   }
   return newItems;
