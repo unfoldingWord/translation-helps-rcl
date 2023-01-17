@@ -53,7 +53,7 @@ const useExtraContent = ({
 }) => {
   const twlListView = (resourceId === 'twl') && (viewMode === 'list')
   const [loadingGlData, setLoadingGlData] = useState(false)
-  const [glBiblesList, setGlBiblesList] = useState(yalcyalnull)
+  const [glBiblesList, setGlBiblesList] = useState(null)
   const [glBibles, setGlBibles] = useState(null)
   const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
   const [processedItems, setProcessedItems] = useState(null)
