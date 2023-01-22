@@ -1,7 +1,7 @@
-node_modules
-__tests__
-__mocks__
-testSetUp
-tc-ui-toolkit-test
-src
-.vscode
+.yalc/
+.vscode/
+.idea/
+.editorconfig
+styleguide.config.js
+styleguide.styles.js
+yalc.lock
