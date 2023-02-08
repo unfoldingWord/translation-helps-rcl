@@ -43,7 +43,7 @@ const useUserBranch = ({
     : useState(false)
   const [listRef, setListRef] = useState(ref)
   const [contentRef, setContentRef] = useState(ref)
-  const userEditBranchName = getUserEditBranch(loggedInUser)
+  const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser) : null;
 
   async function getWorkingBranchForResource(resourceId) {
     const repoName = `${languageId}_${resourceId}`
@@ -175,13 +175,16 @@ const useUserBranch = ({
       updateRef(listRef, newListRef, setListRef)
       updateRef(contentRef, newContentRef, setContentRef)
     }
-    updateStatus().catch(console.error)
+    if (loggedInUser) {
+      updateStatus().catch(console.error)
+    }
   }, [
     {
       ref,
       languageId,
       server,
       owner,
+      loggedInUser,
     }
   ])
 
