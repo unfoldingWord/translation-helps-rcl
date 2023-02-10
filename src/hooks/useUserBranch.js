@@ -82,38 +82,41 @@ const useUserBranch = ({
    */
   async function ensureUserEditBranch() {
     const repoName = `${languageId}_${cardResourceId}`
-    const config = authentication.config
 
-    try {
-      if (ref !== userEditBranchName) {
-        const response = await createUserBranch(
-          server,
-          owner,
-          repoName,
-          config,
-          userEditBranchName
-        )
-        console.info(
-          `useUserBranch - user branch created ${JSON.stringify({
+    if (authentication) {
+      const config = authentication.config
+
+      try {
+        if (ref !== userEditBranchName) {
+          const response = await createUserBranch(
             server,
             owner,
             repoName,
-            loggedInUser,
-          })}`,
-          response
-        )
+            config,
+            userEditBranchName
+          )
+          console.info(
+            `useUserBranch - user branch created ${JSON.stringify({
+              server,
+              owner,
+              repoName,
+              loggedInUser,
+            })}`,
+            response
+          )
 
-        setRef(userEditBranchName) // switch current branch to user edit branch
+          setRef(userEditBranchName) // switch current branch to user edit branch
+        }
+        return userEditBranchName
+      } catch (e) {
+        console.error(`useUserBranch - ensureUserEditBranch FAILED`, e)
+        processUnknownError(
+          e,
+          'DCS API',
+          `create user branch ${userEditBranchName} on ${repoName}`,
+          onResourceError
+        )
       }
-      return userEditBranchName
-    } catch (e) {
-      console.error(`useUserBranch - ensureUserEditBranch FAILED`, e)
-      processUnknownError(
-        e,
-        'DCS API',
-        `create user branch ${userEditBranchName} on ${repoName}`,
-        onResourceError
-      )
     }
     return false
   }
@@ -125,8 +128,10 @@ const useUserBranch = ({
   async function startEdit() {
     if (!usingUserBranch) {
       const branch = await ensureUserEditBranch()
-      setUsingUserBranch(true)
-      return branch
+      if (branch) {
+        setUsingUserBranch(true)
+        return branch
+      }
     }
 
     return false
