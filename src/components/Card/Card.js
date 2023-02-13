@@ -18,6 +18,8 @@ import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
   Minimize as MinimizeIcon,
+  BugReport as BugReportIcon,
+  CheckOutlined as CheckOutlinedIcon,
 } from '@mui/icons-material'
 
 import Paper from '../Paper'
@@ -151,6 +153,8 @@ const Card = ({
   getCustomComponent,
   disableSettingsButton,
   showSaveChangesPrompt,
+  checkingState,
+  onCheckingStateClick,
   settingsTitle: settingsTitle_,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
@@ -295,12 +299,28 @@ const Card = ({
                   onClick={() => onSaveEdit()}
                   title={saved ? 'Saved' : 'Save'}
                   aria-label={saved ? 'Saved' : 'Save'}
-                  style={{ cursor: saved ? 'none' : 'pointer ' }}
+                  style={{ cursor: saved ? 'none' : 'pointer' }}
                 >
                   {saved ? (
                     <SaveOutlinedIcon id='saved_icon' />
                   ) : (
                     <SaveIcon id='save_icon' htmlColor='#000' />
+                  )}
+                </IconButton>
+              ) : null}
+              {checkingState ? (
+                <IconButton
+                  className={classes.margin}
+                  key='checking-button'
+                  onClick={() => onCheckingStateClick()}
+                  title={checkingState === 'valid' ? 'Check Valid' : 'Check Invalid'}
+                  aria-label={checkingState === 'valid' ? 'Check Valid' : 'Check Invalid'}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {checkingState === 'valid' ? (
+                    <CheckOutlinedIcon id='valid_icon' htmlColor='#000' />
+                  ) : (
+                    <BugReportIcon id='invalid_icon' htmlColor='#000' />
                   )}
                 </IconButton>
               ) : null}
@@ -379,6 +399,7 @@ Card.defaultProps = {
   hideMarkdownToggle: false,
   disableSettingsButton: false,
   onSaveEdit: () => console.info('onSaveEdit() funct not passed'),
+  checkingState: '',
 }
 
 Card.propTypes = {
@@ -442,6 +463,10 @@ Card.propTypes = {
   getCustomComponent: PropTypes.func,
   /** function to minimize the card (optional) */
   onMinimize: PropTypes.func,
+  /** if state is 'valid', then show valid state.  Otherwise if not empty, show invalid.  If empty string then show nothing. */
+  checkingState: PropTypes.string,
+  /** function to minimize the card (optional) */
+  onCheckingStateClick: PropTypes.func,
 }
 
 export default Card

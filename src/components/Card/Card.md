@@ -52,6 +52,19 @@ const Component = () => {
     })
   }
 
+  const onRenderGreeting = ({ items }) => {
+    const [emoji,greeting,...rest] = items;
+    return [
+      greeting.toUpperCase(),
+      " WORLD!",
+      emoji,
+      <span role="img" aria-label="world">
+        🌎
+      </span>,
+      ...rest
+    ];
+  };
+
   return (
     <Card
       alert
