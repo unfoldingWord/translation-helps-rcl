@@ -18,9 +18,9 @@ import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
   Minimize as MinimizeIcon,
-  BugReport as BugReportIcon,
-  CheckOutlined as CheckOutlinedIcon,
 } from '@mui/icons-material'
+import { RxLink2 } from 'react-icons/rx';
+import { RxLinkBreak2 } from 'react-icons/rx';
 
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
@@ -318,9 +318,9 @@ const Card = ({
                   style={{ cursor: 'pointer' }}
                 >
                   {checkingState === 'valid' ? (
-                    <CheckOutlinedIcon id='valid_icon' htmlColor='#000' />
+                    <RxLink2 id='valid_icon' htmlColor='#000' />
                   ) : (
-                    <BugReportIcon id='invalid_icon' htmlColor='#000' />
+                    <RxLinkBreak2 id='invalid_icon' htmlColor='#000' />
                   )}
                 </IconButton>
               ) : null}
