@@ -313,14 +313,14 @@ const Card = ({
                   className={classes.margin}
                   key='checking-button'
                   onClick={() => onCheckingStateClick()}
-                  title={checkingState === 'valid' ? 'Check Valid' : 'Check Invalid'}
-                  aria-label={checkingState === 'valid' ? 'Check Valid' : 'Check Invalid'}
+                  title={checkingState === 'valid' ? 'Alignment Valid' : 'Alignment Invalid'}
+                  aria-label={checkingState === 'valid' ? 'Alignment Valid' : 'Alignment Invalid'}
                   style={{ cursor: 'pointer' }}
                 >
                   {checkingState === 'valid' ? (
-                    <RxLink2 id='valid_icon' htmlColor='#000' />
+                    <RxLink2 id='valid_icon' />
                   ) : (
-                    <RxLinkBreak2 id='invalid_icon' htmlColor='#000' />
+                    <RxLinkBreak2 id='invalid_icon' color='#000' />
                   )}
                 </IconButton>
               ) : null}
