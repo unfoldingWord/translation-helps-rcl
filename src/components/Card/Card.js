@@ -19,8 +19,6 @@ import {
   VisibilityOff as VisibilityOffIcon,
   Minimize as MinimizeIcon,
 } from '@mui/icons-material'
-import { RxLink2 } from 'react-icons/rx';
-import { RxLinkBreak2 } from 'react-icons/rx';
 
 import Paper from '../Paper'
 import SettingsCard from '../SettingsCard'
@@ -153,8 +151,6 @@ const Card = ({
   getCustomComponent,
   disableSettingsButton,
   showSaveChangesPrompt,
-  checkingState,
-  onCheckingStateClick,
   settingsTitle: settingsTitle_,
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
@@ -308,22 +304,6 @@ const Card = ({
                   )}
                 </IconButton>
               ) : null}
-              {checkingState ? (
-                <IconButton
-                  className={classes.margin}
-                  key='checking-button'
-                  onClick={() => onCheckingStateClick()}
-                  title={checkingState === 'valid' ? 'Alignment Valid' : 'Alignment Invalid'}
-                  aria-label={checkingState === 'valid' ? 'Alignment Valid' : 'Alignment Invalid'}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {checkingState === 'valid' ? (
-                    <RxLink2 id='valid_icon' />
-                  ) : (
-                    <RxLinkBreak2 id='invalid_icon' color='#000' />
-                  )}
-                </IconButton>
-              ) : null}
             </Extensible>
             {showMenu && (
               <SettingsCard
@@ -399,7 +379,6 @@ Card.defaultProps = {
   hideMarkdownToggle: false,
   disableSettingsButton: false,
   onSaveEdit: () => console.info('onSaveEdit() funct not passed'),
-  checkingState: '',
 }
 
 Card.propTypes = {
@@ -463,10 +442,6 @@ Card.propTypes = {
   getCustomComponent: PropTypes.func,
   /** function to minimize the card (optional) */
   onMinimize: PropTypes.func,
-  /** if state is 'valid', then show valid state.  Otherwise if not empty, show invalid.  If empty string then show nothing. */
-  checkingState: PropTypes.string,
-  /** function to minimize the card (optional) */
-  onCheckingStateClick: PropTypes.func,
 }
 
 export default Card
