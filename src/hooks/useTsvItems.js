@@ -163,8 +163,22 @@ export default function useTsvItems({
           setLoading(false)
         }
       }
+      // Make sure that all Quotes are adapted (check for ellipsis and replace with ampersand)
+      const adaptedQuoteItems =
+        _items &&
+        _items.map(item => {
+          const adaptedItem = {}
+          if (item.GLQuote) {
+            adaptedItem.GLQuote = item.GLQuote.replace(/( ?… ?)+/g, ' & ')
+          }
+          if (item.OrigQuote) {
+            adaptedItem.OrigQuote = item.OrigQuote.replace(/( ?… ?)+/g, ' & ')
+          }
+          return { ...item, ...adaptedItem }
+        })
+
       setState({
-        items: _items,
+        items: adaptedQuoteItems,
         tsvs: tn[book] || null,
       })
     }

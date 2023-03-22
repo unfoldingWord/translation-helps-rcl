@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import isEqual from 'deep-equal'
-import useDeepCompareEffect from "use-deep-compare-effect"
+import useDeepCompareEffect from 'use-deep-compare-effect'
 import {
   addGlQuotesTo,
   getGlAlignmentBibles,
   getGlAlignmentBiblesList,
-} from "../core"
+} from '../core'
 
 /**
  * hook for loading extra content to specific translation helps resources.
@@ -53,7 +53,10 @@ const useExtraContent = ({
 }) => {
   const twlListView = (resourceId === 'twl') && (viewMode === 'list')
   const [loadingGlData, setLoadingGlData] = useState(false)
-  const [glBiblesList, setGlBiblesList] = useState(null)
+  const [glBiblesList, setGlBiblesList] = useTwlListViewUserLocalStorage(
+    'gl_bible_list',
+    null
+  )
   const [glBibles, setGlBibles] = useState(null)
   const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
   const [processedItems, setProcessedItems] = useState(null)
@@ -63,7 +66,7 @@ const useExtraContent = ({
       if (twlListView) { // we only need to load gl quotes if we are showing list view
         if (initialized && !loading && !error && !loadingGlData) {
           setLoadingGlData(true)
-          const currentGlRepo = `${owner}/${languageId}`;
+          const currentGlRepo = `${owner}/${languageId}`
           let glBibles_ = glBibles
           let glBiblesList_ = glBiblesList
 
@@ -82,7 +85,12 @@ const useExtraContent = ({
           if (!glBiblesList_) { // see if we have alignment bibles list for current GL
             setProcessedItems(null)
             setGlBibles(null)
-            const newGlBiblesList = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
+            const newGlBiblesList = await getGlAlignmentBiblesList(
+              languageId,
+              httpConfig,
+              server,
+              owner
+            )
             glBiblesList_ = {
               repo: currentGlRepo,
               bibles: newGlBiblesList
@@ -93,7 +101,14 @@ const useExtraContent = ({
 
           if (!glBibles_?.length && glBiblesList_) {
             setProcessedItems(null)
-            glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_.bibles)
+            glBibles_ = await getGlAlignmentBibles(
+              languageId,
+              httpConfig,
+              server,
+              owner,
+              reference,
+              glBiblesList_.bibles
+            )
             setGlBibles(glBibles_)
             setGlLoadedProjectId(projectId)
           }
@@ -102,13 +117,26 @@ const useExtraContent = ({
       }
     }
     loadGLBibles().catch(console.error)
-  }, [{initialized, loading, error, loadingGlData, projectId, glBibles, glBiblesList, reference, languageId, owner}])
+  }, [
+    {
+      initialized,
+      loading,
+      error,
+      loadingGlData,
+      projectId,
+      glBibles,
+      glBiblesList,
+      reference,
+      languageId,
+      owner,
+    },
+  ])
 
   useDeepCompareEffect(() => { // get gl quotes if we have aligned bibles
     if (twlListView) { // we only need to load gl quotes if we are showing list view
       if (initialized && !loading && !error && !loadingGlData) {
         if (glBibles && items?.length) {
-          const newItems = addGlQuotesTo(chapter, verse, items, glBibles);
+          const newItems = addGlQuotesTo(chapter, verse, items, glBibles)
           if (!isEqual(processedItems, newItems)) {
             setProcessedItems(newItems)
           }
@@ -119,7 +147,7 @@ const useExtraContent = ({
         setProcessedItems(null)
       }
     }
-  }, [{initialized, loading, error, loadingGlData, glBibles, items}])
+  }, [{ initialized, loading, error, loadingGlData, glBibles, items }])
 
   /**
    * persist user state only for twl list view
@@ -136,7 +164,7 @@ const useExtraContent = ({
   }
 
   return {
-    processedItems
+    processedItems,
   }
 }
 
