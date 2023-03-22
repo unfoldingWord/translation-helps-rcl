@@ -169,10 +169,10 @@ export default function useTsvItems({
         _items.map(item => {
           const adaptedItem = {}
           if (item.GLQuote) {
-            adaptedItem.GLQuote = item.GLQuote.replace(/( ?… ?)+/g, ' & ')
+            adaptedItem.GLQuote = item.GLQuote.replaceAll('...', '…').replace(/( ?… ?)+/g, ' & ')
           }
           if (item.OrigQuote) {
-            adaptedItem.OrigQuote = item.OrigQuote.replace(/( ?… ?)+/g, ' & ')
+            adaptedItem.OrigQuote = item.OrigQuote.replaceAll('...', '…').replace(/( ?… ?)+/g, ' & ')
           }
           return { ...item, ...adaptedItem }
         })
