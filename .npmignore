@@ -1,6 +1,7 @@
 .yalc/
 .vscode/
 .idea/
+src/
 .editorconfig
 styleguide.config.js
 styleguide.styles.js

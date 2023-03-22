@@ -295,7 +295,7 @@ const Card = ({
                   onClick={() => onSaveEdit()}
                   title={saved ? 'Saved' : 'Save'}
                   aria-label={saved ? 'Saved' : 'Save'}
-                  style={{ cursor: saved ? 'none' : 'pointer ' }}
+                  style={{ cursor: saved ? 'none' : 'pointer' }}
                 >
                   {saved ? (
                     <SaveOutlinedIcon id='saved_icon' />

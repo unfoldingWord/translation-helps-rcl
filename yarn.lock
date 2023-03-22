@@ -1290,10 +1290,10 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@gwdevs/extensible-rcl@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@gwdevs/extensible-rcl/-/extensible-rcl-1.0.0.tgz#daecfb5c16828c58411546a8aaaa1e552028883e"
-  integrity sha512-SryCMnRaviW0CKJpGkFF5acS/B8zsf1kwVYzeLu0+NGooNVFe1oCIVCtOgt6A7nYINGM9qOnWrxFlUe0O8FTww==
+"@gwdevs/extensible-rcl@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@gwdevs/extensible-rcl/-/extensible-rcl-1.0.1.tgz#0f0f7a9342e9c4268f3b308e11a613bcbc959718"
+  integrity sha512-bvRUJFbf8Z96Y9vWqasYMFNvo2+DiMOFBnXHSAK8UKM5kYXb/QVyHhNPn4GwRHnet2iJ7Yf+o9CVvj0wBZYGpg==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"

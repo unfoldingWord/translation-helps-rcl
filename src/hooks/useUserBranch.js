@@ -43,7 +43,7 @@ const useUserBranch = ({
     : useState(false)
   const [listRef, setListRef] = useState(ref)
   const [contentRef, setContentRef] = useState(ref)
-  const userEditBranchName = getUserEditBranch(loggedInUser)
+  const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser) : null;
 
   async function getWorkingBranchForResource(resourceId) {
     const repoName = `${languageId}_${resourceId}`
@@ -82,38 +82,41 @@ const useUserBranch = ({
    */
   async function ensureUserEditBranch() {
     const repoName = `${languageId}_${cardResourceId}`
-    const config = authentication.config
 
-    try {
-      if (ref !== userEditBranchName) {
-        const response = await createUserBranch(
-          server,
-          owner,
-          repoName,
-          config,
-          userEditBranchName
-        )
-        console.info(
-          `useUserBranch - user branch created ${JSON.stringify({
+    if (authentication) {
+      const config = authentication.config
+
+      try {
+        if (ref !== userEditBranchName) {
+          const response = await createUserBranch(
             server,
             owner,
             repoName,
-            loggedInUser,
-          })}`,
-          response
-        )
+            config,
+            userEditBranchName
+          )
+          console.info(
+            `useUserBranch - user branch created ${JSON.stringify({
+              server,
+              owner,
+              repoName,
+              loggedInUser,
+            })}`,
+            response
+          )
 
-        setRef(userEditBranchName) // switch current branch to user edit branch
+          setRef(userEditBranchName) // switch current branch to user edit branch
+        }
+        return userEditBranchName
+      } catch (e) {
+        console.error(`useUserBranch - ensureUserEditBranch FAILED`, e)
+        processUnknownError(
+          e,
+          'DCS API',
+          `create user branch ${userEditBranchName} on ${repoName}`,
+          onResourceError
+        )
       }
-      return userEditBranchName
-    } catch (e) {
-      console.error(`useUserBranch - ensureUserEditBranch FAILED`, e)
-      processUnknownError(
-        e,
-        'DCS API',
-        `create user branch ${userEditBranchName} on ${repoName}`,
-        onResourceError
-      )
     }
     return false
   }
@@ -125,8 +128,10 @@ const useUserBranch = ({
   async function startEdit() {
     if (!usingUserBranch) {
       const branch = await ensureUserEditBranch()
-      setUsingUserBranch(true)
-      return branch
+      if (branch) {
+        setUsingUserBranch(true)
+        return branch
+      }
     }
 
     return false
@@ -175,13 +180,16 @@ const useUserBranch = ({
       updateRef(listRef, newListRef, setListRef)
       updateRef(contentRef, newContentRef, setContentRef)
     }
-    updateStatus().catch(console.error)
+    if (loggedInUser) {
+      updateStatus().catch(console.error)
+    }
   }, [
     {
       ref,
       languageId,
       server,
       owner,
+      loggedInUser,
     }
   ])
 
