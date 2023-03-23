@@ -160,22 +160,41 @@ const Item = ({
     ? 'occurrence'
     : label
   const [isFocused, setIsFocused] = useState(false)
+
+  function cleanQuote(originalQuote) {
+    // cleanup - replace ellipsis
+    const quote = originalQuote.replaceAll('...', '…').replace(/( ?… ?)+/g, " & ")
+    return quote
+  }
+
   const onBlur = event => {
     if (typeof updatedItem[updatedLabel] == 'string') {
-      onTsvEdit && onTsvEdit({ [label]: event.target.value })
+      let value = event.target.value
+      let quote
+      if (updatedLabel === 'quote') {
+        const originalQuote = updatedItem.quote || value;
+        quote = cleanQuote(originalQuote);
+
+        if (quote !== originalQuote) {
+          setUpdatedItem('quote', quote)
+        }
+        value = quote
+      }
+
+      onTsvEdit && onTsvEdit({ [label]: value })
 
       if (
         setQuote &&
-        (updatedLabel == 'quote' || updatedLabel == 'occurrence')
+        (updatedLabel === 'quote' || updatedLabel === 'occurrence')
       ) {
         setQuote({
-          quote: updatedItem['quote'] || value,
+          quote: cleanQuote(quote || updatedItem.quote || item.Quote),
           occurrence: updatedItem['occurrence'] || Occurrence,
           SupportReference,
         })
       }
-      if (label == 'SupportReference') {
-        updateTaDetails(event.target.value)
+      if (label === 'SupportReference') {
+        updateTaDetails(value)
       }
     }
   }
@@ -232,7 +251,7 @@ const Item = ({
           <TextareaAutosize
             id={valueId}
             bold={selected.toString()}
-            defaultValue={
+            value={
               typeof updatedItem[updatedLabel] == 'string'
                 ? updatedItem[updatedLabel]
                 : value
