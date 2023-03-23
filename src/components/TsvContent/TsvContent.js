@@ -161,7 +161,7 @@ const Item = ({
     : label
   const [isFocused, setIsFocused] = useState(false)
   const onBlur = event => {
-    if (typeof updatedItem[updatedLabel] == 'string') {
+    if (updatedItem.hasOwnProperty(updatedLabel)) {
       onTsvEdit && onTsvEdit({ [label]: event.target.value })
 
       if (
