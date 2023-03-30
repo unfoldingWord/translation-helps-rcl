@@ -12,12 +12,12 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-    const [selectedQuote, _setCurrentCheck] = useState({})
-    
-    function setCurrentCheck( selection ){
-        console.log("selection", selection);
-        _setCurrentCheck(selection);
-    }
+  const [selectedQuote, _setCurrentCheck] = useState({})
+
+  function setCurrentCheck( selection ){
+    console.log("Selected check is now", selection);
+    _setCurrentCheck(selection);
+  }
   const languageId = 'en'
   const { markdown, items, isLoading } = useContent({
     chapter: 1,
@@ -47,6 +47,7 @@ const Component = () => {
     }
   } = useCardState({
     items,
+    setCurrentCheck,
   })
   const showSaveChangesPrompt = () => {
     return new Promise((resolve, reject) => {

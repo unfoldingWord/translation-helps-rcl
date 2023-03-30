@@ -36,7 +36,10 @@ const useCardState = ({
 
     useEffect(() => {
         setItemIndex(0)
-    }, [verse, chapter, projectId])
+        if (items?.length) {
+            setItem(0)
+        }
+    }, [verse, chapter, projectId, items])
 
     useEffect(() => {
         if (items && typeof SupportReference === 'string') {
@@ -113,6 +116,7 @@ const useCardState = ({
                 Occurrence,
                 SupportReference,
                 TWLink,
+                Reference,
             } = items[index] || {}
             // Support new TWL column headers (OrigWords & TWLink)
             Quote = !Quote && OrigWords ? OrigWords : Quote
@@ -129,6 +133,7 @@ const useCardState = ({
                     quote: Quote || OrigQuote,
                     occurrence: Occurrence,
                     SupportReference,
+                    reference: Reference,
                 })
             } else if (setCurrentCheck) {
                 setCurrentCheck(null)
