@@ -172,6 +172,7 @@ function Row({
                                 quote: item.Quote,
                                 occurrence: item.Occurrence,
                                 SupportReference,
+                                reference: item.Reference,
                             })
                         }
                     } else if (setCurrentCheck && selected) {
@@ -263,6 +264,7 @@ function EditableItem({
                             quote: item.Quote,
                             occurrence: item.Occurrence,
                             SupportReference,
+                            reference: item.Reference,
                         }
                         updatedQuote[selectedQuoteKey] = inputValue
                         setNewQuote(updatedQuote)

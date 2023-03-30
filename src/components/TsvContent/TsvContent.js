@@ -191,6 +191,7 @@ const Item = ({
                     quote: cleanQuote(quote || updatedItem.quote || item.Quote),
                     occurrence: updatedItem['occurrence'] || Occurrence,
                     SupportReference,
+                    reference: item.Reference,
                 })
             }
             if (label === 'SupportReference') {
@@ -215,6 +216,7 @@ const Item = ({
                             quote: updatedItem['quote'] || value,
                             occurrence: updatedItem['occurrence'] || Occurrence,
                             SupportReference,
+                            reference: item.Reference,
                         })
                     else if (setCurrentCheck && selected) setCurrentCheck(null)
                 }}
