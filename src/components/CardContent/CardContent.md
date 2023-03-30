@@ -12,7 +12,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const [selectedQuote, setQuote] = useState({})
+  const [selectedQuote, setCurrentCheck] = useState({})
   const languageId = 'en'
   const { markdown, items, isLoading } = useContent({
     chapter: 1,
@@ -73,7 +73,7 @@ const Component = () => {
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
@@ -249,7 +249,7 @@ import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
-  const [selectedQuote, setQuote] = useState(null)
+  const [selectedQuote, setCurrentCheck] = useState(null)
   const { markdown, items, isLoading, props: { languageId } } = useContent({
     verse: 1,
     chapter: 1,
@@ -310,7 +310,7 @@ const Component = () => {
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>
