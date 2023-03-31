@@ -36,7 +36,7 @@ const useCardState = ({
 
   useEffect(() => {
     setItemIndex(0)
-  }, [verse, chapter, projectId, items])
+  }, [verse, chapter, projectId])
 
   useEffect(() => {
     if (items && typeof SupportReference === 'string') {
