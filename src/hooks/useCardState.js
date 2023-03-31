@@ -36,9 +36,6 @@ const useCardState = ({
 
   useEffect(() => {
     setItemIndex(0)
-    if (items?.length) {
-      setItem(0)
-    }
   }, [verse, chapter, projectId, items])
 
   useEffect(() => {
