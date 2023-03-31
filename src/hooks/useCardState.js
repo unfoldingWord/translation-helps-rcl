@@ -7,7 +7,7 @@ const useCardState = ({
   items,
   verse,
   chapter,
-  setQuote,
+  setCurrentCheck,
   projectId,
   resourceId,
   selectedQuote = {},
@@ -113,6 +113,7 @@ const useCardState = ({
         Occurrence,
         SupportReference,
         TWLink,
+        Reference,
       } = items[index] || {}
       // Support new TWL column headers (OrigWords & TWLink)
       Quote = !Quote && OrigWords ? OrigWords : Quote
@@ -120,18 +121,19 @@ const useCardState = ({
       Quote = !Quote && OrigQuote ? OrigQuote : Quote
 
       if (
-        setQuote &&
+        setCurrentCheck &&
         (Quote || OrigQuote) &&
         Occurrence &&
         typeof SupportReference === 'string'
       ) {
-        setQuote({
+        setCurrentCheck({
           quote: Quote || OrigQuote,
           occurrence: Occurrence,
           SupportReference,
+          reference: Reference,
         })
-      } else if (setQuote) {
-        setQuote(null)
+      } else if (setCurrentCheck) {
+        setCurrentCheck(null)
       }
     }
   }

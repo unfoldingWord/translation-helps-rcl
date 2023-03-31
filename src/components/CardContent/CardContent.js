@@ -14,7 +14,7 @@ const CardContent = ({
   filters,
   markdown,
   viewMode,
-  setQuote,
+  setCurrentCheck,
   editable,
   isLoading,
   onTsvEdit,
@@ -77,7 +77,7 @@ const CardContent = ({
         items={items}
         filters={filters}
         fontSize={fontSize}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         editable={editable}
         onTsvEdit={onTsvEdit}
         setContent={setContent}
@@ -108,7 +108,7 @@ const CardContent = ({
         id={id}
         item={item}
         filters={filters}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         editable={editable}
         fontSize={_fontSize}
         onTsvEdit={onTsvEdit}
@@ -145,7 +145,7 @@ CardContent.defaultProps = {
   fontSize: 100,
   editable: false,
   isLoading: false,
-  onEdit: () => {},
+  onEdit: () => { },
   viewMode: 'default',
 }
 
@@ -155,7 +155,7 @@ CardContent.propTypes = {
   items: PropTypes.array,
   onEdit: PropTypes.func,
   filters: PropTypes.array,
-  setQuote: PropTypes.func,
+  setCurrentCheck: PropTypes.func,
   isLoading: PropTypes.bool,
   editable: PropTypes.bool,
   markdown: PropTypes.string,

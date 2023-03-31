@@ -11,7 +11,7 @@ export default function TsvContent({
   item,
   filters,
   editable,
-  setQuote,
+  setCurrentCheck,
   onTsvEdit,
   setContent,
   markdownView,
@@ -92,7 +92,7 @@ export default function TsvContent({
             error={false}
             caution={false}
             fontSize={fontSize}
-            setQuote={setQuote}
+            setCurrentCheck={setCurrentCheck}
             editable={editable}
             onTsvEdit={onTsvEdit}
             Occurrence={Occurrence}
@@ -121,7 +121,7 @@ const Item = ({
   valueId,
   caution,
   fontSize,
-  setQuote,
+  setCurrentCheck,
   editable,
   onTsvEdit,
   Occurrence,
@@ -157,8 +157,8 @@ const Item = ({
   const updatedLabel = label.toLowerCase().includes('quote')
     ? 'quote'
     : label.toLowerCase().includes('occurrence')
-    ? 'occurrence'
-    : label
+      ? 'occurrence'
+      : label
   const [isFocused, setIsFocused] = useState(false)
 
   function cleanQuote(originalQuote) {
@@ -184,13 +184,14 @@ const Item = ({
       onTsvEdit && onTsvEdit({ [label]: value })
 
       if (
-        setQuote &&
+        setCurrentCheck &&
         (updatedLabel === 'quote' || updatedLabel === 'occurrence')
       ) {
-        setQuote({
+        setCurrentCheck({
           quote: cleanQuote(quote || updatedItem.quote || item.Quote),
           occurrence: updatedItem['occurrence'] || Occurrence,
           SupportReference,
+          reference: item.Reference,
         })
       }
       if (label === 'SupportReference') {
@@ -207,16 +208,17 @@ const Item = ({
         error={error}
         onClick={() => {
           if (
-            setQuote &&
+            setCurrentCheck &&
             (label === 'Quote' || label === 'OrigQuote') &&
             !selected
           )
-            setQuote({
+            setCurrentCheck({
               quote: updatedItem['quote'] || value,
               occurrence: updatedItem['occurrence'] || Occurrence,
               SupportReference,
+              reference: item.Reference,
             })
-          else if (setQuote && selected) setQuote(null)
+          else if (setCurrentCheck && selected) setCurrentCheck(null)
         }}
       >
         <Legend
@@ -229,8 +231,8 @@ const Item = ({
           {label}
         </Legend>
         {label === 'Annotation' ||
-        label === 'Note' ||
-        label === 'OccurrenceNote' ? (
+          label === 'Note' ||
+          label === 'OccurrenceNote' ? (
           <BlockEditable
             id={valueId}
             editable={isEditable}
@@ -259,15 +261,15 @@ const Item = ({
             style={
               isFocused
                 ? {
-                    fontSize: fontSize,
-                    resize: 'none',
-                    color: '#38ADDF',
-                  }
+                  fontSize: fontSize,
+                  resize: 'none',
+                  color: '#38ADDF',
+                }
                 : {
-                    fontSize: fontSize,
-                    resize: 'none',
-                    border: 'none',
-                  }
+                  fontSize: fontSize,
+                  resize: 'none',
+                  border: 'none',
+                }
             }
             onFocus={event => setIsFocused(true)}
             onBlur={event => {
@@ -282,7 +284,7 @@ const Item = ({
               }
             }}
             onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
-            clickable={setQuote && 'true'}
+            clickable={setCurrentCheck && 'true'}
           />
         ) : (
           <Label
@@ -290,7 +292,7 @@ const Item = ({
             bold={selected}
             value={value}
             fontSize={fontSize}
-            clickable={!!setQuote}
+            clickable={!!setCurrentCheck}
             color={selected ? '#38ADDF' : null}
           >
             {value}
@@ -347,8 +349,8 @@ const Fieldset = styled.fieldset`
     label === 'Annotation' || label === 'Note' || label === 'OccurrenceNote'
       ? 'span 3 / span 3'
       : label === 'GLQuote'
-      ? 'span 2 / span 2'
-      : 'span 1 / span 1'};
+        ? 'span 2 / span 2'
+        : 'span 1 / span 1'};
   flex-direction: column;
   padding: 0px;
   padding-inline-end: 0px;

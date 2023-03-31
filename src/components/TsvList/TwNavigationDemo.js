@@ -4,7 +4,7 @@ import CardContent from '../CardContent'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
-const Card1 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
+const Card1 = ({ selectedQuote, setCurrentCheck, showSaveChangesPrompt }) => {
   const viewMode = 'list'
   const {
     items,
@@ -55,7 +55,7 @@ const Card1 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
         fontSize={fontSize}
         markdown={markdown}
         viewMode={'list'}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
@@ -65,7 +65,7 @@ const Card1 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
   )
 }
 
-const Card2 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
+const Card2 = ({ selectedQuote, setCurrentCheck, showSaveChangesPrompt }) => {
   const {
     items,
     markdown,
@@ -86,7 +86,7 @@ const Card2 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
     actions: { setFilters, setFontSize, setItemIndex, setMarkdownView },
   } = useCardState({
     items,
-    setQuote,
+    setCurrentCheck,
     selectedQuote,
   })
 
@@ -114,7 +114,7 @@ const Card2 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
         fontSize={fontSize}
         markdown={markdown}
         viewMode={'markdown'}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
@@ -125,7 +125,7 @@ const Card2 = ({ selectedQuote, setQuote, showSaveChangesPrompt }) => {
 }
 
 export default function TwNavigationDemo() {
-  const [selectedQuote, setQuote] = useState(null)
+  const [selectedQuote, setCurrentCheck] = useState(null)
   const showSaveChangesPrompt = () => {
     return new Promise((resolve, reject) => {
       resolve()
@@ -136,12 +136,12 @@ export default function TwNavigationDemo() {
     <div style={{ display: 'flex' }}>
       <Card1
         selectedQuote={selectedQuote}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         showSaveChangesPrompt={showSaveChangesPrompt}
       />
       <Card2
         selectedQuote={selectedQuote}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </div>

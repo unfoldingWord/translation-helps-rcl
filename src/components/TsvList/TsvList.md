@@ -10,7 +10,7 @@ import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
   const viewMode = 'list'
-  const [selectedQuote, setQuote] = useState({})
+  const [selectedQuote, setCurrentCheck] = useState({})
   const { markdown, items } = useContent({
     verse: 1,
     chapter: 1,
@@ -72,7 +72,7 @@ const Component = () => {
         fontSize={fontSize}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>

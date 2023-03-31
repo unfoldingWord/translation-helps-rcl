@@ -26,7 +26,7 @@ export default function TsvList({
   items,
   filters,
   fontSize,
-  setQuote,
+  setCurrentCheck,
   editable,
   onTsvEdit,
   setContent,
@@ -84,7 +84,7 @@ export default function TsvList({
               } = item
               Quote = Quote || OrigWords
               SupportReference = SupportReference || TWLink
-              const style = { cursor: setQuote ? 'pointer' : '' }
+              const style = { cursor: setCurrentCheck ? 'pointer' : '' }
 
               return (
                 <Row
@@ -96,7 +96,7 @@ export default function TsvList({
                   Quote={Quote}
                   editable={editable}
                   fontSize={fontSize}
-                  setQuote={setQuote}
+                  setCurrentCheck={setCurrentCheck}
                   onTsvEdit={onTsvEdit}
                   Occurrence={Occurrence}
                   setContent={setContent}
@@ -118,7 +118,7 @@ TsvList.defaultProps = {
 
 TsvList.propTypes = {
   items: PropTypes.array,
-  setQuote: PropTypes.func,
+  setCurrentCheck: PropTypes.func,
   selectedQuote: PropTypes.object,
   filters: PropTypes.array.isRequired,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -132,7 +132,7 @@ function Row({
   rowKey,
   editable,
   fontSize,
-  setQuote,
+  setCurrentCheck,
   onTsvEdit,
   Occurrence,
   setContent,
@@ -164,18 +164,19 @@ function Row({
       onClick={() => {
         // Check if tw has been edited in order to not lose unsaved changes when selecting a twl item.
         showSaveChangesPrompt('tw', setContent).then(() => {
-          if (setQuote && !selected) {
+          if (setCurrentCheck && !selected) {
             if (newQuote) {
-              setQuote(newQuote)
+              setCurrentCheck(newQuote)
             } else {
-              setQuote({
+              setCurrentCheck({
                 quote: item.Quote,
                 occurrence: item.Occurrence,
                 SupportReference,
+                reference: item.Reference,
               })
             }
-          } else if (setQuote && selected) {
-            setQuote({})
+          } else if (setCurrentCheck && selected) {
+            setCurrentCheck({})
           }
         })
       }}
@@ -191,7 +192,7 @@ function Row({
               tsvItem={items[rowKey]}
               fontSize={fontSize}
               selected={selected}
-              setQuote={setQuote}
+              setCurrentCheck={setCurrentCheck}
               onTsvEdit={onTsvEdit}
               setNewQuote={setNewQuote}
               SupportReference={SupportReference}
@@ -221,7 +222,7 @@ function EditableItem({
   valueKey,
   selected,
   fontSize,
-  setQuote,
+  setCurrentCheck,
   onTsvEdit,
   itemIndex,
   setNewQuote,
@@ -263,10 +264,11 @@ function EditableItem({
               quote: item.Quote,
               occurrence: item.Occurrence,
               SupportReference,
+              reference: item.Reference,
             }
             updatedQuote[selectedQuoteKey] = inputValue
             setNewQuote(updatedQuote)
-            setQuote(updatedQuote)
+            setCurrentCheck(updatedQuote)
           }
         }}
       />
