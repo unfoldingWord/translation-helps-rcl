@@ -59,31 +59,25 @@ export default function useTsvItems({
                 const Verse = referenceChunks ? referenceChunks[1] : null
 
 
-                let doesReferenceContain = doesReferenceContain(note?.Reference, `${chapter}:${verse}`)
+                let _doesReferenceContain = doesReferenceContain(note?.Reference, `${chapter}:${verse}`)
 
-                if (doesReferenceContain) {
-                    if (Chapter && Verse && book) {
-                        note.Chapter = Chapter
-                        note.Verse = Verse
-                        note.Book = book
+                if (_doesReferenceContain) {
+                    if (
+                        tn[book] &&
+                        tn[book][chapter] &&
+                        tn[book][chapter][verse]
+                    ) {
+                        tn[book][chapter][verse].push(note)
+                    } else if (tn[book] && tn[book][chapter]) {
+                        tn[book][chapter][verse] = [note]
+                    } else if (tn[book]) {
+                        tn[book][chapter] = {}
+                        tn[book][chapter][verse] = [note]
+                    } else {
+                        tn[book] = {}
+                        tn[book][chapter] = {}
+                        tn[book][chapter][verse] = [note]
                     }
-                }
-
-                if (
-                    tn[book] &&
-                    tn[book][chapter] &&                  //note.Chapter=chapter
-                    tn[book][chapter][verse]
-                ) {
-                    tn[book][chapter][verse].push(note)
-                } else if (tn[book] && tn[book][chapter]) {
-                    tn[book][chapter][verse] = [note]
-                } else if (tn[book]) {
-                    tn[book][chapter] = {}
-                    tn[book][chapter][verse] = [note]
-                } else {
-                    tn[book] = {}
-                    tn[book][chapter] = {}
-                    tn[book][chapter][verse] = [note]
                 }
             }
 
