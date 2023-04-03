@@ -5,6 +5,7 @@ import {
   processUnknownError,
 } from '../core/network'
 import { get } from 'gitea-react-toolkit'
+import { doesReferenceContain } from 'bible-reference-range'
 
 /**
  * hook for loading translation helps resources listed in content
@@ -26,19 +27,19 @@ import { get } from 'gitea-react-toolkit'
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  */
 export default function useTsvItems({
-  fetchMarkdown = true,
-  languageId,
-  resourceId,
-  projectId,
-  chapter,
-  content,
-  server,
-  owner,
-  ref: ref_ = 'master',
-  verse,
-  onResourceError,
-  httpConfig = {},
-}) {
+    fetchMarkdown = true,
+    languageId,
+    resourceId,
+    projectId,
+    chapter,
+    content,
+    server,
+    owner,
+    ref: ref_ = 'master',
+    verse,
+    onResourceError,
+    httpConfig = {},
+  }) {
   const [{ items, tsvs }, setState] = useState({
     items: [],
     tsvs: null,
@@ -57,27 +58,26 @@ export default function useTsvItems({
         const Chapter = referenceChunks ? referenceChunks[0] : null
         const Verse = referenceChunks ? referenceChunks[1] : null
 
-        if (Chapter && Verse && book) {
-          note.Chapter = Chapter
-          note.Verse = Verse
-          note.Book = book
-        }
 
-        if (
-          tn[book] &&
-          tn[book][note.Chapter] &&
-          tn[book][note.Chapter][note.Verse]
-        ) {
-          tn[book][note.Chapter][note.Verse].push(note)
-        } else if (tn[book] && tn[book][note.Chapter]) {
-          tn[book][note.Chapter][note.Verse] = [note]
-        } else if (tn[book]) {
-          tn[book][note.Chapter] = {}
-          tn[book][note.Chapter][note.Verse] = [note]
-        } else {
-          tn[book] = {}
-          tn[book][note.Chapter] = {}
-          tn[book][note.Chapter][note.Verse] = [note]
+        let _doesReferenceContain = doesReferenceContain(note?.Reference, `${chapter}:${verse}`)
+
+        if (_doesReferenceContain) {
+          if (
+            tn[book] &&
+            tn[book][chapter] &&
+            tn[book][chapter][verse]
+          ) {
+            tn[book][chapter][verse].push(note)
+          } else if (tn[book] && tn[book][chapter]) {
+            tn[book][chapter][verse] = [note]
+          } else if (tn[book]) {
+            tn[book][chapter] = {}
+            tn[book][chapter][verse] = [note]
+          } else {
+            tn[book] = {}
+            tn[book][chapter] = {}
+            tn[book][chapter][verse] = [note]
+          }
         }
       }
 
