@@ -15,18 +15,16 @@ import {
 } from 'dcs-branch-merger'
 
 /**
- * manage edit state for card
+ * manage edit branch for card
  * @param {string} languageId
  * @param {string} server
  * @param {string} owner
  * @param {string} ref
- * @param {function} setRef
  * @param {function} useUserLocalStorage
  * @param {string} loggedInUser
  * @param {object} authentication
  * @param {string} cardResourceId - resource id for this card
  * @param {string} cardId - id for the card
- * @param {string} projectId
  * @param {function} onResourceError - callback function for error fetching resource
  * @return {{state: {editing: boolean}, actions: {startEdit: ((function(): Promise<void>)|*), saveEdit: ((function(*): Promise<void>)|*)}}}
  */
@@ -160,9 +158,9 @@ const useUserBranch = ({
 
     async function mergeFromMasterIntoUserBranch() {
         if (mergeFromMaster && !mergeFromMaster.error && !mergeFromMaster.conflict) {
-            const repoName = `${languageId}_${cardResourceId}`;
+            const repo = `${languageId}_${cardResourceId}`;
             const results = await mergeDefaultIntoUserBranch(
-                { server, owner, repoName, userEditBranchName, authentication?.token?.sha1 }
+                { server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 }
             );
             if (results?.success) {
                 const newState = {
@@ -171,14 +169,16 @@ const useUserBranch = ({
                 }
                 setMergeFromMaster(newState)
             }
+            return results;
         }
+        return null;
     }
 
     async function mergeToMasterFromUserBranch() {
         if (mergeToMaster && !mergeToMaster.error && !mergeToMaster.conflict) {
-            const repoName = `${languageId}_${cardResourceId}`;
+            const repo = `${languageId}_${cardResourceId}`;
             const results = await mergeUserIntoDefaultBranch(
-                { server, owner, repoName, userEditBranchName, authentication?.token?.sha1 }
+                { server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 }
             );
             if (results?.success) {
                 const newState = {
@@ -187,20 +187,37 @@ const useUserBranch = ({
                 }
                 setMergeToMaster(newState)
             }
+            return results;
         }
+        return null;
     }
 
     useDeepCompareEffect(() => {
         const updateStatus = async () => {
             let newListRef, newContentRef
+            const repo = `${languageId}_${cardResourceId}`;
+            setMergeFromMaster(null)
+            setMergeToMaster(null)
             const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
-            if (currentResourceRef !== "master") {
-                checkMergeDefaultIntoUserBranch().then(results => {
+            if (currentResourceRef === userEditBranchName) {
+                checkMergeDefaultIntoUserBranch({
+                    server,
+                    owner,
+                    repo,
+                    userBranch: userEditBranchName,
+                    tokenid: authentication?.token?.sha1
+                }).then(results => {
                     setMergeFromMaster(results)
                 })
-                checkMergeUserIntoDefaultBranch().then(results => {
-                    setMergeToMaster(results)
-                })
+                checkMergeUserIntoDefaultBranch({
+                    server,
+                    owner,
+                    repo,
+                    userBranch: userEditBranchName,
+                    tokenid: authentication?.token?.sha1
+                }).then(results => {
+                      setMergeToMaster(results)
+                  })
             }
 
 
@@ -239,6 +256,7 @@ const useUserBranch = ({
             server,
             owner,
             loggedInUser,
+            usingUserBranch,
         }
     ])
 
@@ -248,8 +266,14 @@ const useUserBranch = ({
             contentRef,
             usingUserBranch,
             workingResourceBranch: ref,
+            mergeFromMaster,
+            mergeToMaster,
         },
-        actions: { startEdit },
+        actions: {
+            startEdit,
+            mergeFromMasterIntoUserBranch,
+            mergeToMasterFromUserBranch
+        },
     }
 }
 
