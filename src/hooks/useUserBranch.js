@@ -164,12 +164,22 @@ const useUserBranch = ({
             const results = await mergeDefaultIntoUserBranch(
                 { server, owner, repoName, userEditBranchName, authentication?.token?.sha1 }
             );
+            console.log(`mergeFromMasterIntoUserBranch- results:`, results)
             if (results?.success) {
                 const newState = {
                     ...mergeFromMaster,
                     mergeNeeded: false,
                 }
                 setMergeFromMaster(newState)
+            } else {
+                console.error(
+                    `mergeFromMasterIntoUserBranch - merge failed ${JSON.stringify({
+                        server,
+                        owner,
+                        repoName,
+                        results
+                    })}`
+                )
             }
         }
     }
@@ -180,12 +190,22 @@ const useUserBranch = ({
             const results = await mergeUserIntoDefaultBranch(
                 { server, owner, repoName, userEditBranchName, authentication?.token?.sha1 }
             );
+            console.log(`mergeToMasterFromUserBranch- results:`, results)
             if (results?.success) {
                 const newState = {
                     ...mergeToMaster,
                     mergeNeeded: false,
                 }
                 setMergeToMaster(newState)
+            } else {
+                console.error(
+                    `mergeToMasterFromUserBranch - merge failed ${JSON.stringify({
+                        server,
+                        owner,
+                        repoName,
+                        results
+                    })}`
+                )
             }
         }
     }
@@ -196,9 +216,15 @@ const useUserBranch = ({
             const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
             if (currentResourceRef !== "master") {
                 checkMergeDefaultIntoUserBranch().then(results => {
+                    if (results?.error) {
+                        console.error(`checkMergeDefaultIntoUserBranch-returned error: ${results?.error}`)
+                    }
                     setMergeFromMaster(results)
                 })
                 checkMergeUserIntoDefaultBranch().then(results => {
+                    if (results?.error) {
+                        console.error(`checkMergeUserIntoDefaultBranch-returned error: ${results?.error}`)
+                    }
                     setMergeToMaster(results)
                 })
             }
