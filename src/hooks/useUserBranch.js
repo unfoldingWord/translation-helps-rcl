@@ -50,6 +50,7 @@ const useUserBranch = ({
     const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser) : null;
     const [mergeFromMaster, setMergeFromMaster] = useState(null)
     const [mergeToMaster, setMergeToMaster] = useState(null)
+    const [merging, setMerging] = useState(false)
 
     async function getWorkingBranchForResource(resourceId) {
         const repoName = `${languageId}_${resourceId}`
@@ -158,6 +159,7 @@ const useUserBranch = ({
 
     async function mergeFromMasterIntoUserBranch() {
         if (mergeFromMaster && !mergeFromMaster.error && !mergeFromMaster.conflict) {
+          setMerging(true)
             const repo = `${languageId}_${cardResourceId}`;
             const results = await mergeDefaultIntoUserBranch(
                 { server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 }
@@ -169,7 +171,9 @@ const useUserBranch = ({
                     mergeNeeded: false,
                 }
                 setMergeFromMaster(newState)
+                setMerging(false)
             } else {
+                setMerging(false)
                 console.error(
                     `mergeFromMasterIntoUserBranch - merge failed ${JSON.stringify({
                         server,
@@ -186,6 +190,7 @@ const useUserBranch = ({
 
     async function mergeToMasterFromUserBranch() {
         if (mergeToMaster && !mergeToMaster.error && !mergeToMaster.conflict) {
+            setMerging(true)
             const repo = `${languageId}_${cardResourceId}`;
             const results = await mergeUserIntoDefaultBranch(
                 { server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 }
@@ -197,7 +202,9 @@ const useUserBranch = ({
                     mergeNeeded: false,
                 }
                 setMergeToMaster(newState)
+                setMerging(false)
             } else {
+                setMerging(false)
                 console.error(
                     `mergeToMasterFromUserBranch - merge failed ${JSON.stringify({
                         server,
@@ -289,6 +296,7 @@ const useUserBranch = ({
         state: {
             listRef,
             contentRef,
+            merging,
             usingUserBranch,
             workingResourceBranch: ref,
             mergeFromMaster,
