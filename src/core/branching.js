@@ -1,5 +1,5 @@
 import { get, post } from 'gitea-react-toolkit';
-import { USER_BRANCH_EXTENSION } from "../common";
+import { USER_BOOK_BRANCH_PREFIX, USER_BRANCH_EXTENSION } from "../common";
 import { queryUrl } from "./network";
 
 /**
@@ -25,9 +25,14 @@ export async function getBranchesForRepo(server, repoOwner, repoName, ) {
 /**
  * generate user branch name based on logged in user
  * @param {string} loggedInUser
+ * @param {string} bookId - optional, if present will name edit branch with bookId
  * @return {string} name for user edit branch
  */
-export function getUserEditBranch(loggedInUser) {
+export function getUserEditBranch(loggedInUser, bookId) {
+  if (bookId) {
+    return `${USER_BOOK_BRANCH_PREFIX}${loggedInUser}-${bookId.toUpperCase()}`
+  }
+
   return `${loggedInUser}${USER_BRANCH_EXTENSION}`;
 }
 

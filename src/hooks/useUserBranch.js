@@ -9,32 +9,32 @@ import {
 import useDeepCompareEffect from 'use-deep-compare-effect'
 
 /**
- * manage edit state for card
- * @param {string} languageId
- * @param {string} server
- * @param {string} owner
- * @param {string} ref
- * @param {function} setRef
- * @param {function} useUserLocalStorage
- * @param {string} loggedInUser
+ * manage edit branch for card
+ * @param {string} appRef
  * @param {object} authentication
- * @param {string} cardResourceId - resource id for this card
- * @param {string} cardId - id for the card
- * @param {string} projectId
+ * @param {string} bookId - optional for book branch (such as `php`), otherwise we just use a user edit branch
+ * @param {string} cardResourceId - resource id for this card such as `scripture_card_Literal_Translation`
+ * @param {string} cardId - id for the card such as `ult`
+ * @param {string} languageId
+ * @param {string} loggedInUser
  * @param {function} onResourceError - callback function for error fetching resource
+ * @param {string} owner
+ * @param {string} server
+ * @param {function} useUserLocalStorage
  * @return {{state: {editing: boolean}, actions: {startEdit: ((function(): Promise<void>)|*), saveEdit: ((function(*): Promise<void>)|*)}}}
  */
 const useUserBranch = ({
-  owner,
-  server,
-  appRef,
-  cardId,
-  languageId,
-  loggedInUser,
-  authentication,
-  cardResourceId,
-  onResourceError,
-  useUserLocalStorage,
+    appRef,
+    authentication,
+    bookId,
+    cardId,
+    cardResourceId,
+    languageId,
+    loggedInUser,
+    onResourceError,
+    owner,
+    server,
+    useUserLocalStorage,
 }) => {
   // initialize to default for app
   const [ref, setRef] = useUserLocalStorage(`${cardId}_ref`, appRef)
@@ -43,7 +43,9 @@ const useUserBranch = ({
     : useState(false)
   const [listRef, setListRef] = useState(ref)
   const [contentRef, setContentRef] = useState(ref)
-  const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser) : null;
+  const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser, bookId) : null;
+  const [fetchingBranch, setFetchingBranch] = useState(false)
+  const [lastFetch, setLastFetch] = useState(null)
 
   async function getWorkingBranchForResource(resourceId) {
     const repoName = `${languageId}_${resourceId}`
@@ -153,50 +155,70 @@ const useUserBranch = ({
   useDeepCompareEffect(() => {
     const updateStatus = async () => {
       let newListRef, newContentRef
-      const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
+      const fetching = JSON.stringify( {
+        bookId,
+        cardId,
+        languageId,
+        loggedInUser,
+        owner,
+        appRef,
+        server,
+      })
+      if (fetching !== lastFetch) {
+        setFetchingBranch(true)
+        const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
 
-      // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
-      switch (cardResourceId) {
-        case 'tw':
-          newContentRef = currentResourceRef
-          newListRef = await getWorkingBranchForResource('twl')
-          break
+        // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
+        switch (cardResourceId) {
+          case 'tw':
+            newContentRef = currentResourceRef
+            newListRef = await getWorkingBranchForResource('twl')
+            break
 
-        case 'twl':
-          newListRef = currentResourceRef
-          newContentRef = await getWorkingBranchForResource('tw')
-          break
+          case 'twl':
+            newListRef = currentResourceRef
+            newContentRef = await getWorkingBranchForResource('tw')
+            break
 
-        default:
-          newListRef = newContentRef = currentResourceRef
+          default:
+            newListRef = newContentRef = currentResourceRef
+        }
+
+        // update states
+        if (currentResourceRef !== ref) {
+          setRef(currentResourceRef)
+        }
+
+        const newUsingUserBranch = currentResourceRef === userEditBranchName;
+        if (newUsingUserBranch !== usingUserBranch) {
+          setUsingUserBranch(newUsingUserBranch) // if edit branch may have been merged or deleted, we are no longer using edit branch
+        }
+        updateRef(listRef, newListRef, setListRef)
+        updateRef(contentRef, newContentRef, setContentRef)
+        setFetchingBranch(false)
+        setLastFetch(fetching);
       }
-
-      // update states
-      if (currentResourceRef !== ref) {
-        setRef(currentResourceRef)
-      }
-
-      setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
-      updateRef(listRef, newListRef, setListRef)
-      updateRef(contentRef, newContentRef, setContentRef)
     }
-    if (loggedInUser) {
+    if (loggedInUser && !fetchingBranch) {
       updateStatus().catch(console.error)
     }
   }, [
     {
-      ref,
+      appRef,
+      bookId,
+      cardId,
       languageId,
-      server,
-      owner,
       loggedInUser,
+      owner,
+      server,
     }
   ])
 
   return {
     state: {
-      listRef,
       contentRef,
+      listRef,
+      userEditBranchName,
       usingUserBranch,
       workingResourceBranch: ref,
     },
