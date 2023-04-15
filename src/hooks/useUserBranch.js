@@ -13,8 +13,8 @@ import useDeepCompareEffect from 'use-deep-compare-effect'
  * @param {string} appRef
  * @param {object} authentication
  * @param {string} bookId - optional for book branch (such as `php`), otherwise we just use a user edit branch
- * @param {string} cardResourceId - resource id for this card such as `scripture_card_Literal_Translation`
- * @param {string} cardId - id for the card such as `ult`
+ * @param {string} cardResourceId - resource id for this card such as `ult`
+ * @param {string} cardId - id for the card such as `scripture_card_Literal_Translation`
  * @param {string} languageId
  * @param {string} loggedInUser
  * @param {function} onResourceError - callback function for error fetching resource
@@ -157,7 +157,7 @@ const useUserBranch = ({
       let newListRef, newContentRef
       const fetching = JSON.stringify( {
         bookId,
-        cardId,
+        cardResourceId,
         languageId,
         loggedInUser,
         owner,
@@ -167,6 +167,14 @@ const useUserBranch = ({
       if (fetching !== lastFetch) {
         setFetchingBranch(true)
         const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
+        // console.log(`updateStatus() - `, {
+        //   owner,
+        //   cardResourceId,
+        //   languageId,
+        //   loggedInUser,
+        //   appRef,
+        //   currentResourceRef,
+        // })
 
         // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
         switch (cardResourceId) {
@@ -186,6 +194,7 @@ const useUserBranch = ({
 
         // update states
         if (currentResourceRef !== ref) {
+          console.log(`updateStatus() - changing ref`, { cardResourceId, ref, currentResourceRef })
           setRef(currentResourceRef)
         }
 
@@ -206,7 +215,7 @@ const useUserBranch = ({
     {
       appRef,
       bookId,
-      cardId,
+      cardResourceId,
       languageId,
       loggedInUser,
       owner,
