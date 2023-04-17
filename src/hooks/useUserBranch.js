@@ -136,7 +136,7 @@ const useUserBranch = ({
       }
     }
 
-    return false
+    return userEditBranchName
   }
 
   /**
