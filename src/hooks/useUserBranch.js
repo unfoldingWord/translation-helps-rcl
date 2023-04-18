@@ -38,9 +38,7 @@ const useUserBranch = ({
 }) => {
   // initialize to default for app
   const [ref, setRef] = useUserLocalStorage(`${cardId}_ref`, appRef)
-  const [usingUserBranch, setUsingUserBranch] = useUserLocalStorage
-    ? useUserLocalStorage(`editing_${cardId}_${languageId}`, false)
-    : useState(false)
+  const [usingUserBranch, setUsingUserBranch] = useState(false)
   const [listRef, setListRef] = useState(ref)
   const [contentRef, setContentRef] = useState(ref)
   const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser, bookId) : null;
@@ -164,17 +162,13 @@ const useUserBranch = ({
         appRef,
         server,
       })
-      if (fetching !== lastFetch) {
+      if (fetchingBranch) {
+        console.log(`updateStatus() - already fetching`, fetching)
+      } else if (fetching !== lastFetch) {
         setFetchingBranch(true)
+        setUsingUserBranch(false)
         const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
-        // console.log(`updateStatus() - `, {
-        //   owner,
-        //   cardResourceId,
-        //   languageId,
-        //   loggedInUser,
-        //   appRef,
-        //   currentResourceRef,
-        // })
+        console.log(`updateStatus() - `, fetching)
 
         // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
         switch (cardResourceId) {
@@ -198,17 +192,16 @@ const useUserBranch = ({
           setRef(currentResourceRef)
         }
 
-        const newUsingUserBranch = currentResourceRef === userEditBranchName;
-        if (newUsingUserBranch !== usingUserBranch) {
-          setUsingUserBranch(newUsingUserBranch) // if edit branch may have been merged or deleted, we are no longer using edit branch
-        }
+        setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
         updateRef(listRef, newListRef, setListRef)
         updateRef(contentRef, newContentRef, setContentRef)
+        setLastFetch(fetching)
         setFetchingBranch(false)
-        setLastFetch(fetching);
+      } else {
+        console.log(`updateStatus() - already fetched`, fetching)
       }
     }
-    if (loggedInUser && !fetchingBranch) {
+    if (loggedInUser) {
       updateStatus().catch(console.error)
     }
   }, [
