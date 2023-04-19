@@ -28,12 +28,24 @@ export async function getBranchesForRepo(server, repoOwner, repoName, ) {
  * @param {string} bookId - optional, if present will name edit branch with bookId
  * @return {string} name for user edit branch
  */
-export function getUserEditBranch(loggedInUser, bookId) {
+export function getUserEditBranch(loggedInUser, bookId = null) {
   if (bookId) {
     return `${USER_BOOK_BRANCH_PREFIX}${loggedInUser}-${bookId.toUpperCase()}`
   }
 
   return `${loggedInUser}${USER_BRANCH_EXTENSION}`;
+}
+
+/**
+ * verify that branch name is valid for username and optional bookId
+ * @param {string} loggedInUser
+ * @param {string} branch
+ * @param {string} bookId
+ * @return {*|boolean} true if valid for user branch
+ */
+export function isValidUserWorkingBranch(loggedInUser, branch, bookId = null) {
+  const userBranch= getUserEditBranch(loggedInUser, bookId)
+  return userBranch === branch
 }
 
 /**
