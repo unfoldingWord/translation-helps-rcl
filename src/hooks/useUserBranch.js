@@ -13,6 +13,10 @@ import {
     mergeDefaultIntoUserBranch,
     mergeUserIntoDefaultBranch
 } from 'dcs-branch-merger'
+// TODO: Use Abel's brach merger library.
+// QUESTION: The only parameter that I'm not sure about is userBranch. How do we pass this?
+// Also, maybe we just remove the branch merger functionality from useUserBranch and then just use both hooks in consuming applications?
+import useBranchMerger from '../components/branch-merger/hooks/useBranchMerger'
 
 /**
  * manage edit branch for card
@@ -50,7 +54,9 @@ const useUserBranch = ({
     const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser) : null;
     const [mergeFromMaster, setMergeFromMaster] = useState(null)
     const [mergeToMaster, setMergeToMaster] = useState(null)
+    // TODO: replace these two with updateStatus & mergeStatus
     const [merging, setMerging] = useState(false)
+    // TODO: Replace with loadingUpdate & loadingMerge
 
     async function getWorkingBranchForResource(resourceId) {
         const repoName = `${languageId}_${resourceId}`
@@ -157,6 +163,7 @@ const useUserBranch = ({
         }
     }
 
+    // TODO: Replace this with Abel's updateUserBranch
     async function mergeFromMasterIntoUserBranch() {
         if (mergeFromMaster && !mergeFromMaster.error && !mergeFromMaster.conflict) {
           setMerging(true)
@@ -188,6 +195,7 @@ const useUserBranch = ({
         return null;
     }
 
+    // TODO: Replace this with Abel's mergeMasterBranch
     async function mergeToMasterFromUserBranch() {
         if (mergeToMaster && !mergeToMaster.error && !mergeToMaster.conflict) {
             setMerging(true)
@@ -227,6 +235,7 @@ const useUserBranch = ({
             setMergeToMaster(null)
             const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
             if (currentResourceRef === userEditBranchName) {
+                // TODO: Can this be replaced with the hook???
                 checkMergeDefaultIntoUserBranch({
                     server,
                     owner,
