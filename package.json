@@ -31,6 +31,7 @@
     "prop-types": "^15.x",
     "react": "^17.x || ^18.x ",
     "react-dom": "^17.x || ^18.x",
+    "react-icons": "^4.x",
     "scripture-resources-rcl": "^5.x"
   },
   "devDependencies": {
