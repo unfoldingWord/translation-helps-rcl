@@ -105,9 +105,8 @@ const Navigation = ({
       id={`${baseId}_prev`}
       onClick={onPrevItem}
     />
-    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${
-      items.length
-    }`}</FlexDiv>
+    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${items.length
+      }`}</FlexDiv>
     <ChevronRightIcon
       className={classes.chevronIcon}
       id={`${baseId}_next`}
@@ -263,6 +262,7 @@ const Card = ({
               )}
               {!!onMinimize ? (
                 <IconButton
+                  id={`minimize_button_${id}`}
                   title='Minimize'
                   key='minimize-button'
                   aria-label='Minimize'
@@ -274,6 +274,7 @@ const Card = ({
               ) : null}
               {!hideMarkdownToggle ? (
                 <IconButton
+                  id={`markdown_button_${id}`}
                   title={markdownView ? 'Preview' : 'Markdown'}
                   key='preview-button'
                   aria-label={markdownView ? 'Preview' : 'Markdown'}
@@ -289,6 +290,7 @@ const Card = ({
               ) : null}
               {editable ? (
                 <IconButton
+                  id={`save_button_${id}`}
                   disabled={saved}
                   className={classes.margin}
                   key='save-button'
