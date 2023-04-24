@@ -7,16 +7,7 @@ import {
     processUnknownError,
 } from '../core'
 import useDeepCompareEffect from 'use-deep-compare-effect'
-import {
-    checkMergeDefaultIntoUserBranch,
-    checkMergeUserIntoDefaultBranch,
-    mergeDefaultIntoUserBranch,
-    mergeUserIntoDefaultBranch
-} from 'dcs-branch-merger'
-// TODO: Use Abel's brach merger library.
-// QUESTION: The only parameter that I'm not sure about is userBranch. How do we pass this?
-// Also, maybe we just remove the branch merger functionality from useUserBranch and then just use both hooks in consuming applications?
-import useBranchMerger from '../components/branch-merger/hooks/useBranchMerger'
+import useBranchMerger from './useBranchMerger'
 
 /**
  * manage edit branch for card
@@ -52,11 +43,16 @@ const useUserBranch = ({
     const [listRef, setListRef] = useState(ref)
     const [contentRef, setContentRef] = useState(ref)
     const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser) : null;
-    const [mergeFromMaster, setMergeFromMaster] = useState(null)
-    const [mergeToMaster, setMergeToMaster] = useState(null)
-    // TODO: replace these two with updateStatus & mergeStatus
-    const [merging, setMerging] = useState(false)
-    // TODO: Replace with loadingUpdate & loadingMerge
+
+    const repo = `${languageId}_${cardResourceId}`;
+    const {
+      state: {
+        mergeStatus, updateStatus, loadingUpdate, loadingMerge
+      },
+      actions: {
+        checkUpdateStatus, checkMergeStatus, updateUserBranch, mergeMasterBranch
+      }
+    } = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
 
     async function getWorkingBranchForResource(resourceId) {
         const repoName = `${languageId}_${resourceId}`
@@ -163,104 +159,10 @@ const useUserBranch = ({
         }
     }
 
-    // TODO: Replace this with Abel's updateUserBranch
-    async function mergeFromMasterIntoUserBranch() {
-        if (mergeFromMaster && !mergeFromMaster.error && !mergeFromMaster.conflict) {
-          setMerging(true)
-            const repo = `${languageId}_${cardResourceId}`;
-            const results = await mergeDefaultIntoUserBranch(
-                { server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 }
-            );
-            console.log(`mergeFromMasterIntoUserBranch- results:`, results)
-            if (results?.success) {
-                const newState = {
-                    ...mergeFromMaster,
-                    mergeNeeded: false,
-                }
-                setMergeFromMaster(newState)
-                setMerging(false)
-            } else {
-                setMerging(false)
-                console.error(
-                    `mergeFromMasterIntoUserBranch - merge failed ${JSON.stringify({
-                        server,
-                        owner,
-                        repoName,
-                        results
-                    })}`
-                )
-            }
-            return results;
-        }
-        return null;
-    }
-
-    // TODO: Replace this with Abel's mergeMasterBranch
-    async function mergeToMasterFromUserBranch() {
-        if (mergeToMaster && !mergeToMaster.error && !mergeToMaster.conflict) {
-            setMerging(true)
-            const repo = `${languageId}_${cardResourceId}`;
-            const results = await mergeUserIntoDefaultBranch(
-                { server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 }
-            );
-            console.log(`mergeToMasterFromUserBranch- results:`, results)
-            if (results?.success) {
-                const newState = {
-                    ...mergeToMaster,
-                    mergeNeeded: false,
-                }
-                setMergeToMaster(newState)
-                setMerging(false)
-            } else {
-                setMerging(false)
-                console.error(
-                    `mergeToMasterFromUserBranch - merge failed ${JSON.stringify({
-                        server,
-                        owner,
-                        repoName,
-                        results
-                    })}`
-                )
-            }
-            return results;
-        }
-        return null;
-    }
-
     useDeepCompareEffect(() => {
         const updateStatus = async () => {
             let newListRef, newContentRef
-            const repo = `${languageId}_${cardResourceId}`;
-            setMergeFromMaster(null)
-            setMergeToMaster(null)
             const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
-            if (currentResourceRef === userEditBranchName) {
-                // TODO: Can this be replaced with the hook???
-                checkMergeDefaultIntoUserBranch({
-                    server,
-                    owner,
-                    repo,
-                    userBranch: userEditBranchName,
-                    tokenid: authentication?.token?.sha1
-                }).then(results => {
-                  if (results?.error) {
-                    console.error(`checkMergeDefaultIntoUserBranch-returned error: ${results?.error}`)
-                  }
-                  setMergeFromMaster(results)
-                })
-                checkMergeUserIntoDefaultBranch({
-                    server,
-                    owner,
-                    repo,
-                    userBranch: userEditBranchName,
-                    tokenid: authentication?.token?.sha1
-                }).then(results => {
-                      if (results?.error) {
-                        console.error(`checkMergeUserIntoDefaultBranch-returned error: ${results?.error}`)
-                      }
-                      setMergeToMaster(results)
-                  })
-            }
 
             // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
             switch (cardResourceId) {
@@ -305,16 +207,19 @@ const useUserBranch = ({
         state: {
             listRef,
             contentRef,
-            merging,
             usingUserBranch,
             workingResourceBranch: ref,
-            mergeFromMaster,
-            mergeToMaster,
+            mergeFromMaster: updateStatus,
+            mergeToMaster: mergeStatus,
+            loadingUpdate,
+            loadingMerge,
         },
         actions: {
             startEdit,
-            mergeFromMasterIntoUserBranch,
-            mergeToMasterFromUserBranch
+            checkMergeFromMaster: checkUpdateStatus,
+            checkMergeToMaster: checkMergeStatus,
+            mergeFromMasterIntoUserBranch: updateUserBranch,
+            mergeToMasterFromUserBranch: mergeMasterBranch
         },
     }
 }
