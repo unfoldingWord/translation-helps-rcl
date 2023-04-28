@@ -21,6 +21,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect'
  * @param {string} owner
  * @param {string} server
  * @param {function} useUserLocalStorage
+ * @param {number} checkForEditBranch for every change of value, re-check for edit branch
  * @return {{state: {editing: boolean}, actions: {startEdit: ((function(): Promise<void>)|*), saveEdit: ((function(*): Promise<void>)|*)}}}
  */
 const useUserBranch = ({
@@ -29,6 +30,7 @@ const useUserBranch = ({
     bookId,
     cardId,
     cardResourceId,
+    checkForEditBranch,
     languageId,
     loggedInUser,
     onResourceError,
@@ -207,8 +209,8 @@ const useUserBranch = ({
   }, [
     {
       appRef,
-      bookId,
       cardResourceId,
+      checkForEditBranch,
       languageId,
       loggedInUser,
       owner,
@@ -219,6 +221,7 @@ const useUserBranch = ({
   return {
     state: {
       contentRef,
+      fetchingBranch,
       listRef,
       userEditBranchName,
       usingUserBranch,
