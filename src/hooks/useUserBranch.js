@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import {
   createUserBranch,
   getUserEditBranch,
@@ -39,11 +39,12 @@ const useUserBranch = ({
     useUserLocalStorage,
 }) => {
   // initialize to default for app
-  const [ref, setRef] = useUserLocalStorage(`${cardId}_ref`, appRef)
+  const [ref, setRef] = useState(appRef)
   const [usingUserBranch, setUsingUserBranch] = useState(false)
   const [listRef, setListRef] = useState(ref)
   const [contentRef, setContentRef] = useState(ref)
   const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser, bookId) : null;
+  const [branchDetermined, setBranchDetermined] = useState(false)
   const [fetchingBranch, setFetchingBranch] = useState(false)
   const [lastFetch, setLastFetch] = useState(null)
 
@@ -108,6 +109,15 @@ const useUserBranch = ({
           )
 
           setRef(userEditBranchName) // switch current branch to user edit branch
+        } else {
+          console.info(
+            `useUserBranch - already using user branch ${JSON.stringify({
+              server,
+              owner,
+              repoName,
+              loggedInUser,
+            })}`
+          )
         }
         return userEditBranchName
       } catch (e) {
@@ -198,6 +208,7 @@ const useUserBranch = ({
         updateRef(listRef, newListRef, setListRef)
         updateRef(contentRef, newContentRef, setContentRef)
         setLastFetch(fetching)
+        setBranchDetermined(true)
         setFetchingBranch(false)
       } else {
         console.log(`updateStatus() - already fetched`, fetching)
@@ -218,10 +229,14 @@ const useUserBranch = ({
     }
   ])
 
+  useEffect(() => {
+    setBranchDetermined(false)
+  }, checkForEditBranch)
+
   return {
     state: {
       contentRef,
-      fetchingBranch,
+      branchDetermined,
       listRef,
       userEditBranchName,
       usingUserBranch,
