@@ -36,17 +36,31 @@ const useUserBranch = ({
     onResourceError,
     owner,
     server,
-    useUserLocalStorage,
 }) => {
   // initialize to default for app
-  const [ref, setRef] = useState(appRef)
-  const [usingUserBranch, setUsingUserBranch] = useState(false)
-  const [listRef, setListRef] = useState(ref)
-  const [contentRef, setContentRef] = useState(ref)
+  const [state, _setState] = useState({
+    branchDetermined: false,
+    contentRef: appRef,
+    fetchingBranch: false,
+    lastFetch: null,
+    listRef: appRef,
+    ref: appRef,
+    usingUserBranch: false,
+  })
+  const {
+    branchDetermined,
+    contentRef,
+    fetchingBranch,
+    lastFetch,
+    listRef,
+    ref,
+    usingUserBranch,
+  } = state
   const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser, bookId) : null;
-  const [branchDetermined, setBranchDetermined] = useState(false)
-  const [fetchingBranch, setFetchingBranch] = useState(false)
-  const [lastFetch, setLastFetch] = useState(null)
+
+  function setState(newState) {
+    _setState(prevState => ({ ...prevState, ...newState }))
+  }
 
   async function getWorkingBranchForResource(resourceId) {
     const repoName = `${languageId}_${resourceId}`
@@ -108,7 +122,7 @@ const useUserBranch = ({
             response
           )
 
-          setRef(userEditBranchName) // switch current branch to user edit branch
+          setState( { ref: userEditBranchName }) // switch current branch to user edit branch
         } else {
           console.info(
             `useUserBranch - already using user branch ${JSON.stringify({
@@ -141,25 +155,12 @@ const useUserBranch = ({
     if (!usingUserBranch) {
       const branch = await ensureUserEditBranch()
       if (branch) {
-        setUsingUserBranch(true)
+        setState( { usingUserBranch: true })
         return branch
       }
     }
 
     return userEditBranchName
-  }
-
-  /**
-   * update ref value if different
-   * @param {any} ref
-   * @param {any} newRef
-   * @param {function} setRefState
-   */
-  function updateRef(ref, newRef, setRefState) {
-    newRef = newRef || 'master' // default to master in case error fetching branch name
-    if (ref !== newRef) {
-      setRefState(newRef)
-    }
   }
 
   useDeepCompareEffect(() => {
@@ -174,11 +175,15 @@ const useUserBranch = ({
         appRef,
         server,
       })
-      if (fetchingBranch) {
+      if (fetchingBranch && (fetching === lastFetch)) {
         console.log(`updateStatus() - already fetching`, fetching)
       } else if (fetching !== lastFetch) {
-        setFetchingBranch(true)
-        setUsingUserBranch(false)
+        setState( {
+          fetchingBranch: true,
+          lastFetch: fetching,
+          usingUserBranch: false,
+          branchDetermined: false,
+        })
         const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
         console.log(`updateStatus() - `, fetching)
 
@@ -201,17 +206,22 @@ const useUserBranch = ({
         // update states
         if (currentResourceRef !== ref) {
           console.log(`updateStatus() - changing ref`, { cardResourceId, ref, currentResourceRef })
-          setRef(currentResourceRef)
         }
-
-        setUsingUserBranch(currentResourceRef === userEditBranchName) // if edit branch may have been merged or deleted, we are no longer using edit branch
-        updateRef(listRef, newListRef, setListRef)
-        updateRef(contentRef, newContentRef, setContentRef)
-        setLastFetch(fetching)
-        setBranchDetermined(true)
-        setFetchingBranch(false)
+        setState( {
+          ref: currentResourceRef,
+          usingUserBranch: currentResourceRef === userEditBranchName,
+          listRef: newListRef,
+          contentRef: newContentRef,
+          branchDetermined: true,
+          fetchingBranch: false,
+        })
+        console.log(`updateStatus() - branch determined`, { cardResourceId, ref, currentResourceRef })
       } else {
         console.log(`updateStatus() - already fetched`, fetching)
+        setState( {
+          branchDetermined: true,
+          fetchingBranch: false,
+        })
       }
     }
     if (loggedInUser) {
@@ -230,8 +240,11 @@ const useUserBranch = ({
   ])
 
   useEffect(() => {
-    setBranchDetermined(false)
-  }, checkForEditBranch)
+    console.log(`updateStatus() - checkForEditBranch now ${checkForEditBranch} resetting branchDetermined`)
+    setState( {
+      branchDetermined: false,
+    })
+  }, [checkForEditBranch])
 
   return {
     state: {
