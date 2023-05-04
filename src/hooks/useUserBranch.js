@@ -7,7 +7,6 @@ import {
     processUnknownError,
 } from '../core'
 import useDeepCompareEffect from 'use-deep-compare-effect'
-import useBranchMerger from './useBranchMerger'
 
 /**
  * manage edit branch for card
@@ -43,16 +42,6 @@ const useUserBranch = ({
     const [listRef, setListRef] = useState(ref)
     const [contentRef, setContentRef] = useState(ref)
     const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser) : null;
-
-    const repo = `${languageId}_${cardResourceId}`;
-    const {
-      state: {
-        mergeStatus, updateStatus, loadingUpdate, loadingMerge
-      },
-      actions: {
-        checkUpdateStatus, checkMergeStatus, updateUserBranch, mergeMasterBranch
-      }
-    } = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
 
     async function getWorkingBranchForResource(resourceId) {
         const repoName = `${languageId}_${resourceId}`
@@ -208,18 +197,11 @@ const useUserBranch = ({
             listRef,
             contentRef,
             usingUserBranch,
+            userEditBranchName,
             workingResourceBranch: ref,
-            mergeFromMaster: updateStatus,
-            mergeToMaster: mergeStatus,
-            loadingUpdate,
-            loadingMerge,
         },
         actions: {
             startEdit,
-            checkMergeFromMaster: checkUpdateStatus,
-            checkMergeToMaster: checkMergeStatus,
-            mergeFromMasterIntoUserBranch: updateUserBranch,
-            mergeToMasterFromUserBranch: mergeMasterBranch
         },
     }
 }

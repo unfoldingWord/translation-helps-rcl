@@ -16,6 +16,12 @@ const defaultStatus = {
   "pullRequest": "",
 }
 
+/**
+ * Legend:
+ * merge = push from user branch to master branch
+ * update = pull from master branch to user branch
+ **/
+
 //Adapters
 const update = (params) => mergeDefaultIntoUserBranch(params);
 const checkUpdate = (params) => checkMergeDefaultIntoUserBranch(params);
@@ -23,12 +29,6 @@ const merge = (params) => mergeUserIntoDefaultBranch(params);
 const checkMerge = (params) => checkMergeUserIntoDefaultBranch(params);
 
 export default function useBranchMerger({ server, owner, repo, userBranch, tokenid }) {
-
-  /**
-   * Legend:
-   * merge = push from user branch to master branch
-   * update = pull from master branch to user branch
-   **/
 
   const [mergeStatus, setMergeStatus] = useState(defaultStatus);
   const [updateStatus, setUpdateStatus] = useState(defaultStatus);
@@ -65,8 +65,13 @@ export default function useBranchMerger({ server, owner, repo, userBranch, token
   const checkUpdateStatus = useCallback(() => {
     setLoadingUpdate(true);
     const setter = setUpdateStatus;
-    const handler = checkUpdate
-    return runMergeHandler({setter,handler,params}).then(r => { setLoadingUpdate(false);  return r})
+    const handler = checkUpdate;
+    console.log("branch-merger: started checking update");
+    return runMergeHandler({setter,handler,params}).then(r => {
+      setLoadingUpdate(false);
+      console.log("branch-merger: finished checking update");
+      return r
+    })
   },[params,runMergeHandler])
 
   /**
@@ -105,7 +110,7 @@ export default function useBranchMerger({ server, owner, repo, userBranch, token
   useEffect(() => {
     checkMergeStatus();
   }, [checkMergeStatus])
-  
+
   useEffect(() => {
     checkUpdateStatus();
   }, [checkUpdateStatus])

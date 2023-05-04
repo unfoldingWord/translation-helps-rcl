@@ -6,3 +6,14 @@ export { default as FontSizeSlider } from './FontSizeSlider'
 export { default as SettingsCard } from './SettingsCard'
 export { default as TsvContent } from './TsvContent'
 export { default as DraggableCard } from './DraggableCard'
+export {
+  MergeBranchButton,
+  MergeDialog,
+  ErrorDialog,
+  UpdateBranchButton,
+  useBranchMerger,
+  useContentUpdateProps,
+  useMasterMergeProps,
+  BranchMergerContext,
+  BranchMergerProvider,
+} from './BranchMerger'
