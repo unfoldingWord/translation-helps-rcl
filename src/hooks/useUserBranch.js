@@ -239,13 +239,6 @@ const useUserBranch = ({
     }
   ])
 
-  useEffect(() => {
-    console.log(`updateStatus() - checkForEditBranch now ${checkForEditBranch} resetting branchDetermined`)
-    setState( {
-      branchDetermined: false,
-    })
-  }, [checkForEditBranch])
-
   return {
     state: {
       contentRef,
