@@ -155,7 +155,7 @@ const useUserBranch = ({
     if (!usingUserBranch) {
       const branch = await ensureUserEditBranch()
       if (branch) {
-        setState( { usingUserBranch: true })
+        setState( { usingUserBranch: true, ref: branch })
         return branch
       }
     }
