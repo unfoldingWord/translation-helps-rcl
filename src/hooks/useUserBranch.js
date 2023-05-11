@@ -157,6 +157,9 @@ const useUserBranch = ({
       if (branch) {
         setState( { usingUserBranch: true, ref: branch })
         return branch
+      } else {
+        console.log(`useUserBranch.startEdit - failed to create user branch`)
+        return null
       }
     }
 
