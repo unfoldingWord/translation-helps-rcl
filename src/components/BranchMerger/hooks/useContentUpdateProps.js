@@ -71,23 +71,27 @@ export default function useContentUpdateProps({
     setIsErrorDialogOpen(false)
   }
 
+  const callUpdateUserBranch = async () => {
+    setIsLoading(true);
+    const response = await updateUserBranch()
+    if (response.success && response.message === "") {
+      reloadContent && reloadContent()
+    }
+    else {
+      setIsErrorDialogOpen(true);
+      setIsLoading(false)
+    };
+  }
+
   const onClick = () => {
     if (blocked || !pending) return setIsErrorDialogOpen(true)
-    setIsLoading(true);
-    updateUserBranch().then((response) => {
-      if (response.success && response.message === "") {
-        reloadContent && reloadContent()
-      }
-      else {
-        setIsErrorDialogOpen(true);
-        setIsLoading(false)
-      };
-    })
+    callUpdateUserBranch()
   }
 
   return {
-    isLoading: (isLoading | loadingUpdate),
+    isLoading: (isLoading || loadingUpdate),
     onClick,
+    callUpdateUserBranch,
     isErrorDialogOpen,
     onCloseErrorDialog,
     dialogMessage,
