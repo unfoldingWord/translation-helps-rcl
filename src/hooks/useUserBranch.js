@@ -112,7 +112,7 @@ const useUserBranch = ({
             config,
             userEditBranchName
           )
-          console.info(
+          console.log(
             `useUserBranch - user branch created ${JSON.stringify({
               server,
               owner,
@@ -124,7 +124,7 @@ const useUserBranch = ({
 
           setState( { ref: userEditBranchName }) // switch current branch to user edit branch
         } else {
-          console.info(
+          console.log(
             `useUserBranch - already using user branch ${JSON.stringify({
               server,
               owner,
@@ -158,7 +158,7 @@ const useUserBranch = ({
         setState( { usingUserBranch: true, ref: branch })
         return branch
       } else {
-        console.log(`useUserBranch.startEdit - failed to create user branch`)
+        console.warn(`useUserBranch.startEdit - failed to create user branch`)
         return null
       }
     }
