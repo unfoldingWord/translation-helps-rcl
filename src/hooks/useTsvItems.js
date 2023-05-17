@@ -54,6 +54,9 @@ export default function useTsvItems({
 
       for (let index = 0; index < tsvItems.length; index++) {
         const note = tsvItems[index]
+        if (!note?.Reference) {
+          continue
+        }
         const referenceChunks = note?.Reference?.split(':')
         const Chapter = referenceChunks ? referenceChunks[0] : null
         const Verse = referenceChunks ? referenceChunks[1] : null
