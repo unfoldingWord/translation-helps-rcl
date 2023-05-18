@@ -46,7 +46,7 @@ export default function useMasterMergeProps({
   }
 
   return {
-    isLoading: isLoading | loadingMerge,
+    isLoading: isLoading || loadingMerge,
     callMergeUserBranch,
   }
 }
