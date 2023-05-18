@@ -4,8 +4,6 @@ export default function useMasterMergeProps({
   isLoading: _isLoading = false,
   isSaving = false,
   useBranchMerger,
-  // bibleRef = {},
-  reloadContent = null,
 } = {}) {
   const [isLoading, setIsLoading] = useState(_isLoading)
 
@@ -35,7 +33,6 @@ export default function useMasterMergeProps({
     setIsLoading(true)
     mergeMasterBranch(description).then(response => {
       if (response.success && response.message === '') {
-        reloadContent?.()
         checkUpdateStatus()
         return true
       } else {
