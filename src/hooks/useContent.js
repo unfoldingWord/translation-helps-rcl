@@ -31,6 +31,7 @@ import useExtraContent from './useExtraContent'
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  * @param {string} viewMode - list or markdown view
  * @param {function} useUserLocalStorage
+ * @param {boolean} readyToFetch - if true then ready to fetch
  */
 const useContent = ({
   listRef = 'master',
@@ -48,6 +49,7 @@ const useContent = ({
   httpConfig = {},
   viewMode = 'markdown',
   useUserLocalStorage,
+  readyToFetch = false,
 }) => {
   const [initialized, setInitialized] = useState(false)
 
@@ -58,7 +60,7 @@ const useContent = ({
     projectId,
     ref: listRef,
   }
-  const resourceLink = `${owner}/${languageId}/${resourceId}/${listRef}`
+  const resourceLink = readyToFetch ? `${owner}/${languageId}/${resourceId}/${listRef}` : null
   const config = {
     server,
     ...httpConfig,
