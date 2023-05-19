@@ -39,7 +39,27 @@ export default function useTsvMerger({
         delete tsvItems[0].markdown
       }
 
-      const tsvFile = parser.TSV.stringify(tsvItems)
+      const _tsvItems = []
+      const usedRefRanges = {}
+      for (const tsvItem of tsvItems) {
+        let saveItem = true
+
+        // if this is a reference range, remove any duplicates
+        let tag = tsvItem?.rerenceRange;
+        if (tag) {
+          if (!usedRefRanges[tag]) { // reference range not yet used
+            usedRefRanges[tag] = true
+          } else { // this reference range was already saved, so skip
+            saveItem = false
+          }
+        }
+
+        if (saveItem) {
+          _tsvItems.push(tsvItem)
+        }
+      }
+
+      const tsvFile = parser.TSV.stringify(_tsvItems)
       setContent(tsvFile)
     }
   }
