@@ -54,18 +54,22 @@ export default function useTsvItems({
 
       for (let index = 0; index < tsvItems.length; index++) {
         const note = tsvItems[index]
-        if (!note?.Reference) {
-          continue
+        let referenceList = null
+        let _reference = note?.Reference
+        if (!_reference) { // if in old TSV format, then add as a single ref to refs
+          referenceList = [ { chapter: note?.Chapter || '', verse: note?.Verse || '' } ]
         }
 
-        // parse the reference to see if this is a reference range
-        let referenceList = parseReferenceToList(note?.Reference)
-        const multiVerse = (referenceList?.length > 1) || referenceList?.[0]?.endVerse
-        if (multiVerse) {
-          note.rerenceRange = `${note.ID}_${note.Reference}` // save a unique tag for the reference range
+        if (_reference) { // if new TSV format, parse the reference
+          // parse the reference to find all the verses contained since this could be a reference range
+          referenceList = parseReferenceToList(_reference)
+          const multiVerse = (referenceList?.length > 1) || referenceList?.[0]?.endVerse
+          if (multiVerse) {
+            note.rerenceRange = `${note.ID}_${_reference}` // save a unique tag for the reference range
+          }
         }
 
-        // iterate through each verse covered and map to each chapter:verse in reference range
+        // map this note to each chapter:verse in reference list
         for (const refChunk of referenceList || []) {
           const refs = []
           let { chapter, verse: _verse, endVerse } = refChunk

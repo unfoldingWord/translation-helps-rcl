@@ -40,14 +40,14 @@ export default function useTsvMerger({
       }
 
       const _tsvItems = []
-      const usedRefRanges = {}
+      const usedRefRanges = {} // keeps track if we have already saved this reference range
       for (const tsvItem of tsvItems) {
         let saveItem = true
 
-        // if this is a reference range, remove any duplicates
+        // if this note is a reference range, remove any duplicates
         let tag = tsvItem?.rerenceRange;
         if (tag) {
-          if (!usedRefRanges[tag]) { // reference range not yet used
+          if (!usedRefRanges[tag]) { // reference range not yet saved
             usedRefRanges[tag] = true
           } else { // this reference range was already saved, so skip
             saveItem = false
