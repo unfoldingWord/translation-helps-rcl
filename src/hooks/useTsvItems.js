@@ -65,7 +65,7 @@ export default function useTsvItems({
           referenceList = parseReferenceToList(_reference)
           const multiVerse = (referenceList?.length > 1) || referenceList?.[0]?.endVerse
           if (multiVerse) {
-            note.rerenceRange = `${note.ID}_${_reference}` // save a unique tag for the reference range
+            note._referenceRange = `${note.ID}_${_reference}` // save a unique tag for the reference range
           }
         }
 
