@@ -28,7 +28,7 @@ export default function useTsvMerger({
       newTsvs[chapter][verse][itemIndex] = newTsvItem
 
       let refRangeTag = newTsvItem?._referenceRange;
-      if (refRangeTag) { // make sure we update every instance of a reference range
+      if (refRangeTag) { // for this check, make sure we update every instance of a reference range
         for (const chapter_ of Object.keys(newTsvs)) {
           const tsvChapter = newTsvs[chapter_]
           for (const verse_ of Object.keys(tsvChapter)) {
