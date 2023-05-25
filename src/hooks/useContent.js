@@ -31,34 +31,36 @@ import useExtraContent from './useExtraContent'
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  * @param {string} viewMode - list or markdown view
  * @param {function} useUserLocalStorage
+ * @param {boolean} readyToFetch - if true then ready to fetch
  */
 const useContent = ({
-  listRef = 'master',
-  contentRef = 'master',
-  verse = 1,
-  owner,
-  server,
   chapter = 1,
-  filePath = '',
-  projectId,
-  languageId,
-  resourceId,
+  contentRef = 'master',
   fetchMarkdown = true,
-  onResourceError,
+  filePath = '',
   httpConfig = {},
-  viewMode = 'markdown',
+  languageId,
+  listRef = 'master',
+  onResourceError,
+  owner,
+  projectId,
+  readyToFetch = false,
+  resourceId,
+  server,
   useUserLocalStorage,
+  verse = 1,
+  viewMode = 'markdown',
 }) => {
   const [initialized, setInitialized] = useState(false)
 
   const reference = {
-    verse,
     chapter,
+    verse,
     filePath,
     projectId,
     ref: listRef,
   }
-  const resourceLink = `${owner}/${languageId}/${resourceId}/${listRef}`
+  const resourceLink = readyToFetch ? `${owner}/${languageId}/${resourceId}/${listRef}` : null
   const config = {
     server,
     ...httpConfig,

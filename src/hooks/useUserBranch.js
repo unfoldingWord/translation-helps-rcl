@@ -155,7 +155,26 @@ const useUserBranch = ({
     if (!usingUserBranch) {
       const branch = await ensureUserEditBranch()
       if (branch) {
-        setState( { usingUserBranch: true, ref: branch })
+        let newListRef = listRef, newContentRef = contentRef
+        switch (cardResourceId) {
+          case 'tw':
+            newContentRef = branch
+            break
+
+          case 'twl':
+            newListRef = branch
+            break
+
+          default:
+            newListRef = newContentRef = branch
+        }
+
+        setState( {
+          contentRef: newContentRef,
+          listRef: newListRef,
+          ref: branch,
+          usingUserBranch: true,
+        })
         return branch
       } else {
         console.warn(`useUserBranch.startEdit - failed to create user branch`)
@@ -211,12 +230,12 @@ const useUserBranch = ({
           console.log(`updateStatus() - changing ref`, { cardResourceId, ref, currentResourceRef })
         }
         setState( {
+          branchDetermined: true,
+          contentRef: newContentRef,
+          fetchingBranch: false,
+          listRef: newListRef,
           ref: currentResourceRef,
           usingUserBranch: currentResourceRef === userEditBranchName,
-          listRef: newListRef,
-          contentRef: newContentRef,
-          branchDetermined: true,
-          fetchingBranch: false,
         })
         console.log(`updateStatus() - branch determined`, { cardResourceId, ref, currentResourceRef })
       } else {
