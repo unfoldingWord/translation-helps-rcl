@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 
 export default function useMasterMergeProps({
   isLoading: _isLoading = false,
-  isSaving = false,
   useBranchMerger,
+  content = null,
+  reloadContent = null,
 } = {}) {
   const [isLoading, setIsLoading] = useState(_isLoading)
 
@@ -13,31 +14,20 @@ export default function useMasterMergeProps({
   } = useBranchMerger
 
   useEffect(() => {
-    if (isSaving & !isLoading) {
-      setIsLoading(true)
-    }
-    if (!isSaving & isLoading) {
-      // There is a race condition with server returning
-      // a conflict while processing the last commit
-      // the setTimeout tries to make sure we don't get a false conflict
-      setTimeout(() => {
-        checkMergeStatus().then(status => {
-          if (status.conflict) checkMergeStatus()
-        })
-        setIsLoading(false)
-      }, 1000)
-    }
-  }, [isSaving, isLoading, checkMergeStatus])
+    setIsLoading(false);
+    checkMergeStatus();
+  }, [content, checkMergeStatus])
 
   const callMergeUserBranch = async description => {
     setIsLoading(true)
     mergeMasterBranch(description).then(response => {
       if (response.success && response.message === '') {
+        reloadContent?.()
         checkUpdateStatus()
-        return true
+        return response
       } else {
         setIsLoading(false)
-        return false
+        return response
       }
     })
   }

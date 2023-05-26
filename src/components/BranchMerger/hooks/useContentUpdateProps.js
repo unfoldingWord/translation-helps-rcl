@@ -75,7 +75,7 @@ export default function useContentUpdateProps({
     setIsLoading(true);
     const response = await updateUserBranch()
     if (response.success && response.message === "") {
-      reloadContent && reloadContent()
+      reloadContent?.()
     }
     else {
       setIsErrorDialogOpen(true);
