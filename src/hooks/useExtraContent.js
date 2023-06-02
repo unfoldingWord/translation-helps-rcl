@@ -121,19 +121,6 @@ const useExtraContent = ({
     }
   }, [{initialized, loading, error, loadingGlData, glBibles, items}])
 
-  /**
-   * persist user state only for twl list view
-   * @param {string} key
-   * @param {any} value
-   * @return {[any, function]|*} - array [currentValue, setValue]
-   */
-  function useTwlListViewUserLocalStorage(key, value) {
-    if (twlListView && useUserLocalStorage) {
-      return useUserLocalStorage('twl_list_view_' + key, value)
-    } else {
-      return useState(value)
-    }
-  }
 
   return {
     processedItems
