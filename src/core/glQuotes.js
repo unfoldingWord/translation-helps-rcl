@@ -120,52 +120,30 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
 };
 
 /**
- * load the book (in reference) for each of the bibles listed in glBibleList
- * @param {string} languageId
- * @param {object} httpConfig - http request configuration
- * @param {string} server
- * @param {string} owner
- * @param {object} reference - includes bookId or projectId
- * @param {array} glBibleList - list of bible names to load such as en_ult
- * @return {Promise<*[]>} returns array of loaded bibles
- */
-export async function getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBibleList) {
-  const glBibles_ = []
-  const config = {
-    ...httpConfig,
-    server,
-  }
-  const reference_ = { ...reference }
+ * Creates a new reference that points a whole Bible
+ * @typedef {object} Reference
+ * @param {Reference} reference 
+ * @return {Reference}
+ * @todo document an example
+ * @todo consider moving this to the scripture-resources-rcl repo
+*/
+export const toWholeBibleReference = (reference) => {
+  const reference_ = { ...reference };
   // remove chapter and verse so we get back whole book of the bible
-  delete reference_.chapter
-  delete reference_.verse
-  for (const glBible of glBibleList || []) {
-    const bible = await loadGlBible(glBible, config, 'master', reference_)
-    if (bible) {
-      glBibles_.push(bible)
-    }
-  }
-  return glBibles_
+  delete reference_.chapter;
+  delete reference_.verse;
+  return reference_;
 }
 
 /**
  * load the book (in reference) for glBible
- * @param {string} glBible
- * @param {object} config - http request configuration
- * @param {string} ref - branch or tag name
- * @param {object} reference
+ * @typedef {resourceLink, config, reference} ResourceReq
+ * @param {ResourceReq} resourceReq
  * @return {Promise<{resource: ({parseUsfm}|{manifest}|*), json: *}|null>}
  */
-export async function loadGlBible(glBible, config, ref, reference) {
-  const [langId, bible] = glBible.split('_')
-  const resourceLink = `${DOOR43_CATALOG}/${langId}/${bible}/${ref}`
+export async function loadGlBible(resourceReq) {
   try {
-    const resource = await core.resourceFromResourceLink({
-      resourceLink,
-      reference,
-      config,
-    })
-    let loaded = false
+    const resource = await core.resourceFromResourceLink(resourceReq)
     if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
       const fileResults = await resource?.project?.parseUsfm()
 
@@ -180,9 +158,9 @@ export async function loadGlBible(glBible, config, ref, reference) {
         }
       }
     }
-    console.warn(`useContent - ${glBible} is not a valid bible at ${resourceLink}`)
+    console.warn(`useContent - invalid resource link ${resourceReq.resourceLink}`)
   } catch (e) {
-    console.warn(`useContent - error loading ${resourceLink}`, e)
+    console.warn(`useContent - error loading ${resourceReq.resourceLink}`, e)
   }
   return null
 }
