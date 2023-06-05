@@ -1,35 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function useMasterMergeProps({
-  isLoading: _isLoading = false,
   useBranchMerger,
-  content = null,
-  reloadContent = null,
+  onMerge = null,
 } = {}) {
-  const [isLoading, setIsLoading] = useState(_isLoading)
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     state: { loadingMerge },
     actions: { mergeMasterBranch, checkMergeStatus, checkUpdateStatus },
   } = useBranchMerger
 
-  useEffect(() => {
-    setIsLoading(false);
-    checkMergeStatus();
-  }, [content, checkMergeStatus])
-
   const callMergeUserBranch = async description => {
     setIsLoading(true)
-    mergeMasterBranch(description).then(response => {
-      if (response.success && response.message === '') {
-        reloadContent?.()
-        checkUpdateStatus()
-        return response
-      } else {
-        setIsLoading(false)
-        return response
-      }
-    })
+    const response = await mergeMasterBranch(description)
+    if (response.success && response.message === '') {
+      onMerge?.()
+      await checkMergeStatus()
+      await checkUpdateStatus()
+      setIsLoading(false)
+      return response
+    } else {
+      setIsLoading(false)
+      return response
+    }
   }
 
   return {

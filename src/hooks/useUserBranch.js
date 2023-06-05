@@ -136,6 +136,16 @@ const useUserBranch = ({
     }
 
     /**
+     * Called to reset the ref to appRef from user branch on edit finish
+     */
+    function finishEdit() {
+      setUsingUserBranch(false)
+      setRef(appRef)
+      setListRef(appRef)
+      setContentRef(appRef)
+    }
+
+    /**
      * update ref value if different
      * @param {any} ref
      * @param {any} newRef
@@ -202,6 +212,7 @@ const useUserBranch = ({
         },
         actions: {
             startEdit,
+            finishEdit
         },
     }
 }

@@ -4,13 +4,13 @@ export default function useContentUpdateProps({
   isLoading: _isLoading = false,
   isSaving = false,
   useBranchMerger,
-  reloadContent = null
+  onUpdate = null
 } = {}) {
   const [isLoading, setIsLoading] = useState(_isLoading);
   const [isErrorDialogOpen,setIsErrorDialogOpen] = useState(false);
 
   const {
-    state: { updateStatus, loadingUpdate }, actions: { updateUserBranch, checkUpdateStatus }
+    state: { updateStatus, loadingUpdate }, actions: { updateUserBranch, checkUpdateStatus, checkMergeStatus }
   } = useBranchMerger;
 
   const loadingProps = { color: loadingUpdate ? "primary" : "secondary" };
@@ -20,18 +20,12 @@ export default function useContentUpdateProps({
       setIsLoading(true);
     }
     if (!isSaving & isLoading) {
-      // There is a race condition with server returning
-      // a conflict while processing the last commit
-      // the setTimeout tries to make sure we don't get a false conflict
-      setTimeout(() => {
-        checkUpdateStatus().then((status) => {
-          if (status.conflict)
-            checkUpdateStatus();
-        });
-        setIsLoading(false);
-      },1000)
+      checkUpdateStatus().then(() => {
+        checkMergeStatus()
+      });
+      setIsLoading(false);
     }
-  },[isSaving, isLoading, checkUpdateStatus])
+  },[isSaving, checkUpdateStatus])
 
   const { conflict, mergeNeeded, error, message, pullRequest } = updateStatus
   const pending = mergeNeeded || conflict
@@ -75,7 +69,16 @@ export default function useContentUpdateProps({
     setIsLoading(true);
     const response = await updateUserBranch()
     if (response.success && response.message === "") {
-      reloadContent?.()
+      onUpdate?.()
+      setTimeout(async () => {
+        const status = await checkUpdateStatus()
+        if (status.conflict) {
+          await checkUpdateStatus();
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
+      },1000)
     }
     else {
       setIsErrorDialogOpen(true);

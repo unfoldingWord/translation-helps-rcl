@@ -78,6 +78,7 @@ export default function useBranchMerger({ server, owner, repo, userBranch, token
    * pulls master branch from user branch
    */
   const updateUserBranch = useCallback(() => {
+    if (loadingUpdate) return
     setLoadingUpdate(true);
     const setter = setUpdateStatus;
     const handler = update;
@@ -88,6 +89,7 @@ export default function useBranchMerger({ server, owner, repo, userBranch, token
    * updates the mergeStatus state
    */
   const checkMergeStatus = useCallback(() => {
+    if (loadingMerge) return
     setLoadingMerge(true);
     const setter = setMergeStatus;
     const handler = checkMerge;

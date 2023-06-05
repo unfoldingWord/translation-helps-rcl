@@ -142,6 +142,7 @@ const useContent = ({
     fetchResponse,
     resourceStatus,
     reloadResource,
+    loadingResource,
     items: processedItems || items, // processed items take priority
     markdown: Array.isArray(content) ? null : content,
     props: {
