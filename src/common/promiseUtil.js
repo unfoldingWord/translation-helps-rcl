@@ -4,6 +4,7 @@
  * @param {Promise<any|null>[]} promises list of promises 
  * @returns {Promise<any[]>} a promise containing a list of all successful Promises that produce non-null values
  * @todo TEST!
+ * @todo investigate a more generous
  */
 export const allSettledTruthy = promises => 
   Promise

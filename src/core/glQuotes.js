@@ -1,4 +1,3 @@
-import { DOOR43_CATALOG } from "../common";
 import { core } from "scripture-resources-rcl";
 import { searchCatalogForRepos } from "./network";
 
@@ -126,6 +125,7 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
  * @return {Reference}
  * @todo document an example
  * @todo consider moving this to the scripture-resources-rcl repo
+ * @todo note why this function exists which is a hack
 */
 export const toWholeBibleReference = (reference) => {
   const reference_ = { ...reference };
@@ -137,11 +137,14 @@ export const toWholeBibleReference = (reference) => {
 
 /**
  * load the book (in reference) for glBible
- * @typedef {resourceLink, config, reference} ResourceReq
+ * 
+ * @typedef {{resourceLink : ResourceLink, config : APIConfig, reference : Reference}} ResourceReq
  * @param {ResourceReq} resourceReq
  * @return {Promise<{resource: ({parseUsfm}|{manifest}|*), json: *}|null>}
+ * @see {@link https://github.com/unfoldingWord/gitea-react-toolkit/tree/master | gitea-react-toolkit for APIConfig}
+ * 
  */
-export async function loadGlBible(resourceReq) {
+export async function loadResourceLink(resourceReq) {
   try {
     const resource = await core.resourceFromResourceLink(resourceReq)
     if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
@@ -167,30 +170,22 @@ export async function loadGlBible(resourceReq) {
 
 /**
  * load the manifest of repo to get the relation.  Then parse the relation to get resources that are GL bibles
- * @param {string} languageId
- * @param {object} httpConfig - http request configuration
- * @param {string} server
+ * @param {LangId} languageId
+ * @param {APIConfig} config - http request configuration
  * @param {string} owner
- * @return {Promise<null|*[]>}
+ * @return {Promise<null| GlBible[]>}
  */
-export async function getGlAlignmentBiblesList(languageId, httpConfig, server, owner) {
-  const params = {
-    owner: DOOR43_CATALOG,
-    lang: languageId,
-    subject: ['Aligned Bible', 'Bible']
-  }
-  const config_ = {
-    server,
-    ...httpConfig,
-  };
+export async function getGlAlignmentBiblesList(languageId, config, owner) {
+  
   let results
 
   try {
     results = await core.getResourceManifest({
       username: owner,
       languageId,
+      //TODO: is this the same as a bible name? 
       resourceId: 'tw',
-      config: config_,
+      config,
       fullResponse: true,
     })
   } catch (e) {
@@ -201,24 +196,18 @@ export async function getGlAlignmentBiblesList(languageId, httpConfig, server, o
     return null
   }
 
-  const bibleRepos = await searchCatalogForRepos(server, httpConfig, params)
-  let alignmentBibles = []
+  const bibleRepos = await searchCatalogForRepos(config, {
+    owner,
+    lang: languageId,
+    subject: ['Aligned Bible', 'Bible']
+  })
 
-  if (bibleRepos) {
-    const tsv_relations = results?.manifest?.dublin_core?.relation
-    if (tsv_relations) {
-      for (const repo of tsv_relations) {
-        const [langAndBible] = repo.split('?') 
-        const [langId, bible] = langAndBible.split('/')
-        const repoName = `${langId}_${bible}`
-        if ((langId === languageId) && (bible !== 'obs')) { // if GL bible
-          alignmentBibles.push(repoName)
-        }
-      }
-    }
-  }
-
-  return alignmentBibles
+  if (bibleRepos)
+    return results?.manifest?.dublin_core?.relation
+      .map(repo => repo.split('?')[0].split('/')[1])
+      .filter(bible && bible !== 'obs') || [];
+  else 
+    return []
 }
 
 /**

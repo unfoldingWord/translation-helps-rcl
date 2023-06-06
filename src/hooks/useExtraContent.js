@@ -6,7 +6,7 @@ import {
   addGlQuotesTo,
   getGlAlignmentBiblesList,
   glBibleToResourceLink,
-  loadGlBible,
+  loadResourceLink,
   toWholeBibleReference,
 } from "../core"
 import { resourceLink } from '../core/glBible'
@@ -35,24 +35,25 @@ import { resourceLink } from '../core/glBible'
  * @param {boolean} error - error fetching resource
  * @param {function} useUserLocalStorage
  * @param {object} reference
+ * 
+ * @todo the business logic for this function is occluded by the ReactJS
+ * scafolding (state management code, def of effects, etc.). I would recommend
+ * that we extract the business logic as a non-ReactJS function.
  */
 const useExtraContent = ({
   verse = 1,
   owner,
   server,
   chapter = 1,
-  filePath = '',
   projectId,
   languageId,
   resourceId,
   httpConfig = {},
   viewMode = 'markdown',
-  useUserLocalStorage,
   initialized,
   loading,
   items,
   error,
-  onResourceError,
   reference,
 }) => {
   const twlListView = (resourceId === 'twl') && (viewMode === 'list')
@@ -61,6 +62,9 @@ const useExtraContent = ({
   const [glBibles, setGlBibles] = useState(null)
   const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
   const [processedItems, setProcessedItems] = useState(null)
+
+  const config = { ...httpConfig, server };
+  const wholeBibleReference = toWholeBibleReference(reference);
 
   useDeepCompareEffect(() => {
     const loadGLBibles = async () => { // load GL bibles in resource manifest
@@ -71,9 +75,8 @@ const useExtraContent = ({
           let glBibles_ = glBibles
           let glBiblesList_ = glBiblesList
 
-          const config = { ...httpConfig, server };
-          const wholeBibleReference = toWholeBibleReference(reference);
 
+          //TODO: it appears this check is unnecessary given the nature of React. This function will be called whenever a parameter passed in changes.
           if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
             setGlBibles(null)
             glBibles_ = null
@@ -89,32 +92,27 @@ const useExtraContent = ({
           if (!glBiblesList_) { // see if we have alignment bibles list for current GL
             setProcessedItems(null)
             setGlBibles(null)
-            const newGlBiblesList = await getGlAlignmentBiblesList(languageId, httpConfig, server, owner);
-            glBiblesList_ = {
-              repo: currentGlRepo,
-              bibles: newGlBiblesList
-            };
-            setGlBiblesList(glBiblesList_)
-            glBibles_ = null
-          }
 
-          if (!glBibles_?.length && glBiblesList_) {
-            setProcessedItems(null)
-
-            //TODO: test
-
-            glBibles_ = await allSettledTruthy(
-              glBiblesList_.bibles.map(glBible => loadGlBible(
-                { resourceLink: glBibleToResourceLink(owner, glBible)
-                , config
-                , reference: wholeBibleReference 
-                }
-              ))
+            const glBibles_ = await allSettledTruthy(getGlAlignmentBiblesList(languageId, config, owner)
+              .then(repoNames => 
+                repoNames.map(repoName => loadResourceLink(
+                  { resourceLink: `${owner}/${languageId}/${repoName}/master`
+                  , config
+                  , reference: wholeBibleReference 
+                  }
+                ))
+              )
             )
 
+            glBiblesList_ = {
+              repo: currentGlRepo,
+            };
+
+            setGlBiblesList(glBiblesList_)
             setGlBibles(glBibles_)
             setGlLoadedProjectId(projectId)
           }
+
           setLoadingGlData(false)
         }
       }
