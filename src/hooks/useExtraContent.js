@@ -83,7 +83,7 @@ const useExtraContent = ({
             setProcessedItems(null)
           }
 
-          if (glBiblesList_ && (glBiblesList_.repo !== currentGlRepo)) { // if we have don't have alignment bibles list for current GL
+          if (glBiblesList_ && glBiblesList_!== currentGlRepo) { // if we have don't have alignment bibles list for current GL
             setGlBiblesList(null)
             glBiblesList_ = null
             setProcessedItems(null)
@@ -104,10 +104,7 @@ const useExtraContent = ({
               )
             )
 
-            glBiblesList_ = {
-              repo: currentGlRepo,
-            };
-
+            glBiblesList_ = currentGlRepo;
             setGlBiblesList(glBiblesList_)
             setGlBibles(glBibles_)
             setGlLoadedProjectId(projectId)
