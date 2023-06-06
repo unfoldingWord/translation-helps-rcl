@@ -9,7 +9,7 @@ import {
   loadGlBible,
   toWholeBibleReference,
 } from "../core"
-import { glBibleToResourceLink } from '../core/glBible'
+import { resourceLink } from '../core/glBible'
 
 /**
  * hook for loading extra content to specific translation helps resources.
@@ -71,6 +71,9 @@ const useExtraContent = ({
           let glBibles_ = glBibles
           let glBiblesList_ = glBiblesList
 
+          const config = { ...httpConfig, server };
+          const wholeBibleReference = toWholeBibleReference(reference);
+
           if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
             setGlBibles(null)
             glBibles_ = null
@@ -98,14 +101,13 @@ const useExtraContent = ({
           if (!glBibles_?.length && glBiblesList_) {
             setProcessedItems(null)
 
-            const config = { ...httpConfig, server };
-            const reference_ = toWholeBibleReference(reference);
+            //TODO: test
 
             glBibles_ = await allSettledTruthy(
               glBiblesList_.bibles.map(glBible => loadGlBible(
                 { resourceLink: glBibleToResourceLink(owner, glBible)
                 , config
-                , reference: reference_ 
+                , reference: wholeBibleReference 
                 }
               ))
             )
