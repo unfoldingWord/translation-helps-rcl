@@ -12,53 +12,55 @@ import useExtraContent from './useExtraContent'
 
 /**
  * hook for loading content of translation helps resources
- * @param {number|string} verse
- * @param {string} owner
- * @param {string} listRef - points to specific branch or tag for tsv list
- * @param {string} contentRef - points to specific branch or tag for tsv contents
- * @param {string} server
  * @param {number|string} chapter
- * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
- * @param {string} projectId
- * @param {string} languageId
- * @param {string} resourceId
+ * @param {string} contentRef - points to specific branch or tag for tsv contents
  * @param {boolean} fetchMarkdown - flag that resource being fetched is in markdown
+ * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
+ * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
+ * @param {string} languageId
+ * @param {string} listRef - points to specific branch or tag for tsv list
  * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters are:
  *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus, {Error} error)
  *      - isAccessError - is true if this was an error trying to access file
  *      - resourceStatus - is object containing details about problems fetching resource
  *      - error - Error object that has the specific error returned
- * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
- * @param {string} viewMode - list or markdown view
+ * @param {string} owner
+ * @param {string} projectId
+ * @param {boolean} readyToFetch - if true then ready to fetch
+ * @param {string} resourceId
+ * @param {string} server
  * @param {function} useUserLocalStorage
+ * @param {number|string} verse
+ * @param {string} viewMode - list or markdown view
  */
 const useContent = ({
-  listRef = 'master',
-  contentRef = 'master',
-  verse = 1,
-  owner,
-  server,
   chapter = 1,
-  filePath = '',
-  projectId,
-  languageId,
-  resourceId,
+  contentRef = 'master',
   fetchMarkdown = true,
-  onResourceError,
+  filePath = '',
   httpConfig = {},
-  viewMode = 'markdown',
+  languageId,
+  listRef = 'master',
+  onResourceError,
+  owner,
+  projectId,
+  readyToFetch = false,
+  resourceId,
+  server,
   useUserLocalStorage,
+  verse = 1,
+  viewMode = 'markdown',
 }) => {
   const [initialized, setInitialized] = useState(false)
 
   const reference = {
-    verse,
     chapter,
+    verse,
     filePath,
     projectId,
     ref: listRef,
   }
-  const resourceLink = `${owner}/${languageId}/${resourceId}/${listRef}`
+  const resourceLink = readyToFetch ? `${owner}/${languageId}/${resourceId}/${listRef}` : null
   const config = {
     server,
     ...httpConfig,

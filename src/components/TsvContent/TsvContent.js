@@ -66,6 +66,7 @@ export default function TsvContent({
   }
 
   filters = filters
+    .filter( label => label !== "_referenceRange")
     .sort((a, b) => {
       if (ordering[a] < ordering[b]) {
         return -1

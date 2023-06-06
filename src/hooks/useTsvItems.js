@@ -5,7 +5,7 @@ import {
   processUnknownError,
 } from '../core/network'
 import { get } from 'gitea-react-toolkit'
-import { doesReferenceContain } from 'bible-reference-range'
+import { parseReferenceToList } from 'bible-reference-range'
 
 /**
  * hook for loading translation helps resources listed in content
@@ -54,29 +54,54 @@ export default function useTsvItems({
 
       for (let index = 0; index < tsvItems.length; index++) {
         const note = tsvItems[index]
-        const referenceChunks = note?.Reference?.split(':')
-        const Chapter = referenceChunks ? referenceChunks[0] : null
-        const Verse = referenceChunks ? referenceChunks[1] : null
+        let referenceList = null
+        let _reference = note?.Reference
+        if (!_reference) { // if in old TSV format, then add as a single ref to refs
+          referenceList = [ { chapter: note?.Chapter || '', verse: note?.Verse || '' } ]
+        }
 
+        if (_reference) { // if new TSV format, parse the reference
+          // parse the reference to find all the verses contained since this could be a reference range
+          referenceList = parseReferenceToList(_reference)
+          const multiVerse = (referenceList?.length > 1) || referenceList?.[0]?.endVerse
+          if (multiVerse) {
+            note._referenceRange = `${note.ID}_${_reference}` // save a unique tag for the reference range
+          }
+        }
 
-        let _doesReferenceContain = doesReferenceContain(note?.Reference, `${chapter}:${verse}`)
+        // map this note to each chapter:verse in reference list
+        for (const refChunk of referenceList || []) {
+          const refs = []
+          let { chapter, verse: _verse, endVerse } = refChunk
+          endVerse = endVerse || _verse
 
-        if (_doesReferenceContain) {
-          if (
-            tn[book] &&
-            tn[book][chapter] &&
-            tn[book][chapter][verse]
-          ) {
-            tn[book][chapter][verse].push(note)
-          } else if (tn[book] && tn[book][chapter]) {
-            tn[book][chapter][verse] = [note]
-          } else if (tn[book]) {
-            tn[book][chapter] = {}
-            tn[book][chapter][verse] = [note]
+          if (chapter > 0 && _verse > 0) {
+            for (let verse = _verse; verse <= endVerse; verse++) {
+              refs.push({chapter, verse})
+            }
           } else {
-            tn[book] = {}
-            tn[book][chapter] = {}
-            tn[book][chapter][verse] = [note]
+            refs.push({chapter, verse: _verse})
+          }
+
+          for (const ref of refs) {
+            const { chapter, verse } = ref
+
+            if (
+              tn[book] &&
+              tn[book][chapter] &&
+              tn[book][chapter][verse]
+            ) {
+              tn[book][chapter][verse].push(note)
+            } else if (tn[book] && tn[book][chapter]) {
+              tn[book][chapter][verse] = [note]
+            } else if (tn[book]) {
+              tn[book][chapter] = {}
+              tn[book][chapter][verse] = [note]
+            } else {
+              tn[book] = {}
+              tn[book][chapter] = {}
+              tn[book][chapter][verse] = [note]
+            }
           }
         }
       }
