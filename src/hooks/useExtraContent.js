@@ -74,7 +74,6 @@ const useExtraContent = ({
           let glBiblesList_ = glBiblesList
 
 
-          //TODO: it appears this check is unnecessary given the nature of React. This function will be called whenever a parameter passed in changes.
           if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
             setGlBibles(null)
             glBibles_ = null
