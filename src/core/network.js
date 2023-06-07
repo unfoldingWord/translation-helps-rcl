@@ -89,15 +89,19 @@ function cleanUpParams(params) {
 
 /**
  * searches catalog for repos that match params (low level function)
- * @param {APIConfig} config - http request configuration
+ * @param {string} server such as https://git.door43.org
+ * @param {object} config - http request configuration
  * @param {object} params - optional search parameters
  * @return {Promise<object>} http response
  */
-async function searchCatalog(config, params) {
+async function searchCatalog(server, config, params) {
   const params_ = cleanUpParams(params);
   const response = await get({
-    url: `${config.server}/api/v1/repos/search`,
-    config,
+    url: `${server}/api/v1/repos/search`,
+    config: {
+      ...config,
+      server,
+    },
     params: params_,
     fullResponse: config.fullResponse,
   });
@@ -112,14 +116,13 @@ async function searchCatalog(config, params) {
  * @param {object} params - optional search parameters
  * @return {Promise<object>} object containing repos by name
  */
-export async function searchCatalogForRepos(config, params) {
+export async function searchCatalogForRepos(server, config, params) {
   const config_ = {
     ...config,
     fullResponse: true,
     skipNetworkCheck: true,
   };
-
-  const results = await searchCatalog(config_, params)
+  const results = await searchCatalog(server, config_, params)
 
   let repos = null
   if (results?.status === 200) {
