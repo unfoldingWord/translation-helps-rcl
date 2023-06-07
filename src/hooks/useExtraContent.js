@@ -5,7 +5,6 @@ import { allSettledTruthy } from '../common/promiseUtil'
 import {
   addGlQuotesTo,
   getGlAlignmentBiblesList,
-  glBibleToResourceLink,
   loadResourceLink,
 } from "../core"
 import { resourceLink } from '../core/glBible'
