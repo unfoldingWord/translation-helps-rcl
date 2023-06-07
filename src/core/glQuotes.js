@@ -183,7 +183,6 @@ export async function getGlAlignmentBiblesList(languageId, config, owner) {
     results = await core.getResourceManifest({
       username: owner,
       languageId,
-      //TODO: is this the same as a bible name? 
       resourceId: 'tw',
       config,
       fullResponse: true,
@@ -196,7 +195,7 @@ export async function getGlAlignmentBiblesList(languageId, config, owner) {
     return null
   }
 
-  const bibleRepos = await searchCatalogForRepos(config, {
+  const bibleRepos = await searchCatalogForRepos(config.server, config, {
     owner,
     lang: languageId,
     subject: ['Aligned Bible', 'Bible']
