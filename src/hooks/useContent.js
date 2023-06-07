@@ -119,9 +119,6 @@ const useContent = ({
     }
   }, [loading])
 
-  //NOTE: A quick search on github shows that this is the only callsite for useExtraContent. 
-  //??? Why does useExtraContent exist?
-  //??? since it's an internal library can we modify the module path to better indicate this fact?
   const { processedItems } = useExtraContent({
     verse,
     owner,
