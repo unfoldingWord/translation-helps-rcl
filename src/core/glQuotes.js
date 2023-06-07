@@ -119,23 +119,6 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
 };
 
 /**
- * Creates a new reference that points a whole Bible
- * @typedef {object} Reference
- * @param {Reference} reference 
- * @return {Reference}
- * @todo document an example
- * @todo consider moving this to the scripture-resources-rcl repo
- * @todo note why this function exists which is a hack
-*/
-export const toWholeBibleReference = (reference) => {
-  const reference_ = { ...reference };
-  // remove chapter and verse so we get back whole book of the bible
-  delete reference_.chapter;
-  delete reference_.verse;
-  return reference_;
-}
-
-/**
  * load the book (in reference) for glBible
  * 
  * @typedef {{resourceLink : ResourceLink, config : APIConfig, reference : Reference}} ResourceReq

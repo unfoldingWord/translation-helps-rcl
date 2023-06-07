@@ -7,7 +7,6 @@ import {
   getGlAlignmentBiblesList,
   glBibleToResourceLink,
   loadResourceLink,
-  toWholeBibleReference,
 } from "../core"
 import { resourceLink } from '../core/glBible'
 
@@ -138,6 +137,24 @@ const useExtraContent = ({
   return {
     processedItems
   }
+}
+
+/**
+ * WARNING: This is a hack! 
+ * Creates a new reference that points a whole Bible
+ *
+ * @typedef {object} Reference
+ * @param {Reference} reference 
+ * @return {Reference}
+ * @todo document an example
+ * @todo consider moving this to the scripture-resources-rcl repo
+*/
+export const toWholeBibleReference = (reference) => {
+  const reference_ = { ...reference };
+  // remove chapter and verse so we get back whole book of the bible
+  delete reference_.chapter;
+  delete reference_.verse;
+  return reference_;
 }
 
 export default useExtraContent
