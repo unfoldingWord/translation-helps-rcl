@@ -172,7 +172,7 @@ export async function getGlAlignmentBiblesList(languageId, config, owner) {
     owner,
     lang: languageId,
     subject: ['Aligned Bible', 'Bible']
-  }).catch(e => throw new Error({msg: "Loading catalog failed", value {exception: e, owner, languageId}}))
+  }).catch(e => throw new Error({msg: "Loading catalog failed", value: {exception: e, owner, languageId}}))
 
   return results?.manifest?.dublin_core?.relation
     .map(repo => repo.split('?')[0].split('/')[1])

@@ -7,7 +7,6 @@ import {
   getGlAlignmentBiblesList,
   loadResourceLink,
 } from "../core"
-import { resourceLink } from '../core/glBible'
 
 /**
  * hook for loading extra content to specific translation helps resources.
