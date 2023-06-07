@@ -160,36 +160,23 @@ export async function loadResourceLink(resourceReq) {
  */
 export async function getGlAlignmentBiblesList(languageId, config, owner) {
   
-  let results
-
-  try {
-    results = await core.getResourceManifest({
-      username: owner,
-      languageId,
-      resourceId: 'tw',
-      config,
-      fullResponse: true,
-    })
-  } catch (e) {
-    console.warn('tw manifest', e)
-  }
-
-  if (!results?.manifest) {
-    return null
-  }
+  const results = await core.getResourceManifest({
+    username: owner,
+    languageId,
+    resourceId: 'tw',
+    config,
+    fullResponse: true,
+  }).catch(e => throw new Error({msg: "Loading manifest failed", value: {exception: e, owner,languageId}}))
 
   const bibleRepos = await searchCatalogForRepos(config.server, config, {
     owner,
     lang: languageId,
     subject: ['Aligned Bible', 'Bible']
-  })
+  }).catch(e => throw new Error({msg: "Loading catalog failed", value {exception: e, owner, languageId}}))
 
-  if (bibleRepos)
-    return results?.manifest?.dublin_core?.relation
-      .map(repo => repo.split('?')[0].split('/')[1])
-      .filter(bible && bible !== 'obs') || [];
-  else 
-    return []
+  return results?.manifest?.dublin_core?.relation
+    .map(repo => repo.split('?')[0].split('/')[1])
+    .filter(bible && bible !== 'obs') || [];
 }
 
 /**
