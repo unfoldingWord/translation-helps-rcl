@@ -128,21 +128,27 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
  * 
  */
 export async function loadResourceLink(resourceReq) {
-  const resourceLoadFailed = () => new Error ({msg: "failed to load resource link", value: {resourceReq}});
+  try {
+    const resource = await core.resourceFromResourceLink(resourceReq)
+    if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
+      const fileResults = await resource?.project?.parseUsfm()
 
-  const resource = await core.resourceFromResourceLink(resourceReq)
-    .then(x => { console.log('resource result', x); return x; })
-    .catch(_ => throw resourceLoadFailed())
+      if (fileResults?.response?.status === 200) {
+        const json = fileResults?.json;
 
-  if (!resource?.manifestHttpResponse || !resource?.manifest || !resource?.project?.parseUsfm) 
-    resourceLoadFailed();
-
-  const fileResults = await resource?.project?.parseUsfm()
-
-  if (fileResults?.response?.status !== 200 && fileResults?.json)
-    throw new Error({msg: "failed to parse project USFM data"})
-
-  return {resource, json: fileResults?.json}
+        if (json) {
+          return {
+            resource,
+            json,
+          }
+        }
+      }
+    }
+    console.warn(`useContent - invalid resource link ${resourceReq.resourceLink}`)
+  } catch (e) {
+    console.warn(`useContent - error loading ${resourceReq.resourceLink}`, e)
+  }
+  return null
 }
 
 /**
@@ -170,7 +176,7 @@ export async function getGlAlignmentBiblesList(languageId, config, owner) {
 
   return results?.manifest?.dublin_core?.relation
     .map(repo => repo.split('?')[0].split('/')[1])
-    .filter(bible => bible && bible !== 'obs') || [];
+    .filter(bible && bible !== 'obs') || [];
 }
 
 /**

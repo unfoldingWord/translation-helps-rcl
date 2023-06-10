@@ -89,15 +89,16 @@ const useExtraContent = ({
             setProcessedItems(null)
             setGlBibles(null)
 
-            const glBibles_ = getGlAlignmentBiblesList(languageId, config, owner)
+            const glBibles_ = await allSettledTruthy(getGlAlignmentBiblesList(languageId, config, owner)
               .then(repoNames => 
-                Promise.all(repoNames.map(repoName => loadResourceLink(
+                repoNames.map(repoName => loadResourceLink(
                   { resourceLink: `${owner}/${languageId}/${repoName}/master`
                   , config
                   , reference: wholeBibleReference 
                   }
-                )))
+                ))
               )
+            )
 
             glBiblesList_ = currentGlRepo;
             setGlBiblesList(glBiblesList_)
