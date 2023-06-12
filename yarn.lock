@@ -8788,6 +8788,22 @@ react-docgen@^5.0.0:
     node-dir "^0.1.10"
     strip-indent "^3.0.0"
 
+react-docgen@^5.4.3:
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/react-docgen/-/react-docgen-5.4.3.tgz#7d297f73b977d0c7611402e5fc2a168acf332b26"
+  integrity sha512-xlLJyOlnfr8lLEEeaDZ+X2J/KJoe6Nr9AzxnkdQWush5hz2ZSu66w6iLMOScMmxoSHWpWMn+k3v5ZiyCfcWsOA==
+  dependencies:
+    "@babel/core" "^7.7.5"
+    "@babel/generator" "^7.12.11"
+    "@babel/runtime" "^7.7.6"
+    ast-types "^0.14.2"
+    commander "^2.19.0"
+    doctrine "^3.0.0"
+    estree-to-babel "^3.1.0"
+    neo-async "^2.6.1"
+    node-dir "^0.1.10"
+    strip-indent "^3.0.0"
+
 react-dom@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
