@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {
   createUserBranch,
   getUserEditBranch,
@@ -14,7 +14,6 @@ import useDeepCompareEffect from 'use-deep-compare-effect'
  * @param {object} authentication
  * @param {string} bookId - optional for book branch (such as `php`), otherwise we just use a user edit branch
  * @param {string} cardResourceId - resource id for this card such as `ult`
- * @param {string} cardId - id for the card such as `scripture_card_Literal_Translation`
  * @param {number} checkForEditBranch for every change of value, re-check for edit branch
  * @param {string} languageId
  * @param {string} loggedInUser
@@ -28,7 +27,6 @@ const useUserBranch = ({
     appRef,
     authentication,
     bookId,
-    cardId,
     cardResourceId,
     checkForEditBranch,
     languageId,
@@ -181,8 +179,15 @@ const useUserBranch = ({
         return null
       }
     }
+  }
 
-    return userEditBranchName
+  function finishEdit() {
+    setState({
+      usingUserBranch: false,
+      ref: appRef,
+      listRef: appRef,
+      contentRef: appRef
+    })
   }
 
   useDeepCompareEffect(() => {
@@ -261,17 +266,20 @@ const useUserBranch = ({
     }
   ])
 
-  return {
-    state: {
-      contentRef,
-      branchDetermined,
-      listRef,
-      userEditBranchName,
-      usingUserBranch,
-      workingResourceBranch: ref,
-    },
-    actions: { startEdit },
-  }
+    return {
+        state: {
+            branchDetermined,
+            contentRef,
+            listRef,
+            usingUserBranch,
+            userEditBranchName,
+            workingResourceBranch: ref,
+        },
+        actions: {
+          finishEdit,
+          startEdit,
+        },
+    }
 }
 
 export default useUserBranch
