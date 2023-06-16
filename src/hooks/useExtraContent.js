@@ -32,10 +32,6 @@ import {
  * @param {boolean} error - error fetching resource
  * @param {function} useUserLocalStorage
  * @param {object} reference
- * 
- * @todo the business logic for this function is occluded by the ReactJS
- * scafolding (state management code, def of effects, etc.). I would recommend
- * that we extract the business logic as a non-ReactJS function.
  */
 const useExtraContent = ({
   verse = 1,
