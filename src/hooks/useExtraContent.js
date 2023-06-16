@@ -79,7 +79,7 @@ const useExtraContent = ({
             setProcessedItems(null)
           }
 
-          if (glBiblesList_ && glBiblesList_!== currentGlRepo) { // if we have don't have alignment bibles list for current GL
+          if (glBiblesList_ && (glBiblesList_.repo !== currentGlRepo)) { // if we have don't have alignment bibles list for current GL
             setGlBiblesList(null)
             glBiblesList_ = null
             setProcessedItems(null)
@@ -88,8 +88,7 @@ const useExtraContent = ({
           if (!glBiblesList_) { // see if we have alignment bibles list for current GL
             setProcessedItems(null)
             setGlBibles(null)
-
-            const glBibles_ = await allSettledTruthy(getGlAlignmentBiblesList(languageId, config, owner)
+            const newGlBiblesList = await allSettledTruthy(getGlAlignmentBiblesList(languageId, config, owner)
               .then(repoNames => 
                 repoNames.map(repoName => loadResourceLink(
                   { resourceLink: `${owner}/${languageId}/${repoName}/master`
@@ -99,13 +98,20 @@ const useExtraContent = ({
                 ))
               )
             )
-
-            glBiblesList_ = currentGlRepo;
+            glBiblesList_ = {
+              repo: currentGlRepo,
+              bibles: newGlBiblesList
+            };
             setGlBiblesList(glBiblesList_)
+            glBibles_ = null
+          }
+
+          if (!glBibles_?.length && glBiblesList_) {
+            setProcessedItems(null)
+            glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_.bibles)
             setGlBibles(glBibles_)
             setGlLoadedProjectId(projectId)
           }
-
           setLoadingGlData(false)
         }
       }
