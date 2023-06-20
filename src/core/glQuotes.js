@@ -130,6 +130,7 @@ export const loadResourceLink = (resourceReq) =>
  * @return {Promise<{resource: ({parseUsfm}|{manifest}|*), json: *}|null>}
  * @see {@link https://github.com/unfoldingWord/gitea-react-toolkit/tree/master | gitea-react-toolkit for APIConfig}
  * 
+ * @todo remove try catch and handle errors correctly
  */
 async function loadResourceLink_(resourceReq) {
   try {
@@ -137,6 +138,7 @@ async function loadResourceLink_(resourceReq) {
     if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
       const fileResults = await resource?.project?.parseUsfm()
 
+      //TODO: the failure path here is not handled
       if (fileResults?.response?.status === 200) {
         const json = fileResults?.json;
 
