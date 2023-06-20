@@ -1,16 +1,73 @@
 /**
- * Runs a list of promises in parallel and returns a list of the ones that succeeded 
- * 
- * @param {Promise<any|null>[]} promises list of promises 
- * @returns {Promise<any[]>} a promise containing a list of all successful Promises that produce non-null values
- * @todo TEST!
- * @todo investigate a more generous
+ * Promise utilities
+ *
  */
-export const allSettledTruthy = promises => 
-  Promise
-  .allSettled(promises)
-  .then(values => 
-    values
-    .filter(({status, value}) => status === 'fulfilled' && value != null)
-    .map(({value}) => value)
-  )
+
+
+/**
+ *
+ * Execute all given promises asynchronously and collect all failures and
+ * successes independently.
+ *
+ */
+export const collectPromises = (...args) => foldMap(CollectPromise, ...args)
+
+/**
+ * Javascript doesn't provide a nice `reduceMap` function.
+ *
+ */
+export const foldMap = (monoid, f, array) => 
+  array.reduce
+    ((m, a) => monoid.concat(m, f(a))
+    , monoid.empty()
+    )
+
+/**
+ * `Promise (Collect e a)` form a monoid
+ */
+export const CollectPromise =
+  { empty: () => Promise.resolve(Collect.empty())
+  , concat: (a,b) =>
+      Promise
+        .all([a,b])
+        .then(v => Collect.concat(...v))
+    // lift a `Promise a` to a `Promise (Collect e a)` where `e` is the type of
+    // error the promise rejects with.
+    // NOTE: the makes the input Promise __ALWAYS__ resolve
+  , lift: promise =>
+      promise
+        .then(a => Collect.value(a))
+        .catch(e => Collect.error(e))
+
+    // promises are equivalent if they both resolve and have the same value
+    // NOTE: technically this violates the Setoid type constraint as this 
+    // return a `Promise Bool` not a `Bool`
+  , equals: (a,b) => Promise.all([a,b]).then(v => Collect.equals(...v))
+  }
+
+/**
+ * `Collect e a` represents a collection of errors and values.
+ *
+ * It supports the following properties:
+ *
+ * - Setoid: (supports equality)
+ * - Semigroup: (supports concat)
+ * - Monoid: (a Semigroup that supports an empty value)
+ *
+ */
+export const Collect =
+  { empty: () => ({errors: [], values: []})
+  , concat: (a,b) => 
+      ({ errors: a.errors.concat(b.errors)
+      , values: a.values.concat(b.values)
+      })
+  , equals: (a,b) => arrayEquals(a.errors, b.errors) && arrayEquals(a.values, b.values)
+  , error: e => ({errors: [e], values: []})
+  , value: v => ({errors: [], values: [v]})
+  }
+
+/**
+ * helper function for testing for array equality
+ *
+ */
+const arrayEquals = (a,b) => a.length === b.length && a.every((e, i) => e === b[i])
