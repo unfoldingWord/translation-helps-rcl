@@ -6,17 +6,19 @@
 
 /**
  *
- * Execute all given promises asynchronously and collect all failures and
- * successes independently.
+ * Map over an array and apply the given function (which returns a promise) and collect all resolves/rejets.
+ *
+ * @param {(f) : a -> Promise<b>}
+ * @return {Promise<Collect e a>}
  *
  */
-export const collectPromises = (...args) => foldMap(CollectPromise, ...args)
+export const collectPromises = (array, f) => foldMap(CollectPromise, array, a => CollectPromise.lift(f(a)))
 
 /**
  * Javascript doesn't provide a nice `reduceMap` function.
  *
  */
-export const foldMap = (monoid, f, array) => 
+export const foldMap = (monoid, array, f) => 
   array.reduce
     ((m, a) => monoid.concat(m, f(a))
     , monoid.empty()

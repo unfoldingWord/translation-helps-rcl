@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import isEqual from 'deep-equal'
 import useDeepCompareEffect from "use-deep-compare-effect"
-import { allSettledTruthy } from '../common/promiseUtil'
+import { collectPromises } from '../common/promiseUtil'
 import {
   addGlQuotesTo,
   getGlAlignmentBiblesList,
@@ -84,16 +84,23 @@ const useExtraContent = ({
           if (!glBiblesList_) { // see if we have alignment bibles list for current GL
             setProcessedItems(null)
             setGlBibles(null)
-            const newGlBiblesList = await allSettledTruthy(getGlAlignmentBiblesList(languageId, config, owner)
-              .then(repoNames => 
-                repoNames.map(repoName => loadResourceLink(
+
+            const newGlBiblesList = await 
+              getGlAlignmentBiblesList(languageId, config, owner)
+              .then(repoNames => collectPromises(repoNames, repoName => 
+                loadResourceLink(
                   { resourceLink: `${owner}/${languageId}/${repoName}/master`
                   , config
                   , reference: wholeBibleReference 
                   }
-                ))
-              )
-            )
+                ).catch(e => {repoName, error: e})
+              ))
+              .then({errors, values} => {
+                //TODO: make sure this is the best way to handle the errors
+                errors.forEach(console.log);
+                return values;
+              })
+
             glBiblesList_ = {
               repo: currentGlRepo,
               bibles: newGlBiblesList
