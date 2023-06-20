@@ -94,7 +94,6 @@ const useExtraContent = ({
                   , reference: wholeBibleReference 
                   }
                 )
-                .then(x => x === null 
                 .catch(e => {repoName, error: e})
               ))
               .then({errors, values} => {

@@ -1,5 +1,6 @@
 import { core } from "scripture-resources-rcl";
 import { searchCatalogForRepos } from "./network";
+import { failIfNull } from '../common/promiseUtil'
 
 const ELLIPSIS = '…';
 const DEFAULT_SEPARATOR = ' ';
@@ -118,6 +119,9 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
   return quoteArray;
 };
 
+export const loadResourceLink = (resourceReq) =>
+  failIfNull({msg: 'load resource link failed', resourceReq}, loadResourceLink_(resourceReq))
+
 /**
  * load the book (in reference) for glBible
  * 
@@ -127,7 +131,7 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
  * @see {@link https://github.com/unfoldingWord/gitea-react-toolkit/tree/master | gitea-react-toolkit for APIConfig}
  * 
  */
-export async function loadResourceLink(resourceReq) {
+async function loadResourceLink_(resourceReq) {
   try {
     const resource = await core.resourceFromResourceLink(resourceReq)
     if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
