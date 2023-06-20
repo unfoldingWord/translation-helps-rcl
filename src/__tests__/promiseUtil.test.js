@@ -56,20 +56,21 @@ describe('failIfNull', () => {
   })
 })
 
+
 describe('foldMap', () => {
-  const f = x => [x + 1]
+  const f = x => [x]
 
   it('foldMap f [] ≡ empty', () => { 
-    fc.assert(fc.property(fc.integer(), _ =>
+    expect(
       ArrayMonoid.equals
       ( foldMap(ArrayMonoid, [], _ => throw 'this should never be called')
       , ArrayMonoid.empty()
       )
-    ))
+    ).toBeTruthy()
   })
 
   it('foldMap f [a] ≡ f a', () => { 
-    fc.assert(fc.property(fc.integer(), i =>
+    fc.assert(fc.property(fc.anything(), i =>
       ArrayMonoid.equals
       ( foldMap(ArrayMonoid, [i], f)
       , f(i)
@@ -78,7 +79,7 @@ describe('foldMap', () => {
   })
 
   it('foldMap f [a,b] === f a <> f b | <> is not commutative', () => { 
-    fc.assert(fc.property(fc.tuple(fc.integer(), fc.integer()), (a) =>
+    fc.assert(fc.property(fc.tuple(fc.anything(), fc.anything()), (a) =>
       ArrayMonoid.equals
       ( foldMap(ArrayMonoid, a, f)
       , ArrayMonoid.concat(f(a[0]), f(a[1]))
