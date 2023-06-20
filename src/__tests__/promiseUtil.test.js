@@ -1,4 +1,4 @@
-import {Collect, CollectPromise}  from '../common/promiseUtil'
+import {Collect, CollectPromise, failIfNull, collectPromises}  from '../common/promiseUtil'
 import * as fc from 'fast-check'
 
 const testMonoid_ = (property, monoid, arbitrary) =>
@@ -35,6 +35,20 @@ const testMonoid_ = (property, monoid, arbitrary) =>
 
 const testMonoid = (...args) => testMonoid_(fc.property, ...args)
 const testAsyncMonoid = (...args) => testMonoid_(fc.asyncProperty, ...args)
+
+describe('failIfNull', () => {
+  it('should fail if exception in promise resolves to null', () => {
+    fc.assert(fc.asyncProperty(fc.string(), anyError => 
+      failIfNull
+      ( anyError
+      , new Promise((r, _) => { try { throw 'foo'; } catch(__) { r(null); } }) 
+      )
+      .then(_ => false)
+      .catch(v => v === anyError)
+    ))
+  })
+
+})
 
 //Collect should be have as a monoid
 describe('Collect', () => {
