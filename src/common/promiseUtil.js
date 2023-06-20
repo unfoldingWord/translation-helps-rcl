@@ -19,7 +19,8 @@
  * @todo test
  *
  */
-export const failIfNull = (anyError, promise) => promise.then(x => x === null ? Promise.reject(anyError) : Promise.resolve(x))
+export const failIfNull = (anyError, promise) => 
+  promise.then(x => x === null ? Promise.reject(anyError) : Promise.resolve(x))
 
 /**
  *
@@ -42,7 +43,16 @@ export const foldMap = (monoid, array, f) =>
     )
 
 /**
- * `Promise (Collect e a)` form a monoid
+ * `Promise (Collect e a)` represents promised values that always resolve to a
+ * collection of failures and successes.
+ *
+ * It supports the following properties:
+ *
+ * - Setoid
+ * - Semigroup
+ * - Monoid
+ *
+ * @todo move to a new module
  */
 export const CollectPromise =
   { empty: () => Promise.resolve(Collect.empty())
@@ -73,6 +83,7 @@ export const CollectPromise =
  * - Semigroup: (supports concat)
  * - Monoid: (a Semigroup that supports an empty value)
  *
+ * @todo move to a new module
  */
 export const Collect =
   { empty: () => ({errors: [], values: []})
@@ -80,13 +91,13 @@ export const Collect =
       ({ errors: a.errors.concat(b.errors)
       , values: a.values.concat(b.values)
       })
-  , equals: (a,b) => arrayEquals(a.errors, b.errors) && arrayEquals(a.values, b.values)
+  , equals: (a,b) => ArrayMonoid.equals(a.errors, b.errors) && ArrayMonoid.equals(a.values, b.values)
   , error: e => ({errors: [e], values: []})
   , value: v => ({errors: [], values: [v]})
   }
 
-/**
- * helper function for testing for array equality
- *
- */
-const arrayEquals = (a,b) => a.length === b.length && a.every((e, i) => e === b[i])
+export const ArrayMonoid =
+  { empty: () => []
+  , concat: (a,b) => a.concat(b)
+  , equals: (a,b) => a.length === b.length && a.every((e, i) => e === b[i])
+  }
