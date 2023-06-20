@@ -26,11 +26,13 @@ export const failIfNull = (anyError, promise) =>
  *
  * Map over an array and apply the given function (which returns a promise) and collect all resolves/rejets.
  *
+ * @param {Array<a>} array an array
  * @param {(f) : a -> Promise<b>}
  * @return {Promise<Collect e a>}
  *
  */
-export const collectPromises = (array, f) => foldMap(CollectPromise, array, a => CollectPromise.lift(f(a)))
+export const collectPromises = (array, f) => 
+  foldMap(CollectPromise, array, a => CollectPromise.lift(f(a)))
 
 /**
  * Javascript doesn't provide a nice `reduceMap` function.
