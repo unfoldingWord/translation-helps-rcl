@@ -3,6 +3,23 @@
  *
  */
 
+/**
+ * In this library errors thrown in promises are often caught ignored and `null` is instead returned.
+ * This makes it difficult to find the origin of an error and breaks any callsites of these promises.
+ *
+ * This utility aims to be a patch to at least reject a promise if any of these
+ * failure signalling methods are used.
+ *
+ * @warning This will reject any promise that would resolve to an intended `null` value; __USE WITH CAUTION__!
+ *
+ * @param {any} errorMsg an error to throw if a produced null is detected
+ * @param {Promise<a>} the promise to inspect
+ * @return {Promise<a>} a promise that is sure to fail if a null value is previously returned.
+ *
+ * @todo test
+ *
+ */
+export const failIfNull = (anyError, promise) => promise.then(x => x === null ? Promise.reject(anyError) : Promise.resolve(x))
 
 /**
  *

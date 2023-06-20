@@ -93,7 +93,9 @@ const useExtraContent = ({
                   , config
                   , reference: wholeBibleReference 
                   }
-                ).catch(e => {repoName, error: e})
+                )
+                .then(x => x === null 
+                .catch(e => {repoName, error: e})
               ))
               .then({errors, values} => {
                 //TODO: make sure this is the best way to handle the errors
