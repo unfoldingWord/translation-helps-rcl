@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,37 +11,66 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { FormGroup } from '@mui/material';
 
-export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards, cardMergeGroupings }) {
-    const [checked, setChecked] = React.useState([true, false]);
+export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards }) {
+    const [checked, setChecked] = useState([]);
+    const [isChecked, setIsChecked] = useState(false);
 
-    console.log('MergeDialog', cardMergeGroupings, mergeStatusForCards);
 
     const descriptionRef = useRef(null);
     const handleChange1 = (event) => {
-        setChecked([event.target.checked, event.target.checked]);
+        console.log(event.target);
+        if (event.target.checked) {
+            setChecked((checked) => [...checked, event.target.value]);
+        } else {
+            setChecked((checked) => checked.filter((item) => item !== event.target.value));
+        }
     };
 
-    const handleChange2 = (event) => {
-        setChecked([event.target.checked, checked[1]]);
+    console.log({ checked });
+
+    const getSelectedTargets = () => {
+        const description = descriptionRef.current.value;
+        const mergeableCardIds = checked
+        onSubmit({ description, mergeableCardIds })
+    }
+
+    let newMergeStatusForCards = [];
+    let cardNames = {
+        tn: 'Translation Notes',
+        ta: 'Translation Academy',
+        tq: 'Translation Questions',
+        ust: 'UnfoldingWord Simplified Text',
+        ult: 'UnfoldingWord Literal Text',
+        twa: 'Translation Words Article',
+        twl: 'Translation Words List'
     };
 
-    const handleChange3 = (event) => {
-        setChecked([checked[0], event.target.checked]);
-    };
+    for (const [key, value] of Object.entries(mergeStatusForCards)) {
+        if (value.mergeToMaster.mergeNeeded === true) {
+            newMergeStatusForCards = [...newMergeStatusForCards, `${key}`]
+        }
+        console.log({ newMergeStatusForCards });
+    }
 
-    const children = (
-        <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-            <FormControlLabel
-                label="Child 1"
-                control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-            />
-            <FormControlLabel
-                label="Child 2"
-                control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-            />
-        </Box>
-    );
+    const children = useMemo(() => (
+        <>
+            {newMergeStatusForCards.map((ele, index) => (
+                <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
+                    {console.log('index', checked.includes(ele))}
+                    <FormControlLabel
+                        label={ele}
+                        control={<Checkbox
+                            // value={ele}
+                            checked={checked.includes(ele)}
+                            onChange={handleChange1} />}
+                    />
+                </Box>
+            ))
+            }
+        </>
+    ), [checked]);
 
     return (
         <Dialog open={open} onClose={onCancel} aria-labelledby="form-dialog-title">
@@ -50,20 +79,11 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
                 <DialogContentText>
                     Clicking submit will merge your current work with your team's work. Please add a comment below about the changes that you are submitting.
                 </DialogContentText>
-                {/* <div>
-                    <FormControlLabel
-                        // label={cardMergeGroupings?.cardId}
-                        control={
-                            <Checkbox
-                                checked={checked[0] && checked[1]}
-                                indeterminate={checked[0] !== checked[1]}
-                                onChange={handleChange1}
-                            />
-                        }
-                    />
+                <div>
                     {children}
-                </div> */}
+                </div>
                 <TextField
+                    name='description'
                     inputRef={descriptionRef}
                     autoFocus
                     margin="dense"
@@ -80,9 +100,8 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
                 <Button onClick={onCancel} color="primary" disabled={isLoading}>
                     Cancel
                 </Button>
-                <Button onClick={() => {
-                    onSubmit(descriptionRef.current.value)
-                }}
+                <Button
+                    onClick={getSelectedTargets}
                     color="primary"
                     disabled={isLoading}
                 >
