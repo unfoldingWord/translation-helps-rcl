@@ -14,7 +14,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { FormGroup } from '@mui/material';
 
 export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards }) {
-    const formRef = useRef(null);
+    const [checked, setChecked] = useState([]);
+    const [isChecked, setIsChecked] = useState(false);
 
 
     // const getSelectedTargets = () => {
@@ -32,6 +33,23 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
     //     console.log(mergeableCardIds)
     //     onSubmit({ mergeableCardIds, description })
     // }
+    const descriptionRef = useRef(null);
+    const handleChange1 = (event) => {
+        console.log(event.target);
+        if (event.target.checked) {
+            setChecked((checked) => [...checked, event.target.value]);
+        } else {
+            setChecked((checked) => checked.filter((item) => item !== event.target.value));
+        }
+    };
+
+    console.log({ checked });
+
+    const getSelectedTargets = () => {
+        const description = descriptionRef.current.value;
+        const mergeableCardIds = checked
+        onSubmit({ description, mergeableCardIds })
+    }
 
     let newMergeStatusForCards = [];
     let cardNames = {
@@ -55,44 +73,43 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
         <>
             {newMergeStatusForCards.map((ele, index) => (
                 <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
+                    {console.log('index', checked.includes(ele))}
                     <FormControlLabel
                         label={ele}
                         control={<Checkbox
-                            name={ele}
-
-                            value={ele}
-                        />}
+                            // value={ele}
+                            checked={checked.includes(ele)}
+                            onChange={handleChange1} />}
                     />
                 </Box>
             ))
             }
         </>
-    ), []);
+    ), [checked]);
 
     return (
         <Dialog open={open} onClose={onCancel} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Merge</DialogTitle>
             <DialogContent>
-                <form ref={formRef}>
-                    <DialogContentText>
-                        Clicking submit will merge your current work with your team's work. Please add a comment below about the changes that you are submitting.
-                    </DialogContentText>
-                    <div>
-                        {children}
-                    </div>
-                    <TextField
-                        name='description'
-                        autoFocus
-                        margin="dense"
-                        id="merge-description"
-                        label="Description"
-                        type="text"
-                        minRows={2}
-                        fullWidth
-                        multiline
-                        disabled={isLoading}
-                    />
-                </form>
+                <DialogContentText>
+                    Clicking submit will merge your current work with your team's work. Please add a comment below about the changes that you are submitting.
+                </DialogContentText>
+                <div>
+                    {children}
+                </div>
+                <TextField
+                    name='description'
+                    inputRef={descriptionRef}
+                    autoFocus
+                    margin="dense"
+                    id="merge-description"
+                    label="Description"
+                    type="text"
+                    minRows={2}
+                    fullWidth
+                    multiline
+                    disabled={isLoading}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} color="primary" disabled={isLoading}>

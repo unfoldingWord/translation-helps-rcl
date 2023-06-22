@@ -7,13 +7,13 @@ export { default as SettingsCard } from './SettingsCard'
 export { default as TsvContent } from './TsvContent'
 export { default as DraggableCard } from './DraggableCard'
 export {
-    MergeBranchButton,
-    MergeDialog,
-    ErrorDialog,
-    UpdateBranchButton,
-    useBranchMerger,
-    useContentUpdateProps,
-    useMasterMergeProps,
-    useBranchMergerContext,
-    BranchMergerProvider,
+  MergeBranchButton,
+  MergeDialog,
+  ErrorDialog,
+  UpdateBranchButton,
+  useBranchMerger,
+  useContentUpdateProps,
+  useMasterMergeProps,
+  BranchMergerContext,
+  BranchMergerProvider,
 } from './BranchMerger'
