@@ -17,20 +17,21 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
     const formRef = useRef(null);
 
 
-    const getSelectedTargets = () => {
-        const { description, mergeableCardIds } = Array.from(formRef.current).reduce((formData, input) => {
-            if (input.type === 'checkbox' && input.checked) {
-                formData.mergeableCardIds.push(input.value);
-                return formData;
-            }
-            if (input.name === 'description') {
-                formData.description = input.value;
-                return formData;
-            }
-            return formData;
-        }, { description: '', mergeableCardIds: [] });
-        onSubmit({ description, mergeableCardIds })
-    }
+    // const getSelectedTargets = () => {
+    //     const { description, mergeableCardIds } = Array.from(formRef.current).reduce((formData, input) => {
+    //         if (input.type === 'checkbox' && input.checked) {
+    //             formData.mergeableCardIds.push(input.value);
+    //             return formData;
+    //         }
+    //         if (input.name === 'description') {
+    //             formData.description = input.value;
+    //             return formData;
+    //         }
+    //         return formData;
+    //     }, { description: '', mergeableCardIds: [] });
+    //     console.log(mergeableCardIds)
+    //     onSubmit({ mergeableCardIds, description })
+    // }
 
     let newMergeStatusForCards = [];
     let cardNames = {
@@ -98,7 +99,23 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
                     Cancel
                 </Button>
                 <Button
-                    onClick={getSelectedTargets}
+                    onClick={() => {
+                        const { description, mergeableCardIds } = Array.from(formRef.current).reduce((formData, input) => {
+                            console.log('formData.mergeableCardIds', formData.mergeableCardIds)
+                            if (input.type === 'checkbox' && input.checked) {
+                                formData.mergeableCardIds.push(input.value);
+                                return formData;
+                            }
+                            if (input.name === 'description') {
+                                formData.description = input.value;
+                                return formData;
+                            }
+                            console.log('formData', formData)
+                            return formData;
+                        }, { description: '', mergeableCardIds: [] });
+                        console.log({ mergeableCardIds })
+                        onSubmit({ mergeableCardIds, description })
+                    }}
                     color="primary"
                     disabled={isLoading}
                 >
