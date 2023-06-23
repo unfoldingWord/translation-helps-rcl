@@ -20,10 +20,15 @@ export default function useContentUpdateProps({
       setIsLoading(true);
     }
     if (!isSaving & isLoading) {
-      checkUpdateStatus().then(() => {
-        checkMergeStatus()
-      });
-      setIsLoading(false);
+      // There is a race condition with server returning
+      // a conflict while processing the last commit
+      // the setTimeout tries to make sure we don't get a false conflict
+      setTimeout(() => {
+        checkUpdateStatus().then(() => {
+          checkMergeStatus()
+        });
+        setIsLoading(false);
+      }, 3000)
     }
   },[isSaving, checkUpdateStatus])
 
