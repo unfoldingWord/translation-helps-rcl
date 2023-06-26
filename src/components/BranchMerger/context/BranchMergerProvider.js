@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 export const BranchMergerContext = createContext();
@@ -10,7 +10,13 @@ const BranchMergerProvider = ({ children }) => {
 
     const [mergeStatusForCards, setMergeStatusForCards] = useState({})
 
-    function updateMergeState(cardId, mergeFromMaster, mergeToMaster, mergeFromMasterIntoUserBranch, mergeToMasterFromUserBranch) {
+    function updateMergeState(
+        cardId,
+        mergeFromMaster,
+        mergeToMaster,
+        mergeFromMasterIntoUserBranch,
+        mergeToMasterFromUserBranch,
+    ) {
         console.log('updateMergeState', { cardId, mergeFromMaster, mergeToMaster })
         setMergeStatusForCards((oldMergeStatusForCards) => ({
             ...oldMergeStatusForCards,

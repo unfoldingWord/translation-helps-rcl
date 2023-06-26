@@ -1,5 +1,5 @@
 # Merge Dialog
-
+This is a dialog to 
 Merge Dialog.
 
 ```jsx
@@ -7,6 +7,8 @@ import React, { useState } from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 // import Card from '../Card'
+import { mergeStatusData as mergeStatusForCards } from '../../../Data/mergeStatusData';
+
 
 const Component = () => {
   const [showModal, setShowModal] = useState(false)
@@ -24,9 +26,11 @@ const Component = () => {
         Merge Dialog
       </Button>
       <MergeDialog 
+        mergeStatusForCards={mergeStatusForCards}
         onCancel={handleClickClose}
         open={showModal}
         handleClose={handleClickClose}
+        onSubmit={(args) => console.log({args})}
       />
     </div>
   )

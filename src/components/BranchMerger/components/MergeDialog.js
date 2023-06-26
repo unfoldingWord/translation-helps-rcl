@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,80 +12,82 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { FormGroup } from '@mui/material';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import PropTypes from "prop-types";
+import { mergeStatusData as mergeStatusForCards } from '../../../Data/mergeStatusData';
+
+let cardNames = {
+    tn: 'Translation Notes',
+    ta: 'Translation Academy',
+    tq: 'Translation Questions',
+    ust: 'UnfoldingWord Simplified Text',
+    ult: 'UnfoldingWord Literal Text',
+    twa: 'Translation Words Article',
+    twl: 'Translation Words List',
+    glt: 'Gateway Language Literal Text',
+    gst: 'Gateway Language Simplified Text',
+};
 
 export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards }) {
-    const [checked, setChecked] = useState([]);
-    const [isChecked, setIsChecked] = useState(false);
+    const [checkedIds, setCheckedIds] = useState([]);
 
+    console.log({ checkedIds, mergeStatusForCards });
 
-    // const getSelectedTargets = () => {
-    //     const { description, mergeableCardIds } = Array.from(formRef.current).reduce((formData, input) => {
-    //         if (input.type === 'checkbox' && input.checked) {
-    //             formData.mergeableCardIds.push(input.value);
-    //             return formData;
-    //         }
-    //         if (input.name === 'description') {
-    //             formData.description = input.value;
-    //             return formData;
-    //         }
-    //         return formData;
-    //     }, { description: '', mergeableCardIds: [] });
-    //     console.log(mergeableCardIds)
-    //     onSubmit({ mergeableCardIds, description })
-    // }
     const descriptionRef = useRef(null);
-    const handleChange1 = (event) => {
-        console.log(event.target);
-        if (event.target.checked) {
-            setChecked((checked) => [...checked, event.target.value]);
-        } else {
-            setChecked((checked) => checked.filter((item) => item !== event.target.value));
-        }
+
+    const handleChange = (event) => {
+        const clickedId = event.target.value;
+        console.log({ clickedId });
+        setCheckedIds((checkedIds) =>
+            checkedIds.includes(clickedId)
+                ? checkedIds.filter((chekedId) => chekedId !== clickedId)
+                : [...checkedIds, clickedId]
+        )
     };
 
-    console.log({ checked });
-
-    const getSelectedTargets = () => {
+    const getFormData = useCallback(() => {
         const description = descriptionRef.current.value;
-        const mergeableCardIds = checked
-        onSubmit({ description, mergeableCardIds })
-    }
+        onSubmit({ description, mergeableCardIds: checkedIds })
+    }, [checkedIds])
 
-    let newMergeStatusForCards = [];
-    let cardNames = {
-        tn: 'Translation Notes',
-        ta: 'Translation Academy',
-        tq: 'Translation Questions',
-        ust: 'UnfoldingWord Simplified Text',
-        ult: 'UnfoldingWord Literal Text',
-        twa: 'Translation Words Article',
-        twl: 'Translation Words List'
-    };
-
-    for (const [key, value] of Object.entries(mergeStatusForCards)) {
-        if (value.mergeToMaster.mergeNeeded === true) {
-            newMergeStatusForCards = [...newMergeStatusForCards, `${key}`]
+    const mergeableCardIds = useMemo(() => {
+        let mergeableCardIds = [];
+        for (const [key, value] of Object.entries(mergeStatusForCards)) {
+            if (value.mergeToMaster.mergeNeeded === true) {
+                mergeableCardIds = [...mergeableCardIds, `${key}`]
+            }
         }
-        console.log({ newMergeStatusForCards });
-    }
+        console.log({ newMergeStatusForCards: mergeableCardIds });
+        return mergeableCardIds;
+    }, [mergeStatusForCards]);
+
 
     const children = useMemo(() => (
         <>
-            {newMergeStatusForCards.map((ele, index) => (
-                <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-                    {console.log('index', checked.includes(ele))}
-                    <FormControlLabel
-                        label={ele}
-                        control={<Checkbox
-                            // value={ele}
-                            checked={checked.includes(ele)}
-                            onChange={handleChange1} />}
-                    />
-                </Box>
-            ))
-            }
+            <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+                <FormLabel component="legend">Mergeable Resources</FormLabel>
+                <FormGroup>
+                    {mergeableCardIds.map((cardId, index) => (
+
+                        <Box
+                            key={index}
+                            sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}
+                        >
+                            <FormControlLabel
+                                label={cardNames[cardId]}
+                                control={<Checkbox
+                                    value={cardId}
+                                    checked={checkedIds.includes(cardId)}
+                                    onClick={handleChange} />}
+                            />
+                        </Box>
+                    ))
+                    }
+                </FormGroup>
+            </FormControl>
         </>
-    ), [checked]);
+    ), [checkedIds, mergeableCardIds]);
 
     return (
         <Dialog open={open} onClose={onCancel} aria-labelledby="form-dialog-title">
@@ -111,28 +113,13 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
                     disabled={isLoading}
                 />
             </DialogContent>
+
             <DialogActions>
                 <Button onClick={onCancel} color="primary" disabled={isLoading}>
                     Cancel
                 </Button>
                 <Button
-                    onClick={() => {
-                        const { description, mergeableCardIds } = Array.from(formRef.current).reduce((formData, input) => {
-                            console.log('formData.mergeableCardIds', formData.mergeableCardIds)
-                            if (input.type === 'checkbox' && input.checked) {
-                                formData.mergeableCardIds.push(input.value);
-                                return formData;
-                            }
-                            if (input.name === 'description') {
-                                formData.description = input.value;
-                                return formData;
-                            }
-                            console.log('formData', formData)
-                            return formData;
-                        }, { description: '', mergeableCardIds: [] });
-                        console.log({ mergeableCardIds })
-                        onSubmit({ mergeableCardIds, description })
-                    }}
+                    onClick={getFormData}
                     color="primary"
                     disabled={isLoading}
                 >
@@ -149,3 +136,18 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
         </Dialog>
     );
 }
+
+MergeDialog.propTypes = {
+    /** Current state of preview toggle */
+    isLoading: PropTypes.bool,
+    loadingProps: PropTypes.any,
+    /** Handle click of Preview Button  */
+    onSubmit: PropTypes.func.isRequired,
+    /** Has the file changed for Save to be enabled */
+    open: PropTypes.bool,
+    /** Handle click of Save Button */
+    onCancel: PropTypes.func.isRequired,
+    mergeStatusForCards: PropTypes.object,
+};
+
+//proptypes and a file for the dummy data
