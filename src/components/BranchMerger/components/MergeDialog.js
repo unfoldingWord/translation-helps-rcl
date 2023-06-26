@@ -32,13 +32,10 @@ let cardNames = {
 export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards }) {
     const [checkedIds, setCheckedIds] = useState([]);
 
-    console.log({ checkedIds, mergeStatusForCards });
-
     const descriptionRef = useRef(null);
 
     const handleChange = (event) => {
         const clickedId = event.target.value;
-        console.log({ clickedId });
         setCheckedIds((checkedIds) =>
             checkedIds.includes(clickedId)
                 ? checkedIds.filter((chekedId) => chekedId !== clickedId)
@@ -58,7 +55,6 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
                 mergeableCardIds = [...mergeableCardIds, `${key}`]
             }
         }
-        console.log({ newMergeStatusForCards: mergeableCardIds });
         return mergeableCardIds;
     }, [mergeStatusForCards]);
 
