@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRsrc } from 'scripture-resources-rcl'
 import useTsvItems from './useTsvItems'
+import * as Items from '../core/items'
 import {
   ERROR_STATE,
   LOADING_STATE,
@@ -8,10 +9,13 @@ import {
   CONTENT_NOT_FOUND_ERROR,
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
-import useExtraContent from './useExtraContent'
+import {useExtraContent} from './useExtraContent'
+import {orBool} from '../core/util'
+
 
 /**
  * hook for loading content of translation helps resources
+ *
  * @param {number|string} verse
  * @param {string} owner
  * @param {string} listRef - points to specific branch or tag for tsv list
@@ -30,8 +34,7 @@ import useExtraContent from './useExtraContent'
  *      - error - Error object that has the specific error returned
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  * @param {string} viewMode - list or markdown view
- * @param {function} useUserLocalStorage
- * @param {boolean} readyToFetch - if true then ready to fetch
+ *
  */
 const useContent = ({
   chapter = 1,
@@ -44,14 +47,14 @@ const useContent = ({
   onResourceError,
   owner,
   projectId,
-  readyToFetch = false,
   resourceId,
   server,
-  useUserLocalStorage,
   verse = 1,
   viewMode = 'markdown',
 }) => {
   const [initialized, setInitialized] = useState(false)
+
+  console.log('initialized', initialized)
 
   const reference = {
     chapter,
@@ -60,11 +63,10 @@ const useContent = ({
     projectId,
     ref: listRef,
   }
-  const resourceLink = readyToFetch ? `${owner}/${languageId}/${resourceId}/${listRef}` : null
-  const config = {
-    server,
-    ...httpConfig,
-  }
+
+  const resourceLink = `${owner}/${languageId}/${resourceId}/${listRef}`
+
+  const config = { server, ...httpConfig, }
 
   const {
     state: {
@@ -100,8 +102,7 @@ const useContent = ({
   const contentNotFoundError = !content
   const manifestNotFoundError = !resource?.manifest
   const loading = loadingResource || loadingContent || loadingTSV
-  const error =
-    initialized && !loading && (contentNotFoundError || manifestNotFoundError)
+  const error = initialized && !loading && (contentNotFoundError || manifestNotFoundError)
   const resourceStatus = {
     [LOADING_STATE]: loading,
     [CONTENT_NOT_FOUND_ERROR]: contentNotFoundError,
@@ -110,33 +111,26 @@ const useContent = ({
     [INITIALIZED_STATE]: initialized,
   }
 
-  useEffect(() => {
-    if (!initialized) {
-      if (loading) {
-        // once first load has begun, we are initialized
-        setInitialized(true)
-      }
-    }
-  }, [loading])
+  const _initialized = orBool(initialized, loading);
 
-  const { processedItems } = useExtraContent({
-    verse,
-    owner,
-    server,
-    chapter,
-    filePath,
-    projectId,
-    languageId,
-    resourceId,
-    httpConfig,
-    viewMode,
-    useUserLocalStorage,
-    initialized,
-    loading,
-    items,
-    onResourceError,
-    reference,
-  })
+  const { processedItems } = useExtraContent(
+    { verse,
+      owner,
+      server,
+      chapter,
+      languageId,
+      resourceId,
+      httpConfig,
+      viewMode,
+      initialized: _initialized,
+      loading,
+      error,
+      reference,
+    })
+
+  //remember if we've initialized at least once.
+  if(!initialized && _initialized)
+    setInitialized(_initialized)
 
   return {
     tsvs,
@@ -144,7 +138,7 @@ const useContent = ({
     fetchResponse,
     resourceStatus,
     reloadResource,
-    items: processedItems || items, // processed items take priority
+    items: Items.or(processedItems, items), // processed items take priority
     markdown: Array.isArray(content) ? null : content,
     props: {
       verse,
@@ -158,5 +152,4 @@ const useContent = ({
     },
   }
 }
-
 export default useContent

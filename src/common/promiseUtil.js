@@ -24,7 +24,11 @@ export const failIfNull = (anyError, promise) =>
 
 /**
  *
- * Map over an array and apply the given function (which returns a promise) and collect all resolves/rejets.
+ * Map over an array and apply the given function (which returns a promise) and
+ * collect all resolves/rejets.
+ *
+ * note: this doesn't need a unit test due to foldMap, and CollectPromise being
+ * well tested.
  *
  * @param {Array<a>} array an array
  * @param {(f) : a -> Promise<b>}

@@ -1,6 +1,7 @@
 import { core } from "scripture-resources-rcl";
 import { searchCatalogForRepos } from "./network";
-import { failIfNull } from '../common/promiseUtil'
+import { last, nullMap } from './util'
+
 
 const ELLIPSIS = '…';
 const DEFAULT_SEPARATOR = ' ';
@@ -119,9 +120,6 @@ export const getQuoteAsArray = (quote, occurrenceToMatch) => {
   return quoteArray;
 };
 
-export const loadResourceLink = (resourceReq) =>
-  failIfNull({msg: 'load resource link failed', resourceReq}, loadResourceLink_(resourceReq))
-
 /**
  * load the book (in reference) for glBible
  * 
@@ -130,31 +128,24 @@ export const loadResourceLink = (resourceReq) =>
  * @return {Promise<{resource: ({parseUsfm}|{manifest}|*), json: *}|null>}
  * @see {@link https://github.com/unfoldingWord/gitea-react-toolkit/tree/master | gitea-react-toolkit for APIConfig}
  * 
- * @todo remove try catch and handle errors correctly
  */
-async function loadResourceLink_(resourceReq) {
-  try {
-    const resource = await core.resourceFromResourceLink(resourceReq)
-    if (resource?.manifest && resource?.project?.parseUsfm) { // we have manifest and parse USFM function
-      const fileResults = await resource?.project?.parseUsfm()
+export const loadResourceLink = async (resourceReq) => {
+  const resource = await core.resourceFromResourceLink(resourceReq)
 
-      //TODO: the failure path here is not handled
-      if (fileResults?.response?.status === 200) {
-        const json = fileResults?.json;
+  if (!resource?.manifest || !resource?.project?.parseUsfm) 
+    throw new Error("Invalid Resource Link")
 
-        if (json) {
-          return {
-            resource,
-            json,
-          }
-        }
-      }
-    }
-    console.warn(`useContent - invalid resource link ${resourceReq.resourceLink}`)
-  } catch (e) {
-    console.warn(`useContent - error loading ${resourceReq.resourceLink}`, e)
-  }
-  return null
+  const fileResults = await resource?.project?.parseUsfm()
+
+  if (fileResults?.response?.status !== 200) 
+    throw new Error("HTTP Response Not 200")
+
+  const json = fileResults?.json;
+
+  if (!json)
+    throw new Error("JSON Parser Error")
+
+  return { resource, json }
 }
 
 /**
@@ -172,17 +163,21 @@ export async function getGlAlignmentBiblesList(languageId, config, owner) {
     resourceId: 'tw',
     config,
     fullResponse: true,
-  }).catch(e => throw new Error({msg: "Loading manifest failed", value: {exception: e, owner,languageId}}))
+  }).catch(e => { 
+    throw new Error({msg: "Loading manifest failed", value: {exception: e, owner,languageId}})
+  })
 
-  const bibleRepos = await searchCatalogForRepos(config.server, config, {
+  await searchCatalogForRepos(config.server, config, {
     owner,
     lang: languageId,
     subject: ['Aligned Bible', 'Bible']
-  }).catch(e => throw new Error({msg: "Loading catalog failed", value: {exception: e, owner, languageId}}))
+  }).catch(e => { 
+    throw new Error({msg: "Loading catalog failed", value: {exception: e, owner, languageId}}) 
+  })
 
   return results?.manifest?.dublin_core?.relation
     .map(repo => repo.split('?')[0].split('/')[1])
-    .filter(bible && bible !== 'obs') || [];
+    .filter(bible => bible && bible !== 'obs') || [];
 }
 
 /**
@@ -194,32 +189,19 @@ export async function getGlAlignmentBiblesList(languageId, config, owner) {
  * @param {array} glBibles - list of bibles to search for GL quote
  * @return {*[]}
  */
-export function addGlQuotesTo(chapter, verse, items, glBibles) {
-  const newItems = []
-
-  const reference = {
-    chapter,
-    verse,
-  };
-
-  for (const item of items) {
-    const contextId = {
-      reference: reference,
-      quote: item?.OrigWords,
-      occurrence: item?.Occurrence,
-    }
-    const newItem = {
-      ...item,
-      glQuote: '',
-    }
-    newItems.push(newItem)
-    for (const glBible of glBibles) {
-      const glText = getAlignedTextFromBible(contextId, glBible?.json?.chapters)
-      if (glText) {
-        newItem.glQuote = glText
-        break
-      }
-    }
-  }
-  return newItems;
-}
+export const addGlQuotesTo = (chapter, verse, items, glBibles) =>
+  items.map(item => 
+      ({ ...item
+      , glQuote:
+          nullMap
+            ( last(glBibles)
+            , glBible => getAlignedTextFromBible
+                ({ reference: {chapter, verse}
+                 , quote: item?.OrigWords
+                 , occurrence: item?.Occurrence
+                 }
+                , glBible?.json?.chapters
+                )
+            ) || ''
+      })
+  )

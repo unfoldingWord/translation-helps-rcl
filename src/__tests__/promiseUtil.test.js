@@ -3,7 +3,6 @@ import
   { Collect
   , CollectPromise
   , failIfNull
-  , collectPromises
   , ArrayMonoid
   , foldMap
   } from '../common/promiseUtil'
@@ -13,6 +12,7 @@ const testMonoid_ = (property, monoid, arbitrary) =>
 
     it('unit is left identity', () => {
       fc.assert(property(arbitrary(), i => 
+        //i * ε ≡ i
         monoid.equals
         ( monoid.concat(i, monoid.empty())
         , i

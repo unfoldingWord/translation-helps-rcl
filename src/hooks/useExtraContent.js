@@ -1,12 +1,13 @@
+import useDeepCompareEffect from 'use-deep-compare-effect'
 import { useState } from 'react'
-import isEqual from 'deep-equal'
-import useDeepCompareEffect from "use-deep-compare-effect"
+import * as Items from '../core/items'
 import { collectPromises } from '../common/promiseUtil'
 import {
   addGlQuotesTo,
   getGlAlignmentBiblesList,
   loadResourceLink,
 } from "../core"
+
 
 /**
  * hook for loading extra content to specific translation helps resources.
@@ -16,7 +17,6 @@ import {
  * @param {string} server
  * @param {number|string} chapter
  * @param {string} filePath - optional file path, currently just seems to be a pass through value - not being used by useRsrc or useTsvItems
- * @param {string} projectId
  * @param {string} languageId
  * @param {string} resourceId
  * @param {function} onResourceError - optional callback if there is an error fetching resource, parameters are:
@@ -30,128 +30,69 @@ import {
  * @param {boolean} loading
  * @param {array} items - list created by useTsvItems
  * @param {boolean} error - error fetching resource
- * @param {function} useUserLocalStorage
  * @param {object} reference
+ * 
+ * @return {null | List<item>} no items (null) or a non-empty list of items
+ *
  */
-const useExtraContent = ({
+export const useExtraContent = ({
   verse = 1,
   owner,
   server,
   chapter = 1,
-  projectId,
   languageId,
   resourceId,
   httpConfig = {},
   viewMode = 'markdown',
   initialized,
   loading,
-  items,
   error,
   reference,
 }) => {
-  const twlListView = (resourceId === 'twl') && (viewMode === 'list')
-  const [loadingGlData, setLoadingGlData] = useState(false)
-  const [glBiblesList, setGlBiblesList] = useState(null)
-  const [glBibles, setGlBibles] = useState(null)
-  const [glLoadedProjectId, setGlLoadedProjectId] = useState(null)
-  const [processedItems, setProcessedItems] = useState(null)
+  const [processedItems, setProcessedItems] = useState(Items.empty());
 
   const config = { ...httpConfig, server };
-  const wholeBibleReference = toWholeBibleReference(reference);
 
-  useDeepCompareEffect(() => {
-    const loadGLBibles = async () => { // load GL bibles in resource manifest
-      if (twlListView) { // we only need to load gl quotes if we are showing list view
-        if (initialized && !loading && !error && !loadingGlData) {
-          setLoadingGlData(true)
-          const currentGlRepo = `${owner}/${languageId}`;
-          let glBibles_ = glBibles
-          let glBiblesList_ = glBiblesList
+  useDeepCompareEffect
+    (() => {
+      const shouldLoadResource = 
+        resourceId === 'twl' 
+        && viewMode === 'list' 
+        && initialized 
+        && !loading 
+        && !error 
 
-
-          if (glBibles_ && (glLoadedProjectId !== projectId)) { // if we have changed books of the bible need to load new book of the bible
-            setGlBibles(null)
-            glBibles_ = null
-            setProcessedItems(null)
-          }
-
-          if (glBiblesList_ && (glBiblesList_.repo !== currentGlRepo)) { // if we have don't have alignment bibles list for current GL
-            setGlBiblesList(null)
-            glBiblesList_ = null
-            setProcessedItems(null)
-          }
-
-          if (!glBiblesList_) { // see if we have alignment bibles list for current GL
-            setProcessedItems(null)
-            setGlBibles(null)
-
-            const newGlBiblesList = await 
-              getGlAlignmentBiblesList(languageId, config, owner)
-              .then(repoNames => collectPromises(repoNames, repoName => 
-                loadResourceLink(
-                  { resourceLink: `${owner}/${languageId}/${repoName}/master`
-                  , config
-                  , reference: wholeBibleReference 
-                  }
-                )
-                .catch(e => {repoName, error: e})
-              ))
-              .then({errors, values} => {
-                //TODO: make sure this is the best way to handle the errors
-                errors.forEach(console.log);
-                return values;
-              })
-
-            glBiblesList_ = {
-              repo: currentGlRepo,
-              bibles: newGlBiblesList
-            };
-            setGlBiblesList(glBiblesList_)
-            glBibles_ = null
-          }
-
-          if (!glBibles_?.length && glBiblesList_) {
-            setProcessedItems(null)
-            glBibles_ = await getGlAlignmentBibles(languageId, httpConfig, server, owner, reference, glBiblesList_.bibles)
-            setGlBibles(glBibles_)
-            setGlLoadedProjectId(projectId)
-          }
-          setLoadingGlData(false)
-        }
-      }
+      if(shouldLoadResource) 
+        getGlAlignmentBiblesList(languageId, config, owner)
+          .then(repoNames => collectPromises(repoNames, repoName => 
+            loadResourceLink(
+              { resourceLink: `${owner}/${languageId}/${repoName}/master`
+              , config
+              , reference: toWholeBibleReference(reference) 
+              }
+            )
+            .catch(e => { throw {repoName, error: e} })
+          ))
+          .then(({errors, values}) => {
+            console.log('useExtraContext Errors', errors)
+            return values
+          })
+          .then(items => addGlQuotesTo(chapter, verse, items))
+          .then(newItems => setProcessedItems(newItems))
+          .catch(e => { setProcessedItems(Items.empty()); throw e })
     }
-    loadGLBibles().catch(console.error)
-  }, [{initialized, loading, error, loadingGlData, projectId, glBibles, glBiblesList, reference, languageId, owner}])
+    , [resourceId, viewMode, initialized, loading, error, languageId, config, owner, reference]
+    )
 
-  useDeepCompareEffect(() => { // get gl quotes if we have aligned bibles
-    if (twlListView) { // we only need to load gl quotes if we are showing list view
-      if (initialized && !loading && !error && !loadingGlData) {
-        if (glBibles && items?.length) {
-          const newItems = addGlQuotesTo(chapter, verse, items, glBibles);
-          if (!isEqual(processedItems, newItems)) {
-            setProcessedItems(newItems)
-          }
-        } else if (processedItems) {
-          setProcessedItems(null)
-        }
-      } else if (processedItems) {
-        setProcessedItems(null)
-      }
-    }
-  }, [{initialized, loading, error, loadingGlData, glBibles, items}])
-
-
-  return {
-    processedItems
-  }
+  return { processedItems }
 }
 
 /**
- * WARNING: This is a hack! 
+ * WARNING: This is a hack!
  * Creates a new reference that points a whole Bible
  *
  * @typedef {object} Reference
- * @param {Reference} reference 
+ * @param {Reference} reference
  * @return {Reference}
  * @todo document an example
  * @todo consider moving this to the scripture-resources-rcl repo
@@ -162,6 +103,4 @@ export const toWholeBibleReference = (reference) => {
   delete reference_.chapter;
   delete reference_.verse;
   return reference_;
-}
-
-export default useExtraContent
+ }
