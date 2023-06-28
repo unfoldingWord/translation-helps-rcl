@@ -1,4 +1,6 @@
-import BranchMergerProvider, { BranchMergerContext } from './context/BranchMergerProvider'
+import BranchMergerProvider, {
+  BranchMergerContext,
+} from './context/BranchMergerProvider'
 
 export { default as MergeBranchButton } from './components/MergeBranchButton'
 export { default as MergeDialog } from './components/MergeDialog'
