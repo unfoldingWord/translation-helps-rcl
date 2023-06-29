@@ -54,8 +54,6 @@ const useContent = ({
 }) => {
   const [initialized, setInitialized] = useState(false)
 
-  console.log('initialized', initialized)
-
   const reference = {
     chapter,
     verse,
@@ -101,8 +99,8 @@ const useContent = ({
 
   const contentNotFoundError = !content
   const manifestNotFoundError = !resource?.manifest
-  const loading = loadingResource || loadingContent || loadingTSV
-  const error = initialized && !loading && (contentNotFoundError || manifestNotFoundError)
+  const loading = orBool(loadingResource, orBool(loadingContent, loadingTSV))
+  const error = initialized && !loading && orBool(contentNotFoundError, manifestNotFoundError)
   const resourceStatus = {
     [LOADING_STATE]: loading,
     [CONTENT_NOT_FOUND_ERROR]: contentNotFoundError,

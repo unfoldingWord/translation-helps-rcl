@@ -19,6 +19,6 @@
  * given (p : Predicate a) form a Monoid over (a)
  *
  */
-export const empty = () => []
+export const empty = () => null
 
 export const or = (a,b) => a?.length ? a : b

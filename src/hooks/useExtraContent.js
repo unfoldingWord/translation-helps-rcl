@@ -78,11 +78,13 @@ export const useExtraContent = ({
             return values
           })
           .then(items => addGlQuotesTo(chapter, verse, items))
-          .then(newItems => setProcessedItems(newItems))
+          .then(newItems => { console.log('setting processedItems', newItems); setProcessedItems(newItems)})
           .catch(e => { setProcessedItems(Items.empty()); throw e })
     }
     , [resourceId, viewMode, initialized, loading, error, languageId, config, owner, reference]
     )
+
+  console.log('returned processed items', processedItems)
 
   return { processedItems }
 }
