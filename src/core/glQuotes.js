@@ -1,4 +1,3 @@
-import { DOOR43_CATALOG } from "../common";
 import { core } from "scripture-resources-rcl";
 import { searchCatalogForRepos } from "./network";
 
@@ -140,7 +139,7 @@ export async function getGlAlignmentBibles(languageId, httpConfig, server, owner
   delete reference_.chapter
   delete reference_.verse
   for (const glBible of glBibleList || []) {
-    const bible = await loadGlBible(glBible, config, 'master', reference_)
+    const bible = await loadGlBible(owner, glBible, config, 'master', reference_)
     if (bible) {
       glBibles_.push(bible)
     }
@@ -150,15 +149,16 @@ export async function getGlAlignmentBibles(languageId, httpConfig, server, owner
 
 /**
  * load the book (in reference) for glBible
+ * @param {owner} owner of the resource
  * @param {string} glBible
  * @param {object} config - http request configuration
  * @param {string} ref - branch or tag name
  * @param {object} reference
  * @return {Promise<{resource: ({parseUsfm}|{manifest}|*), json: *}|null>}
  */
-export async function loadGlBible(glBible, config, ref, reference) {
+export async function loadGlBible(owner, glBible, config, ref, reference) {
   const [langId, bible] = glBible.split('_')
-  const resourceLink = `${DOOR43_CATALOG}/${langId}/${bible}/${ref}`
+  const resourceLink = `${owner}/${langId}/${bible}/${ref}`
   try {
     const resource = await core.resourceFromResourceLink({
       resourceLink,
@@ -197,7 +197,7 @@ export async function loadGlBible(glBible, config, ref, reference) {
  */
 export async function getGlAlignmentBiblesList(languageId, httpConfig, server, owner) {
   const params = {
-    owner: DOOR43_CATALOG,
+    owner
     lang: languageId,
     subject: ['Aligned Bible', 'Bible']
   }
