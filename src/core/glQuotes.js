@@ -197,7 +197,7 @@ export async function loadGlBible(owner, glBible, config, ref, reference) {
  */
 export async function getGlAlignmentBiblesList(languageId, httpConfig, server, owner) {
   const params = {
-    owner
+    owner,
     lang: languageId,
     subject: ['Aligned Bible', 'Bible']
   }
