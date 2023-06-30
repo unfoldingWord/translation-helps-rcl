@@ -35,13 +35,59 @@ following:
 6. run `yarn`
 7. start testing (typically `yarn (dev | start)`) 
 
-# Publishing
-
-Please ensure that the version in the package json is greater than the latest
-published version in npm[2].
-
 _consumer-app_: the app that consumes `translation-helps-rcl` that needs to be
 tested with updates from `translation-helps-rcl`.
+
+# Dev Process / Publishing
+
+The following is a psudo-code of our PR/QA Process
+
+```
+`let $latestPublishedVersion = <pull latest non-beta version from npm>`
+1. in library
+  `let $betaVersion = $incrementBetaVersion $latestPublishedVersion`
+  `let $newLatestVersion = $incrementVersion $latestPublishedVersion` 
+  1. publish $betaVersion to npm from local machine
+  2. update package.json to $newLatestVersion 
+  3. Create a commit and push
+  4. Create PR 
+    `let LibPrLink = PRlink`
+    `let PRLibDesc = <write pr description>`
+    1. mark PR as draft
+    2. add reviewers to PR
+    3. set PR status to in review
+    4. `let AppReviewLinks = LibPrLink`
+
+6. ∀.app ∈ consumer-apps 
+  1. update the `<lib>@$latestPublishedVersion` to `<lib>@$betaVersion` in app/package.json
+  2. create a commit and push
+  3. create a PR
+    `let PRLink`
+    `let PRdescription = <write pr description> + <write testing steps>`
+    `AppReviewLinks += PRLink`
+    1. mark PR as draft
+    3. ensure a netlify deploy preview has been created
+    2. add reviewers to PR
+    4. set PR status to in review
+    5. append `PRdescription` to `LibPRDesc`
+
+7. `∀pr ∈ lib. if reviewPass pr (merge pr) (fix pr)`
+
+8. in library
+  1. pull and checkout to `<main>` branch
+  2. publish $newLatestVersion to npm from local machine
+
+9. `∀pr ∈ consumer-apps`
+  1. `if reviewPass pr`
+    1. update `<lib>@$betaVersion` to `<lib>@$newLatestVersion` in app/package.json 
+    2. commit and push
+    2. merge pr
+    3. else `(fix pr)`
+
+10. `∀pr ∈ lib <> consumer-apps >> setAsInQAStatus pr`
+11. Send discord message to QA (DM to Elsy, Daniel) with `LibPrLink <> first AppReviewLinks`
+12. `∀pr ∈ lib <> consumer-apps. if passQa pr (celebrate) (create new issues and start dev proces over)`
+```
 
 ## Peer Dependencies
 
@@ -61,3 +107,4 @@ A few components use the Lab components such as the Skeleton for the infinite sc
 [2]: this might could be removed since the management of package versions could
 be automated away. None-the-less when the version needs to be updated and what
 it needs to be updated to is more complicated than meets the eye.
+[3]: TODO: automate the process for fetching current npm version
