@@ -24,14 +24,21 @@ following:
 1. go to your local clone of `translation-helps-rcl`
 2. edit `package.json`: 
     1. make "postpublish" non-runnable in scripts
-    2. let newVersion = $incrementPatch $currentVersion in
+    2. let $currentVersion = $localRepo/package.version 
+       let $newVersion = $incrementPatch $currentVersion in
        translation-helps-rcl/package.json __NOTE__: forall source-code changes
        perform this step __BEFORE__ testing local consumer apps.
 3. run `yalc publish` 
 4. change directories to consumer-app
+    - ensure to checkout `develop` branch to test the changes
 5. run `yalc add translation-helps-rcl@$newVersion`
 6. run `yarn`
 7. start testing (typically `yarn (dev | start)`) 
+
+# Publishing
+
+Please ensure that the version in the package json is greater than the latest
+published version in npm[2].
 
 _consumer-app_: the app that consumes `translation-helps-rcl` that needs to be
 tested with updates from `translation-helps-rcl`.
@@ -51,3 +58,6 @@ The CSS Styles implementation uses the updated version and is incompatible with 
 A few components use the Lab components such as the Skeleton for the infinite scrolling effect.
 
 [1]: todo include link
+[2]: this might could be removed since the management of package versions could
+be automated away. None-the-less when the version needs to be updated and what
+it needs to be updated to is more complicated than meets the eye.
