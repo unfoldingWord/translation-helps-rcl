@@ -10,6 +10,32 @@
 
 A React Component Library for rendering and editing scripture translation resources.
 
+# Development
+
+## Local Development
+
+We use `yalc`[1] to do local development
+
+### Testing Locally With Other Apps
+
+If you are testing locally with another  app (e.g. `gateway-edit`) do the
+following:
+
+1. go to your local clone of `translation-helps-rcl`
+2. edit `package.json`: 
+    1. make "postpublish" non-runnable in scripts
+    2. let newVersion = $incrementPatch $currentVersion in
+       translation-helps-rcl/package.json __NOTE__: forall source-code changes
+       perform this step __BEFORE__ testing local consumer apps.
+3. run `yalc publish` 
+4. change directories to consumer-app
+5. run `yalc add translation-helps-rcl@$newVersion`
+6. run `yarn`
+7. start testing (typically `yarn (dev | start)`) 
+
+_consumer-app_: the app that consumes `translation-helps-rcl` that needs to be
+tested with updates from `translation-helps-rcl`.
+
 ## Peer Dependencies
 
 - [Material-UI Versions](https://material-ui.com/versions/)
@@ -23,3 +49,5 @@ The CSS Styles implementation uses the updated version and is incompatible with 
 - [Material-UI Lab](https://material-ui.com/components/about-the-lab/)
 
 A few components use the Lab components such as the Skeleton for the infinite scrolling effect.
+
+[1]: todo include link
