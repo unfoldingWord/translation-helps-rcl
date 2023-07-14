@@ -1,6 +1,6 @@
 {
     "name": "translation-helps-rcl",
-    "version": "3.4.3-beta.0",
+    "version": "3.5.0",
     "main": "dist/index.js",
     "homepage": "https://translation-helps-rcl.netlify.app/",
     "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
