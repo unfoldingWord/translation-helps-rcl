@@ -160,3 +160,5 @@ export const mergeStatusData = {
         }
     }
 }
+
+export const cardsToMergeData = ['tn', 'ult']

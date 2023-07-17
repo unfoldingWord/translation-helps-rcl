@@ -15,7 +15,7 @@ import { FormGroup } from '@mui/material';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import PropTypes from "prop-types";
-import { mergeStatusData as mergeStatusForCards } from '../../../Data/mergeStatusData';
+import { cardsToMergeData } from '../../../Data/mergeStatusData';
 
 let cardNames = {
     tn: 'Translation Notes',
@@ -29,7 +29,7 @@ let cardNames = {
     gst: 'Gateway Language Simplified Text',
 };
 
-export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards }) {
+export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards, cardsToMerge }) {
     const [checkedIds, setCheckedIds] = useState([]);
 
     const descriptionRef = useRef(null);
@@ -48,16 +48,7 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
         onSubmit({ description, mergeableCardIds: checkedIds })
     }, [checkedIds])
 
-    const mergeableCardIds = useMemo(() => {
-        let mergeableCardIds = [];
-        for (const [key, value] of Object.entries(mergeStatusForCards)) {
-            if (value.mergeToMaster.mergeNeeded === true) {
-                mergeableCardIds = [...mergeableCardIds, `${key}`]
-            }
-        }
-        return mergeableCardIds;
-    }, [mergeStatusForCards]);
-
+    const mergeableCardIds = cardsToMerge || cardsToMergeData
 
     const children = useMemo(() => (
         <>
@@ -65,7 +56,6 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
                 <FormLabel component="legend">Mergeable Resources</FormLabel>
                 <FormGroup>
                     {mergeableCardIds.map((cardId, index) => (
-
                         <Box
                             key={index}
                             sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}
