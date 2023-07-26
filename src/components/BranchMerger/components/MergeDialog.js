@@ -23,7 +23,7 @@ let cardNames = {
     tq: 'Translation Questions',
     ust: 'UnfoldingWord Simplified Text',
     ult: 'UnfoldingWord Literal Text',
-    twa: 'Translation Words Article',
+    tw: 'Translation Words Article',
     twl: 'Translation Words List',
     glt: 'Gateway Language Literal Text',
     gst: 'Gateway Language Simplified Text',
