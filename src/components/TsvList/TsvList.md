@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import Card from '../../components/Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
+import itemObject from './TsvObject'
 
 const Component = () => {
   const viewMode = 'list'
@@ -50,7 +51,7 @@ const Component = () => {
 
   return (
     <Card
-      items={items}
+      items={items || itemObject}
       title={'Words'}
       headers={headers}
       filters={filters}
@@ -67,7 +68,7 @@ const Component = () => {
       hideMarkdownToggle
     >
       <TsvList
-        items={items}
+        items={items || itemObject}
         filters={filters}
         fontSize={fontSize}
         markdownView={markdownView}
