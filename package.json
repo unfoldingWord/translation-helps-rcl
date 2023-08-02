@@ -6,6 +6,9 @@
     "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
     "author": "mannycolon <colonmanuel7@gmail.com>",
     "license": "MIT",
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "scripts": {
         "start": "styleguidist server",
         "build": "styleguidist build",
@@ -59,7 +62,7 @@
         "react-styleguidist": "^11.1.1",
         "scripture-resources-rcl": "^5.2.2",
         "tc-ui-toolkit": "^5.3.3",
-        "webpack": "4.44.0",
+        "webpack": "5",
         "word-aligner": "^1.0.0"
     },
     "dependencies": {
