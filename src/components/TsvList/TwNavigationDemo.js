@@ -80,6 +80,8 @@ const Card2 = ({ selectedQuote, setCurrentCheck, showSaveChangesPrompt }) => {
     resourceId: 'twl',
     owner: 'test_org',
     server: 'https://git.door43.org',
+    readyToFetch: true,
+
   })
 
   const {
