@@ -60,7 +60,8 @@
         "scripture-resources-rcl": "^5.2.2",
         "tc-ui-toolkit": "^5.3.3",
         "webpack": "4.44.0",
-        "word-aligner": "^1.0.0"
+        "word-aligner": "^1.0.0",
+        "react-icons": "^4.x"
     },
     "dependencies": {
         "@gwdevs/extensible-rcl": "^1.0.1",
