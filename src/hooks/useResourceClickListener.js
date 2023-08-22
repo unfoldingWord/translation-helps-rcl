@@ -84,10 +84,11 @@ export default function useResourceClickListener({
             // slug = "rc://en/tn/help/obs/17/09"
             // slugs:["en", "tn", "help", "obs", "17", "06"]
             _languageId = slugs[0] || languageId
-            resourceId = `${slugs[3]}-${slugs[1]}`
-            filePath = `${slugs[4]}/${slugs[5]}.md`
+            resourceId = `${slugs[3]}`
+            filePath = encodeURIComponent(`content/${slugs[4]}.md`)
             const repoName = `${_languageId}_${resourceId}`
-            url = `${server}/api/v1/repos/${owner}/${repoName}/contents/content/${filePath}?ref=${ref}`
+            // https://git.door43.org/api/v1/repos/unfoldingWord/en_obs/contents/content%2F45.md?ref=master
+            url = `${server}/api/v1/repos/${owner}/${repoName}/contents/${filePath}?ref=${ref}`
             title = `${repoName} ${filePath}`
           } else if (
             slugs.length === 5 &&
@@ -97,19 +98,19 @@ export default function useResourceClickListener({
             // slug = "en/ta/man/translate/translate-names"
             _languageId = slugs[0] || languageId
             resourceId = slugs[1] || 'ta'
-            filePath = `${slugs[3]}/${slugs[4]}`
+            filePath = encodeURIComponent(`${slugs[3]}/${slugs[4]}`)
             url = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/01.md?ref=${ref}`
             titleUrl = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/title.md?ref=${ref}`
           } else if (slug.includes('01.md')) {
             _languageId = languageId
             resourceId = 'ta'
-            filePath = `${taArticle?.projectId || 'translate'}/${slugs[1]}`
+            filePath = encodeURIComponent(`${taArticle?.projectId || 'translate'}/${slugs[1]}`)
             url = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/01.md?ref=${ref}`
             titleUrl = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/title.md?ref=${ref}`
           } else if (tw.find(slugItem => slug.includes(slugItem))) {
             _languageId = languageId
             resourceId = 'tw'
-            filePath = slug
+            filePath = encodeURIComponent(slug)
             url = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/bible${filePath}?ref=${ref}`
             title = slugs[2].replace('.md', '')
             title = title.charAt(0).toUpperCase() + title.slice(1)
