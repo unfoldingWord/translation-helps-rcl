@@ -28,6 +28,7 @@ const Component = () => {
     resourceId: 'tn',
     owner: 'unfoldingWord',
     server: 'https://git.door43.org',
+    readyToFetch: true,
   })
 
   const {
@@ -109,6 +110,7 @@ const Component = () => {
     owner: 'test_org',
     filePath: 'kt/jesus.md',
     server: 'https://git.door43.org',
+    readyToFetch: true,
   })
 
   const {

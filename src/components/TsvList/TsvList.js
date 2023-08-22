@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { itemObject } from './TsvObject'
+import { itemObject, itemsObject } from './TsvObject'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+// import {Backdrop} from "@mui/material";
 
 const Container = styled.div`
   overflow: auto;
@@ -37,18 +39,20 @@ export default function TsvList({
     let filteredItems = []
     fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
 
-    if (items || itemObject) {
-        filters = ['Translation Word', 'Original Quote', 'Occurrence', 'GL Quote']
-        filteredItems = (items || itemObject).map(
-            ({ SupportReference, TWLink, Quote, OrigWords, Occurrence, glQuote }) => {
+
+    if (items || itemsObject) {
+        filters = ['Translation Word', 'Original Quote', 'Occurrence', 'GL Quote', 'Actions']
+        filteredItems = (itemsObject).map(
+            ({ SupportReference, TWLink, Quote, OrigWords, Occurrence, glQuote, actions }) => {
                 const directories = (SupportReference || TWLink || '').split('/')
                 const value = directories[directories.length - 1]
-
+                const actionButton = <DeleteOutlineIcon />
                 return {
                     SupportReference: value,
                     Quote: Quote || OrigWords,
                     Occurrence,
                     glQuote: glQuote || '',
+                    actions: actionButton
                 }
             }
         )
@@ -82,6 +86,7 @@ export default function TsvList({
                                 OrigWords,
                                 Occurrence,
                                 SupportReference,
+                                actions
                             } = item
                             Quote = Quote || OrigWords
                             SupportReference = SupportReference || TWLink
@@ -93,7 +98,7 @@ export default function TsvList({
                                     rowKey={i}
                                     item={item}
                                     style={style}
-                                    items={items || itemObject}
+                                    items={itemsObject || items}
                                     Quote={Quote}
                                     editable={editable}
                                     fontSize={fontSize}
@@ -190,7 +195,7 @@ function Row({
                             item={item}
                             itemIndex={rowKey}
                             valueKey={key}
-                            tsvItem={items[rowKey] || itemObject[rowKey]}
+                            tsvItem={itemsObject[rowKey] || items[rowKey]}
                             fontSize={fontSize}
                             selected={selected}
                             setCurrentCheck={setCurrentCheck}

@@ -8,6 +8,7 @@ import Card from '../../components/Card'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 import itemObject from './TsvObject'
+import TsvList from './TsvList'
 
 const Component = () => {
   const viewMode = 'list'
