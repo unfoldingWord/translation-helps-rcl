@@ -84,9 +84,10 @@ export default function useResourceClickListener({
             // slug = "rc://en/tn/help/obs/17/09"
             // slugs:["en", "tn", "help", "obs", "17", "06"]
             _languageId = slugs[0] || languageId
-            resourceId = `${slugs[3]}-${slugs[1]}`
-            filePath = `${slugs[4]}/${slugs[5]}.md`
+            resourceId = `${slugs[3]}`
+            filePath = `${slugs[4]}.md#${slugs[5]}`
             const repoName = `${_languageId}_${resourceId}`
+            // https://git.door43.org/unfoldingWord/en_obs/src/branch/master/content/45.md
             url = `${server}/api/v1/repos/${owner}/${repoName}/contents/content/${filePath}?ref=${ref}`
             title = `${repoName} ${filePath}`
           } else if (
@@ -97,7 +98,7 @@ export default function useResourceClickListener({
             // slug = "en/ta/man/translate/translate-names"
             _languageId = slugs[0] || languageId
             resourceId = slugs[1] || 'ta'
-            filePath = `${slugs[3]}/${slugs[4]}`
+            filePath = encodeURI(`${slugs[3]}/${slugs[4]}`)
             url = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/01.md?ref=${ref}`
             titleUrl = `${server}/api/v1/repos/${owner}/${_languageId}_${resourceId}/contents/${filePath}/title.md?ref=${ref}`
           } else if (slug.includes('01.md')) {
