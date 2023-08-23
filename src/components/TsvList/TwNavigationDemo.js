@@ -21,6 +21,7 @@ const Card1 = ({ selectedQuote, setCurrentCheck, showSaveChangesPrompt }) => {
     fetchMarkdown: false,
     server: 'https://git.door43.org',
     viewMode,
+    readyToFetch: true,
   })
 
   const {
