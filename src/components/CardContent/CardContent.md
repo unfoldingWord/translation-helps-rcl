@@ -24,7 +24,7 @@ const Component = () => {
     verse: 1,
     languageId,
     projectId: 'tit',
-    // ref: 'master',
+    ref: 'master',
     resourceId: 'tn',
     owner: 'unfoldingWord',
     server: 'https://git.door43.org',
