@@ -23,12 +23,10 @@ export default function useContentUpdateProps({
       // There is a race condition with server returning
       // a conflict while processing the last commit
       // the setTimeout tries to make sure we don't get a false conflict
-      setTimeout(() => {
-        checkUpdateStatus().then(() => {
-          checkMergeStatus()
-        });
-        setIsLoading(false);
-      }, 3000)
+      checkUpdateStatus().then(() => {
+        checkMergeStatus()
+      });
+      setIsLoading(false);
     }
   },[isSaving, checkUpdateStatus])
 
@@ -74,16 +72,14 @@ export default function useContentUpdateProps({
     setIsLoading(true);
     const response = await updateUserBranch()
     if (response.success && response.message === "") {
-      onUpdate?.()
-      setTimeout(async () => {
-        const status = await checkUpdateStatus()
-        if (status.conflict) {
-          await checkUpdateStatus();
-          setIsLoading(false);
-        } else {
-          setIsLoading(false);
-        }
-      },1000)
+    onUpdate?.()
+      const status = await checkUpdateStatus()
+      if (status.conflict) {
+        await checkUpdateStatus();
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+      }
     }
     else {
       setIsErrorDialogOpen(true);
