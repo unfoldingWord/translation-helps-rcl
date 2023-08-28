@@ -21,13 +21,15 @@ const Component = () => {
   const languageId = 'en'
   const { markdown, items, isLoading } = useContent({
     chapter: 1,
-    verse: 2,
+    verse: 1,
     languageId,
-    projectId: 'luk',
+    projectId: 'tit',
     ref: 'master',
     resourceId: 'tn',
     owner: 'unfoldingWord',
     server: 'https://git.door43.org',
+    readyToFetch: true,
+
   })
 
   const {
@@ -100,15 +102,16 @@ import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
   const { markdown, items, isLoading, props: { languageId } } = useContent({
-    verse: 1,
     chapter: 1,
+    verse: 1,
+    languageId: 'en',
     projectId: 'bible',
     ref: 'master',
-    languageId: 'en',
     resourceId: 'tw',
-    owner: 'test_org',
+    owner: 'unfoldingWord',
     filePath: 'kt/jesus.md',
     server: 'https://git.door43.org',
+    readyToFetch: true,
   })
 
   const {
@@ -178,14 +181,15 @@ import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
   const { markdown, items, isLoading, props: { languageId } } = useContent({
-    verse: 1,
     chapter: 1,
+    verse: 1,
+    languageId: 'en',
     projectId: 'tit',
     ref: 'master',
-    languageId: 'en',
     resourceId: 'twl',
-    owner: 'test_org',
+    owner: 'unfoldingWord',
     server: 'https://git.door43.org',
+    readyToFetch: true,
   })
 
   const {
@@ -257,14 +261,15 @@ import useCardState from '../../hooks/useCardState.js'
 const Component = () => {
   const [selectedQuote, setCurrentCheck] = useState(null)
   const { markdown, items, isLoading, props: { languageId } } = useContent({
-    verse: 1,
     chapter: 1,
+    verse: 1,
+    languageId: 'en',
     projectId: 'tit',
     ref: 'master',
-    languageId: 'en',
     resourceId: 'twl',
-    owner: 'test_org',
+    owner: 'unfoldingWord',
     server: 'https://git.door43.org',
+    readyToFetch: true,
   })
 
   const {
@@ -337,15 +342,16 @@ import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
   const { markdown, items, resource, isLoading, props: { languageId } } = useContent({
-    verse: 1,
     chapter: 1,
+    verse: 1,
+    languageId: 'en',
     projectId: 'translate',
     ref: 'master',
-    languageId: 'en',
     resourceId: 'ta',
-    filePath: 'figs-123person/01.md',
-    owner: 'test_org',
+    owner: 'unfoldingWord',
     server: 'https://git.door43.org',
+    readyToFetch: true,
+    filePath: 'figs-123person/01.md',
   })
 
   const {
@@ -415,15 +421,16 @@ import useCardState from '../../hooks/useCardState.js'
 
 const Component = () => {
    const { markdown, items, resource, isLoading, props: { languageId } } = useContent({
-    verse: 1,
     chapter: 1,
+    verse: 1,
+    languageId: 'en',
     projectId: 'tit',
     ref: 'master',
-    languageId: 'en',
     resourceId: 'tq',
-    filePath: null,
-    owner: 'test_org',
+    owner: 'unfoldingWord',
     server: 'https://git.door43.org',
+    readyToFetch: true,
+    filePath: null,
   })
 
   const {

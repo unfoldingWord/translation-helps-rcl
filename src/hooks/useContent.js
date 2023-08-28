@@ -35,20 +35,20 @@ import useExtraContent from './useExtraContent'
  */
 const useContent = ({
   chapter = 1,
+  verse = 1,
+  languageId,
+  projectId,
   contentRef = 'master',
+  resourceId,
+  owner,
+  server,
+  readyToFetch = false,
   fetchMarkdown = true,
   filePath = '',
   httpConfig = {},
-  languageId,
   listRef = 'master',
   onResourceError,
-  owner,
-  projectId,
-  readyToFetch = false,
-  resourceId,
-  server,
   useUserLocalStorage,
-  verse = 1,
   viewMode = 'markdown',
 }) => {
   const [initialized, setInitialized] = useState(false)
