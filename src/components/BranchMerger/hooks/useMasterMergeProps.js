@@ -21,6 +21,7 @@ export default function useMasterMergeProps({
       setIsLoading(false)
       return response
     } else {
+      console.warn(`callMergeUserBranch() - mergeMasterBranch failed ${response.message}`)
       setIsLoading(false)
       return response
     }
