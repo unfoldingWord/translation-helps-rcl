@@ -23,6 +23,7 @@ export default function useContentUpdateProps({
       // There is a race condition with server returning
       // a conflict while processing the last commit
       // the setTimeout tries to make sure we don't get a false conflict
+      // TODO: This might still return a false conflict... let's see if we can make it only run after branch is updated!
       checkUpdateStatus().then(() => {
         checkMergeStatus()
       });
@@ -71,19 +72,12 @@ export default function useContentUpdateProps({
   const callUpdateUserBranch = async () => {
     setIsLoading(true);
     const response = await updateUserBranch()
+    setIsLoading(false);
     if (response.success && response.message === "") {
-    onUpdate?.()
-      const status = await checkUpdateStatus()
-      if (status.conflict) {
-        await checkUpdateStatus();
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-      }
+      onUpdate?.()
     }
     else {
       setIsErrorDialogOpen(true);
-      setIsLoading(false)
     };
   }
 
