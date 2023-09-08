@@ -18,6 +18,8 @@ export default function useMasterMergeProps({
     if (response.success && response.message === '') {
       onMerge?.()
       await checkUpdateStatus()
+    } else {
+      console.warn(`callMergeUserBranch() - mergeMasterBranch failed ${response.message}`)
     }
     return response
   }
