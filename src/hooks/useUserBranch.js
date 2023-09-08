@@ -196,6 +196,7 @@ const useUserBranch = ({
       const fetching = JSON.stringify( {
         bookId,
         cardResourceId,
+        checkForEditBranch,
         languageId,
         loggedInUser,
         owner,
