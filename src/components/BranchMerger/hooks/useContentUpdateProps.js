@@ -23,11 +23,13 @@ export default function useContentUpdateProps({
       // There is a race condition with server returning
       // a conflict while processing the last commit
       // the setTimeout tries to make sure we don't get a false conflict
-      // TODO: This might still return a false conflict... let's see if we can make it only run after branch is updated!
-      checkUpdateStatus().then(() => {
-        checkMergeStatus()
-      });
-      setIsLoading(false);
+      // TODO: This might still return a false conflict...return to when gitea is faster
+      setTimeout(() => {
+        checkUpdateStatus().then(() => {
+          checkMergeStatus()
+        });
+        setIsLoading(false);
+      }, 1000)
     }
   },[isSaving, checkUpdateStatus])
 
