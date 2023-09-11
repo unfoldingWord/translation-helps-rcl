@@ -8,23 +8,20 @@ export default function useMasterMergeProps({
 
   const {
     state: { loadingMerge },
-    actions: { mergeMasterBranch, checkMergeStatus, checkUpdateStatus },
+    actions: { mergeMasterBranch, checkUpdateStatus },
   } = useBranchMerger
 
   const callMergeUserBranch = async description => {
     setIsLoading(true)
     const response = await mergeMasterBranch(description)
+    setIsLoading(false)
     if (response.success && response.message === '') {
       onMerge?.()
-      await checkMergeStatus()
       await checkUpdateStatus()
-      setIsLoading(false)
-      return response
     } else {
       console.warn(`callMergeUserBranch() - mergeMasterBranch failed ${response.message}`)
-      setIsLoading(false)
-      return response
     }
+    return response
   }
 
   return {
