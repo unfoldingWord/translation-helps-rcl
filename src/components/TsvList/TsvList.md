@@ -23,6 +23,7 @@ const Component = () => {
     fetchMarkdown: false,
     server: 'https://git.door43.org',
     viewMode,
+    readyToFetch: true,
   })
 
   const {

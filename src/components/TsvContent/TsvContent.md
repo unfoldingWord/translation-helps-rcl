@@ -19,6 +19,7 @@ function Component() {
     resourceId: 'tn',
     owner: 'test_org',
     server: 'https://git.door43.org',
+    readyToFetch: true
   })
 
   const {
