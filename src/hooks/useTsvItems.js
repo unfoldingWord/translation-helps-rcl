@@ -27,19 +27,19 @@ import { parseReferenceToList } from 'bible-reference-range'
  * @param {object} httpConfig - optional config settings for fetches (timeout, cache, etc.)
  */
 export default function useTsvItems({
-  fetchMarkdown = true,
-  languageId,
-  resourceId,
-  projectId,
-  chapter,
-  content,
-  server,
-  owner,
-  ref: ref_ = 'master',
-  verse,
-  onResourceError,
-  httpConfig = {},
-}) {
+    fetchMarkdown = true,
+    languageId,
+    resourceId,
+    projectId,
+    chapter,
+    content,
+    server,
+    owner,
+    ref: ref_ = 'master',
+    verse,
+    onResourceError,
+    httpConfig = {},
+  }) {
   const [{ items, tsvs }, setState] = useState({
     items: [],
     tsvs: null,
@@ -56,19 +56,14 @@ export default function useTsvItems({
         const note = tsvItems[index]
         let referenceList = null
         let _reference = note?.Reference
-        if (!_reference) {
-          // if in old TSV format, then add as a single ref to refs
-          referenceList = [
-            { chapter: note?.Chapter || '', verse: note?.Verse || '' },
-          ]
+        if (!_reference) { // if in old TSV format, then add as a single ref to refs
+          referenceList = [ { chapter: note?.Chapter || '', verse: note?.Verse || '' } ]
         }
 
-        if (_reference) {
-          // if new TSV format, parse the reference
+        if (_reference) { // if new TSV format, parse the reference
           // parse the reference to find all the verses contained since this could be a reference range
           referenceList = parseReferenceToList(_reference)
-          const multiVerse =
-            referenceList?.length > 1 || referenceList?.[0]?.endVerse
+          const multiVerse = (referenceList?.length > 1) || referenceList?.[0]?.endVerse
           if (multiVerse) {
             note._referenceRange = `${note.ID}_${_reference}` // save a unique tag for the reference range
           }
@@ -82,16 +77,20 @@ export default function useTsvItems({
 
           if (chapter > 0 && _verse > 0) {
             for (let verse = _verse; verse <= endVerse; verse++) {
-              refs.push({ chapter, verse })
+              refs.push({chapter, verse})
             }
           } else {
-            refs.push({ chapter, verse: _verse })
+            refs.push({chapter, verse: _verse})
           }
 
           for (const ref of refs) {
             const { chapter, verse } = ref
 
-            if (tn[book] && tn[book][chapter] && tn[book][chapter][verse]) {
+            if (
+              tn[book] &&
+              tn[book][chapter] &&
+              tn[book][chapter][verse]
+            ) {
               tn[book][chapter][verse].push(note)
             } else if (tn[book] && tn[book][chapter]) {
               tn[book][chapter][verse] = [note]
