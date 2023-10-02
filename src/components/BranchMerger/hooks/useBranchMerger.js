@@ -6,6 +6,26 @@ import {
   mergeUserIntoDefaultBranch
 } from "dcs-branch-merger"
 
+/*
+  TODO 547:
+    The useBranchMerger hook takes a user branch and dcs info (server, owner, repo, tokenid)
+    to compare the current user branch to the master branch to see if there are merges
+    needed to/from master.
+
+    It maintains the state of update/mergeStatus and provides functions to check this status
+    and perform the merges.
+
+    mergeStatus/updateStatus - object like {
+      containing "mergeNeeded": false,
+      "conflict": false,
+      "success": false,
+      "userBranchDeleted": false,
+      "error": false,
+      "message": "",
+      "pullRequest": "",
+    }
+*/
+
 const defaultStatus = {
   "mergeNeeded": false,
   "conflict": false,

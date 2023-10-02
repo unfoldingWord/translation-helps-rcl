@@ -29,6 +29,11 @@ let cardNames = {
     gst: 'Gateway Language Simplified Text',
 };
 
+/*
+  TODO 547:
+    This is the UI that displays what cards need to be merged. It looks at
+    which cards need to be merged and creates a list of checkedIds.
+*/
 export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards, cardsToMerge }) {
     const [checkedIds, setCheckedIds] = useState([]);
 

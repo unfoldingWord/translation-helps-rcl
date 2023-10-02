@@ -6,6 +6,27 @@ export const useBranchMergerContext = () => {
     return useContext(BranchMergerContext)
 }
 
+/*
+  TODO 547:
+    So I'm less familiar with this, but I think someone took out the app-level
+    merge/update state and put it here. I think it should be in gateway edit.
+
+    This handles app-level merge/update state. It provides function to get/set
+    app level update/merge state.
+
+    The getMergeFromMasterStatus & callMergeFromMaster functions are not used
+    and need to be deleted. We also don't need to export setMergeStatusForCards
+
+    mergeStatusForCards like:
+     {
+        [cardId: string like 'tn', 'tq', ...]: {
+          mergeFromMaster: (see object in useBranchMerger),
+          mergeToMaster: ^,
+          mergeFromMasterToUserBranch: function
+          mergeToMasterFromUserBranch: function
+        }, ...
+     }
+*/
 const BranchMergerProvider = ({ children }) => {
 
     const [mergeStatusForCards, setMergeStatusForCards] = useState({})

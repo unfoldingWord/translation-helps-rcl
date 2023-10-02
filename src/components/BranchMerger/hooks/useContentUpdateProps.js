@@ -1,5 +1,15 @@
 import { useMemo, useState } from 'react'
 
+/*
+  TODO 547:
+    This hook keeps track of the merge needed from master state and updates
+    props that are needed for the UpdateBranchButton, ErrorDialog, & LinkChip.
+
+    This hook is used for INDIVIDUAL resources (as opposed to gEdit app-level hooks)
+
+    It also handles the call to update the user branch with changes from master
+    whenever a user clicks the update button.
+*/
 export default function useContentUpdateProps({
   isLoading: _isLoading = false,
   useBranchMerger,
@@ -52,6 +62,12 @@ export default function useContentUpdateProps({
     setIsErrorDialogOpen(false)
   }
 
+  /*
+    TODO 547:
+      We are separating this into a function and exporting it so that it can
+      be called by the application. This is important in gatewayEdit so that
+      the header button can update all necessary cards.
+  */
   const callUpdateUserBranch = async () => {
     setIsLoading(true);
     const response = await updateUserBranch()

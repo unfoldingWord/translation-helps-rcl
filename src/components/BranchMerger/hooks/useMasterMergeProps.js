@@ -1,5 +1,13 @@
 import { useState } from 'react'
 
+/*
+  TODO 547:
+    This hook maintains loading state for merging from user branch to master.
+
+    This hook is used for INDIVIDUAL resources (as opposed to gEdit app-level hooks)
+
+    It also provides the function to merge an individual user resource to master.
+*/
 export default function useMasterMergeProps({
   useBranchMerger,
   onMerge = null,
