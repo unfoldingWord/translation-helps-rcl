@@ -1,6 +1,6 @@
 {
     "name": "translation-helps-rcl",
-    "version": "3.5.7",
+    "version": "3.5.8-beta.0",
     "main": "dist/index.js",
     "homepage": "https://translation-helps-rcl.netlify.app/",
     "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
@@ -14,7 +14,7 @@
         "lint:fix": "eslint ./src --fix",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
         "prepublishOnly": "rm -rf ./dist && babel ./src --out-dir ./dist -s inline",
-        "postpublish": "git tag v$npm_package_version && git push origin v$npm_package_version"
+        "xpostpublish": "git tag v$npm_package_version && git push origin v$npm_package_version"
     },
     "files": [
         "dist/*"
