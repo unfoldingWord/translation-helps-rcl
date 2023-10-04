@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react'
     whenever a user clicks the update button.
 */
 export default function useContentUpdateProps({
+  //TODO: isLoading is no longer used here, please remove
   isLoading: _isLoading = false,
   useBranchMerger,
   onUpdate = null
