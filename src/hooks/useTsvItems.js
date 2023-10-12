@@ -182,7 +182,6 @@ export default function useTsvItems({
             }
 
             newItems.push({ ...item, markdown, fetchResponse, filePath })
-            item.markdown = markdown
           }
           _items = newItems
           setLoading(false)
