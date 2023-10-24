@@ -21,6 +21,7 @@ const CardContent = ({
   setContent,
   markdownView,
   errorMessage,
+  twlActionButtons,
   selectedQuote,
   cardResourceId,
   updateTaDetails,
@@ -80,6 +81,7 @@ const CardContent = ({
         setCurrentCheck={setCurrentCheck}
         editable={editable}
         onTsvEdit={onTsvEdit}
+        renderedActionButtons={twlActionButtons}
         setContent={setContent}
         selectedQuote={selectedQuote}
         showSaveChangesPrompt={showSaveChangesPrompt}

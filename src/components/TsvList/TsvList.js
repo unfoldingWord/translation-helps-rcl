@@ -29,15 +29,17 @@ export default function TsvList({
   setCurrentCheck,
   editable,
   onTsvEdit,
+  renderedActionButtons,
   setContent,
   selectedQuote,
   showSaveChangesPrompt,
 }) {
   let filteredItems = []
+  let headers = []
   fontSize = typeof fontSize === 'number' ? `${fontSize}%` : fontSize
 
   if (items) {
-    filters = ['Translation Word', 'Original Quote', 'Occurrence', 'GL Quote']
+    headers = ['Translation Word', 'Original Quote', 'Occurrence', 'GL Quote']
     filteredItems = items.map(
       ({ SupportReference, TWLink, Quote, OrigWords, Occurrence, glQuote }) => {
         const directories = (SupportReference || TWLink || '').split('/')
@@ -52,13 +54,14 @@ export default function TsvList({
       }
     )
   }
+  headers = renderedActionButtons ? [...headers, 'Actions'] : headers
 
   return (
     <Container>
       <Table>
         <thead style={{ fontSize, paddingBottom: '1rem' }}>
           <tr style={{ textAlign: 'left' }}>
-            {filters.map((header, i) => (
+            {headers.map((header, i) => (
               <th
                 key={header + i}
                 style={{
@@ -99,6 +102,7 @@ export default function TsvList({
                   setCurrentCheck={setCurrentCheck}
                   onTsvEdit={onTsvEdit}
                   Occurrence={Occurrence}
+                  renderedActionButtons={renderedActionButtons}
                   setContent={setContent}
                   selectedQuote={selectedQuote}
                   SupportReference={SupportReference}
@@ -135,6 +139,7 @@ function Row({
   setCurrentCheck,
   onTsvEdit,
   Occurrence,
+  renderedActionButtons,
   setContent,
   selectedQuote,
   SupportReference,
@@ -212,6 +217,15 @@ function Row({
           )
         }
       })}
+      { renderedActionButtons && <td
+        key={`actions${rowKey}`}
+        style={{
+          padding: '0.5rem 0rem',
+          borderBottom: '1px solid lightgrey',
+        }}
+      >
+        {renderedActionButtons}
+      </td>}
     </tr>
   )
 }

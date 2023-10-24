@@ -72,6 +72,7 @@ const Component = () => {
         filters={filters}
         fontSize={fontSize}
         markdownView={markdownView}
+        renderedActionButtons={<button>click me</button>}
         selectedQuote={selectedQuote}
         setCurrentCheck={setCurrentCheck}
         showSaveChangesPrompt={showSaveChangesPrompt}
