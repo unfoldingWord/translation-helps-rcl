@@ -78,7 +78,10 @@ const Component = () => {
         renderedActionButtons={<button>click me</button>}
         selectedQuote={selectedQuote}
         setCurrentCheck={setCurrentCheck}
-        setItemIndex={setItemIndex}
+        setItemIndex={(newIndex) => {
+          console.log("New Item Index: ", newIndex)
+          setItemIndex(newIndex)
+        }}
         showSaveChangesPrompt={showSaveChangesPrompt}
       />
     </Card>

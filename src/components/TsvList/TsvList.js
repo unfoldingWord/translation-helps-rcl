@@ -188,7 +188,6 @@ function Row({
             setCurrentCheck({})
           }
           setItemIndex(rowKey)
-          console.log(rowKey)
         })
       }}
     >
