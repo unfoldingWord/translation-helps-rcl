@@ -31,6 +31,7 @@ export default function TsvList({
   onTsvEdit,
   renderedActionButtons,
   setContent,
+  setItemIndex,
   selectedQuote,
   showSaveChangesPrompt,
 }) {
@@ -104,6 +105,7 @@ export default function TsvList({
                   Occurrence={Occurrence}
                   renderedActionButtons={renderedActionButtons}
                   setContent={setContent}
+                  setItemIndex={setItemIndex}
                   selectedQuote={selectedQuote}
                   SupportReference={SupportReference}
                   showSaveChangesPrompt={showSaveChangesPrompt}
@@ -123,6 +125,7 @@ TsvList.defaultProps = {
 TsvList.propTypes = {
   items: PropTypes.array,
   setCurrentCheck: PropTypes.func,
+  setItemIndex: PropTypes.func,
   selectedQuote: PropTypes.object,
   filters: PropTypes.array.isRequired,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -141,6 +144,7 @@ function Row({
   Occurrence,
   renderedActionButtons,
   setContent,
+  setItemIndex,
   selectedQuote,
   SupportReference,
   showSaveChangesPrompt,
@@ -183,6 +187,8 @@ function Row({
           } else if (setCurrentCheck && selected) {
             setCurrentCheck({})
           }
+          setItemIndex(rowKey)
+          console.log(rowKey)
         })
       }}
     >

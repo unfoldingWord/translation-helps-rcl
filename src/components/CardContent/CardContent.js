@@ -27,6 +27,7 @@ const CardContent = ({
   updateTaDetails,
   fontSize: _fontSize,
   showSaveChangesPrompt,
+  setItemIndex,
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
@@ -83,6 +84,7 @@ const CardContent = ({
         onTsvEdit={onTsvEdit}
         renderedActionButtons={twlActionButtons}
         setContent={setContent}
+        setItemIndex={setItemIndex}
         selectedQuote={selectedQuote}
         showSaveChangesPrompt={showSaveChangesPrompt}
       />
@@ -165,6 +167,7 @@ CardContent.propTypes = {
   markdownView: PropTypes.bool,
   errorMessage: PropTypes.string,
   selectedQuote: PropTypes.object,
+  setItemIndex: PropTypes.func,
   viewMode: PropTypes.oneOf([
     'default',
     'table',
