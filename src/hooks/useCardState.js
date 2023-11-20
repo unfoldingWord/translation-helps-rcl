@@ -151,6 +151,7 @@ const useCardState = ({
       setFilters,
       setFontSize,
       setItemIndex: setItem,
+      setItemIndexPure: setItemIndex,
       setMarkdownView,
     },
   }
