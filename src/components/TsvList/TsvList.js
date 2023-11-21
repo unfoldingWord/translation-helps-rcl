@@ -34,6 +34,7 @@ export default function TsvList({
   setItemIndex,
   selectedQuote,
   showSaveChangesPrompt,
+  shouldDisableClick,
 }) {
   let filteredItems = []
   let headers = []
@@ -106,6 +107,7 @@ export default function TsvList({
                   renderedActionButtons={renderedActionButtons}
                   setContent={setContent}
                   setItemIndex={setItemIndex}
+                  shouldDisableClick={shouldDisableClick}
                   selectedQuote={selectedQuote}
                   SupportReference={SupportReference}
                   showSaveChangesPrompt={showSaveChangesPrompt}
@@ -127,6 +129,7 @@ TsvList.propTypes = {
   setCurrentCheck: PropTypes.func,
   setItemIndex: PropTypes.func,
   selectedQuote: PropTypes.object,
+  shouldDisableClick: PropTypes.bool,
   filters: PropTypes.array.isRequired,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
@@ -145,6 +148,7 @@ function Row({
   renderedActionButtons,
   setContent,
   setItemIndex,
+  shouldDisableClick,
   selectedQuote,
   SupportReference,
   showSaveChangesPrompt,
@@ -172,6 +176,7 @@ function Row({
       style={style}
       onClick={() => {
         // Check if tw has been edited in order to not lose unsaved changes when selecting a twl item.
+        if (shouldDisableClick) return
         showSaveChangesPrompt('tw', setContent).then(() => {
           if (setCurrentCheck && !selected) {
             if (newQuote) {

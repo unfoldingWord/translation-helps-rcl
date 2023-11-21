@@ -23,6 +23,7 @@ const CardContent = ({
   errorMessage,
   twlActionButtons,
   selectedQuote,
+  shouldDisableClick,
   cardResourceId,
   updateTaDetails,
   fontSize: _fontSize,
@@ -87,6 +88,7 @@ const CardContent = ({
         setItemIndex={setItemIndex}
         selectedQuote={selectedQuote}
         showSaveChangesPrompt={showSaveChangesPrompt}
+        shouldDisableClick={shouldDisableClick}
       />
     )
   } else if (
@@ -149,7 +151,7 @@ CardContent.defaultProps = {
   fontSize: 100,
   editable: false,
   isLoading: false,
-  onEdit: () => { },
+  onEdit: () => {},
   viewMode: 'default',
 }
 
@@ -167,6 +169,7 @@ CardContent.propTypes = {
   markdownView: PropTypes.bool,
   errorMessage: PropTypes.string,
   selectedQuote: PropTypes.object,
+  shouldDisableClick: PropTypes.bool,
   setItemIndex: PropTypes.func,
   viewMode: PropTypes.oneOf([
     'default',
