@@ -3783,10 +3783,10 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-dcs-branch-merger@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/dcs-branch-merger/-/dcs-branch-merger-1.4.0.tgz#8f4f28b9ee5e24ff64687de9a6ee0d8a6f1fba49"
-  integrity sha512-zKchiKN1rd4sUW99u6+HvKDLmHwzumilfcNJR8afkEViEvfgYAUrjPRihLg7y+FK4DtPbBkpicrKTLg7y3KnPw==
+dcs-branch-merger@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/dcs-branch-merger/-/dcs-branch-merger-1.4.1.tgz#57a2819c8189f8f23325eff8bebf4f7c698b2c49"
+  integrity sha512-IJbG5OpZQkxNDYao+T5MOrtVatvzDBGsuEwoZ7kq214OCTwlR+J96ApyamNeg+/i5ZQ8oKa3H4OMM6NFp6s7Zw==
   dependencies:
     path "0.12.7"
 
