@@ -122,8 +122,8 @@ const useCardState = ({
 
       if (
         setCurrentCheck &&
-        (Quote || OrigQuote) &&
-        Occurrence &&
+        (typeof Quote === 'string' || typeof OrigQuote === 'string') &&
+        typeof Occurrence === 'string' &&
         typeof SupportReference === 'string'
       ) {
         setCurrentCheck({
