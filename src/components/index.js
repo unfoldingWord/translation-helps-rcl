@@ -6,6 +6,7 @@ export { default as FontSizeSlider } from './FontSizeSlider'
 export { default as SettingsCard } from './SettingsCard'
 export { default as TsvContent } from './TsvContent'
 export { default as DraggableCard } from './DraggableCard'
+export { default as CircularProgress } from './CircularProgress'
 export {
     MergeBranchButton,
     MergeDialog,
