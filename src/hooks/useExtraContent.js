@@ -62,6 +62,10 @@ const useExtraContent = ({
     const loadGLBibles = async () => { // load GL bibles in resource manifest
       if (twlListView) { // we only need to load gl quotes if we are showing list view
         if (initialized && !loading && !error && !loadingGlData) {
+          if (projectId === 'obs') {
+            return // TODO add support for OBS resources that don't use original language resources
+          }
+
           setLoadingGlData(true)
           const currentGlRepo = `${owner}/${languageId}`;
           let glBibles_ = glBibles
