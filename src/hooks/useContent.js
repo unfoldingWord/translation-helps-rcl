@@ -53,7 +53,7 @@ const useContent = ({
   viewMode = 'markdown',
 }) => {
   const [initialized, setInitialized] = useState(false)
-  const { resourceId: _resourceId } = getResourceForRepo(projectId, resourceId);
+  const { resourceId: _resourceId } = getResourceForRepo(resourceId, projectId === 'obs');
 
   const reference = {
     chapter,

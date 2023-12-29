@@ -133,14 +133,13 @@ export async function createUserBranch(server, repoOwner, repoName, config, user
 }
 
 /**
- * if project is obs, create new resource id pefixed by `obs-`, otherwise return original resourceId
- * @param {string} projectId - either book selected (such as gen) or obs
+ * if project is OBS and resourceId is OBS specific, create new resource id prefixed by `obs-`, otherwise return original resourceId
  * @param {string} resourceId - such as tn, twl, tw, etc.
+ * @param {boolean} isObsProject - true if OBS project
  * @returns {{resourceId: (*|string), isObsRepo: boolean, isObsProject: boolean}}
  */
-export function getResourceForRepo(projectId, resourceId) {
+export function getResourceForRepo(resourceId, isObsProject) {
   const obsResources = ['tn', 'twl', 'tq']
-  const isObsProject = projectId === 'obs'
   const isObsRepo = isObsProject && obsResources.includes(resourceId)
   const _resourceId = !isObsRepo ? resourceId : `obs-${resourceId}`
   return {
@@ -148,15 +147,4 @@ export function getResourceForRepo(projectId, resourceId) {
     isObsRepo,
     resourceId: _resourceId
   };
-}
-
-/**
- * if project is obs, create new resource id pefixed by `obs-`, otherwise return original resourceId
- * @param {string} resourceId - such as tn, twl, tw, etc.
- * @param {boolean} isObs - true if OBS
- * @returns {{resourceId: (*|string), isObsRepo: boolean, isObsProject: boolean}}
- */
-export function getResourceForRepoUsingObsFlag(resourceId, isObs) {
-  const results = getResourceForRepo(isObs && 'obs', resourceId)
-  return results
 }

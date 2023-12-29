@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {
   createUserBranch,
-  getResourceForRepoUsingObsFlag,
+  getResourceForRepo,
   getUserEditBranch,
   getUsersWorkingBranch,
   processHttpErrors,
@@ -58,7 +58,7 @@ const useUserBranch = ({
     usingUserBranch,
   } = state
   const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser, bookId) : null;
-  const { resourceId: _resourceId } = getResourceForRepoUsingObsFlag(cardResourceId, isObs)
+  const { resourceId: _resourceId } = getResourceForRepo(cardResourceId, isObs)
 
   function setState(newState) {
     _setState(prevState => ({ ...prevState, ...newState }))
