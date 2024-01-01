@@ -63,7 +63,7 @@ const useExtraContent = ({
       if (twlListView) { // we only need to load gl quotes if we are showing list view
         if (initialized && !loading && !error && !loadingGlData) {
           if (projectId === 'obs') {
-            return // TODO add support for OBS resources that don't use original language resources
+            return // TODO: add support for OBS resources because they do not use original language resources
           }
 
           setLoadingGlData(true)
