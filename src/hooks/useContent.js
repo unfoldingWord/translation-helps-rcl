@@ -9,7 +9,7 @@ import {
   MANIFEST_NOT_LOADED_ERROR,
 } from '../common/constants'
 import useExtraContent from './useExtraContent'
-import { getResourceForRepo } from '../core/branching'
+import { updateResourceIdIfObs } from '../core/branching'
 
 /**
  * hook for loading content of translation helps resources
@@ -53,7 +53,7 @@ const useContent = ({
   viewMode = 'markdown',
 }) => {
   const [initialized, setInitialized] = useState(false)
-  const { resourceId: _resourceId } = getResourceForRepo(resourceId, projectId === 'obs');
+  const { resourceId: _resourceId } = updateResourceIdIfObs(resourceId, projectId === 'obs');
 
   const reference = {
     chapter,

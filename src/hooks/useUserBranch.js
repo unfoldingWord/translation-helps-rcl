@@ -1,11 +1,11 @@
 import {useState} from 'react'
 import {
   createUserBranch,
-  getResourceForRepo,
   getUserEditBranch,
   getUsersWorkingBranch,
   processHttpErrors,
   processUnknownError,
+  updateResourceIdIfObs,
 } from '../core'
 import useDeepCompareEffect from 'use-deep-compare-effect'
 
@@ -58,7 +58,7 @@ const useUserBranch = ({
     usingUserBranch,
   } = state
   const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser, bookId) : null;
-  const { resourceId: _resourceId } = getResourceForRepo(cardResourceId, isObs)
+  const { resourceId: _resourceId } = updateResourceIdIfObs(cardResourceId, isObs)
 
   function setState(newState) {
     _setState(prevState => ({ ...prevState, ...newState }))
