@@ -180,7 +180,9 @@ export async function loadGlBible(owner, glBible, config, ref, reference) {
         }
       }
     }
-    console.warn(`useContent - ${glBible} is not a valid bible at ${resourceLink}`)
+    if (!resource?.projects) { // only warn if no projects
+      console.warn(`useContent - ${glBible} is not a valid bible at ${resourceLink}`)
+    }
   } catch (e) {
     console.warn(`useContent - error loading ${resourceLink}`, e)
   }
@@ -230,7 +232,7 @@ export async function getGlAlignmentBiblesList(languageId, httpConfig, server, o
     const tsv_relations = results?.manifest?.dublin_core?.relation
     if (tsv_relations) {
       for (const repo of tsv_relations) {
-        const [langAndBible] = repo.split('?') 
+        const [langAndBible] = repo.split('?')
         const [langId, bible] = langAndBible.split('/')
         const repoName = `${langId}_${bible}`
         if ((langId === languageId) && (bible !== 'obs')) { // if GL bible

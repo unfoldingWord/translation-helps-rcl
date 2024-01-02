@@ -5,6 +5,7 @@ import {
   getUsersWorkingBranch,
   processHttpErrors,
   processUnknownError,
+  updateResourceIdIfObs,
 } from '../core'
 import useDeepCompareEffect from 'use-deep-compare-effect'
 
@@ -15,6 +16,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect'
  * @param {string} bookId - optional for book branch (such as `php`), otherwise we just use a user edit branch
  * @param {string} cardResourceId - resource id for this card such as `ult`
  * @param {number} checkForEditBranch for every change of value, re-check for edit branch
+ * @param boolean} isObs - if true then this is an OBS resource
  * @param {string} languageId
  * @param {string} loggedInUser
  * @param {function} onResourceError - callback function for error fetching resource
@@ -29,6 +31,7 @@ const useUserBranch = ({
     bookId,
     cardResourceId,
     checkForEditBranch,
+    isObs = false,
     languageId,
     loggedInUser,
     onResourceError,
@@ -55,6 +58,7 @@ const useUserBranch = ({
     usingUserBranch,
   } = state
   const userEditBranchName = loggedInUser ? getUserEditBranch(loggedInUser, bookId) : null;
+  const { resourceId: _resourceId } = updateResourceIdIfObs(cardResourceId, isObs)
 
   function setState(newState) {
     _setState(prevState => ({ ...prevState, ...newState }))
@@ -96,7 +100,7 @@ const useUserBranch = ({
    * @return {Promise<boolean>} returns true if user branch already exists or created
    */
   async function ensureUserEditBranch() {
-    const repoName = `${languageId}_${cardResourceId}`
+    const repoName = `${languageId}_${_resourceId}`
 
     if (authentication) {
       const config = authentication.config
@@ -212,7 +216,7 @@ const useUserBranch = ({
           usingUserBranch: false,
           branchDetermined: false,
         })
-        const currentResourceRef = await getWorkingBranchForResource(cardResourceId)
+        const currentResourceRef = await getWorkingBranchForResource(_resourceId)
         console.log(`updateStatus() - `, fetching)
 
         // TRICKY: in the case of tWords there are two repos (tw for articles and twl for word list) and each one may have different branch
@@ -233,7 +237,7 @@ const useUserBranch = ({
 
         // update states
         if (currentResourceRef !== ref) {
-          console.log(`updateStatus() - changing ref`, { cardResourceId, ref, currentResourceRef })
+          console.log(`updateStatus() - changing ref`, { _resourceId, ref, currentResourceRef })
         }
         setState( {
           branchDetermined: true,
@@ -243,7 +247,7 @@ const useUserBranch = ({
           ref: currentResourceRef,
           usingUserBranch: currentResourceRef === userEditBranchName,
         })
-        console.log(`updateStatus() - branch determined`, { cardResourceId, ref, currentResourceRef })
+        console.log(`updateStatus() - branch determined`, { _resourceId, ref, currentResourceRef })
       } else {
         console.log(`updateStatus() - already fetched`, fetching)
         setState( {

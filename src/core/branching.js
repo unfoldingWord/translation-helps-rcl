@@ -131,3 +131,22 @@ export async function createUserBranch(server, repoOwner, repoName, config, user
 
   return response;
 }
+
+/**
+ * Resource IDs are different between bible resources and OBS resources.  OBS resources are prefixed by `obs-`.  This
+ *     method will handle prefixing the resourceId with `obs-` if it is a specific OBS resourceId (see obsResources list
+ *     defined in first line of function)
+ * @param {string} resourceId - such as tn, twl, tw, etc.
+ * @param {boolean} isObsProject - true if OBS project
+ * @returns {{resourceId: (*|string), isObsRepo: boolean, isObsProject: boolean}}
+ */
+export function updateResourceIdIfObs(resourceId, isObsProject) {
+  const obsResources = ['tn', 'twl', 'tq'] // only update resourceId if it is one of these
+  const isObsRepo = isObsProject && obsResources.includes(resourceId)
+  const _resourceId = !isObsRepo ? resourceId : `obs-${resourceId}`
+  return {
+    isObsProject,
+    isObsRepo,
+    resourceId: _resourceId
+  };
+}
