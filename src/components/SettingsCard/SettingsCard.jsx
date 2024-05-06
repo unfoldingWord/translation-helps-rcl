@@ -1,18 +1,20 @@
 import React, { Fragment } from 'react'
-import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
-import Switch from '@mui/material/Switch'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
-import FormGroup from '@mui/material/FormGroup'
-import Typography from '@mui/material/Typography'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import {
+  styled,
+  Switch,
+  Divider,
+  Checkbox,
+  FormGroup,
+  Typography,
+  FormControlLabel,
+} from '@mui/material'
 import { Extensible } from '@gwdevs/extensible-rcl'
 import DraggableModal from '../DraggableModal'
 import FontSizeSlider from '../FontSizeSlider'
 import Card from '../Card'
 
-const PREFIX = 'SettingsCard';
+const PREFIX = 'SettingsCard'
 
 const classes = {
   switchBase: `${PREFIX}-switchBase`,
@@ -32,14 +34,10 @@ const classes = {
   checkboxes: `${PREFIX}-checkboxes`,
   cardRemovalSection: `${PREFIX}-cardRemovalSection`,
   removeText: `${PREFIX}-removeText`,
-  formControl: `${PREFIX}-formControl`
-};
+  formControl: `${PREFIX}-formControl`,
+}
 
-const StyledDraggableModal = styled(DraggableModal)((
-  {
-    theme
-  }
-) => ({
+const StyledDraggableModal = styled(DraggableModal)(({ theme }) => ({
   [`& .${classes.root2}`]: {
     width: '100%',
   },
@@ -99,12 +97,12 @@ const StyledDraggableModal = styled(DraggableModal)((
   [`& .${classes.formControl}`]: {
     margin: theme.spacing(1),
     minWidth: 120,
-  }
-}));
+  },
+}))
 
 const BlueSwitch = Switch
 
-const BlueCheckbox = (props => <Checkbox color='default' {...props} />)
+const BlueCheckbox = props => <Checkbox color='default' {...props} />
 
 const SettingsCard = ({
   open,
@@ -123,8 +121,6 @@ const SettingsCard = ({
   hideMarkdownToggle,
   getCustomComponent,
 }) => {
-
-
   const handleCheckboxClick = event => {
     event.preventDefault()
     let newFilters = []
@@ -170,8 +166,9 @@ const SettingsCard = ({
                     classes={{
                       switchBase: classes.switchBase,
                       checked: classes.checked,
-                      track: classes.track
-                    }} />
+                      track: classes.track,
+                    }}
+                  />
                 }
                 classes={{ label: classes.switchLabel }}
                 label='Markdown View'
@@ -211,8 +208,9 @@ const SettingsCard = ({
                             checked={filters.includes(header)}
                             classes={{
                               root: classes.root,
-                              checked: classes.checked2
-                            }} />
+                              checked: classes.checked2,
+                            }}
+                          />
                         }
                       />
                     ))}
@@ -234,7 +232,7 @@ const SettingsCard = ({
         </Extensible>
       </Card>
     </StyledDraggableModal>
-  );
+  )
 }
 
 SettingsCard.defaultProps = {
