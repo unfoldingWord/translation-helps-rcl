@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
-import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
 import styledComponents from 'styled-components'
+import { styled, Badge, IconButton } from '@mui/material'
 import {
-  Badge,
-  IconButton
-} from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
-import {
+  Close as CloseIcon,
   MoreVert as MoreVertIcon,
   Announcement as AnnouncementIcon,
   DragIndicator as DragIndicatorIcon,
@@ -25,7 +21,7 @@ import SettingsCard from '../SettingsCard'
 import Scrollable from '../Scrollable'
 import { Extensible } from '@gwdevs/extensible-rcl'
 
-const PREFIX = 'Card';
+const PREFIX = 'Card'
 
 const classes = {
   title: `${PREFIX}-title`,
@@ -33,8 +29,8 @@ const classes = {
   chevronIcon: `${PREFIX}-chevronIcon`,
   pointerIcon: `${PREFIX}-pointerIcon`,
   children: `${PREFIX}-children`,
-  paddingRight: `${PREFIX}-paddingRight`
-};
+  paddingRight: `${PREFIX}-paddingRight`,
+}
 
 const StyledPaper = styled(Paper)(() => ({
   [`& .${classes.title}`]: {
@@ -71,8 +67,8 @@ const StyledPaper = styled(Paper)(() => ({
 
   [`& .${classes.paddingRight}`]: {
     padding: '0px 15px 0px 0px',
-  }
-}));
+  },
+}))
 
 const FlexDiv = styledComponents.div`
   display: flex;
@@ -105,8 +101,9 @@ const Navigation = ({
       id={`${baseId}_prev`}
       onClick={onPrevItem}
     />
-    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${items.length
-      }`}</FlexDiv>
+    <FlexDiv id={`${baseId}_nav`}>{`${itemIndex + 1} of ${
+      items.length
+    }`}</FlexDiv>
     <ChevronRightIcon
       className={classes.chevronIcon}
       id={`${baseId}_next`}
@@ -154,7 +151,6 @@ const Card = ({
   classes: { root, dragIndicator, header, children: childrenClassName },
 }) => {
   const [showMenu, setShowMenu] = useState(false)
-
 
   let settingsTitle = settingsTitle_
   if (!settingsTitle) {
@@ -357,7 +353,7 @@ const Card = ({
         enableAutoScrollToTop={enableAutoScrollToTop}
       />
     </StyledPaper>
-  );
+  )
 }
 
 Card.defaultProps = {

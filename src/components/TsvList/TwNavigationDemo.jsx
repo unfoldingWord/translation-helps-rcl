@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Card from '../Card'
-import CardContent from '../CardContent'
+import Card from '../Card/index.js'
+import CardContent from '../CardContent/index.js'
 import useContent from '../../hooks/useContent.js'
 import useCardState from '../../hooks/useCardState.js'
 
@@ -81,7 +81,6 @@ const Card2 = ({ selectedQuote, setCurrentCheck, showSaveChangesPrompt }) => {
     owner: 'test_org',
     server: 'https://git.door43.org',
     readyToFetch: true,
-
   })
 
   const {

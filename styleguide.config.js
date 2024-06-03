@@ -9,7 +9,7 @@ module.exports = {
   },
   styles,
   theme,
-  components: 'src/components/**/[A-Z]*.js',
+  components: 'src/components/**/[A-Z]*.jsx',
   webpackConfig: {
     module: {
       rules: [

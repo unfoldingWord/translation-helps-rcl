@@ -1,11 +1,9 @@
 import React from 'react'
-import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
-import Grid from '@mui/material/Grid'
-import Slider from '@mui/material/Slider'
-import TextFieldsIcon from '@mui/icons-material/TextFields'
+import { styled, Grid, Slider } from '@mui/material'
+import { TextFields as TextFieldsIcon } from '@mui/icons-material'
 
-const PREFIX = 'FontSizeSlider';
+const PREFIX = 'FontSizeSlider'
 
 const classes = {
   gridItem: `${PREFIX}-gridItem`,
@@ -13,8 +11,8 @@ const classes = {
   largeFont: `${PREFIX}-largeFont`,
   sliderRoot: `${PREFIX}-sliderRoot`,
   sliderMark: `${PREFIX}-sliderMark`,
-  valueLabel: `${PREFIX}-valueLabel`
-};
+  valueLabel: `${PREFIX}-valueLabel`,
+}
 
 const StyledGrid = styled(Grid)({
   [`& .${classes.gridItem}`]: { cursor: 'pointer' },
@@ -40,11 +38,9 @@ const StyledGrid = styled(Grid)({
       color: '#38ADDF',
     },
   },
-});
+})
 
 function FontSizeSlider({ min, max, step, marks, value, onChange }) {
-
-
   const handleChange = (_, newValue) => {
     if (newValue >= min) {
       onChange(newValue)
@@ -89,7 +85,7 @@ function FontSizeSlider({ min, max, step, marks, value, onChange }) {
         <TextFieldsIcon fontSize='large' htmlColor='#38ADDF' />
       </Grid>
     </StyledGrid>
-  );
+  )
 }
 
 FontSizeSlider.defaultProps = {
