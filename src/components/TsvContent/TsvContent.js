@@ -210,16 +210,15 @@ const Item = ({
         onClick={() => {
           if (
             setCurrentCheck &&
-            (label === 'Quote' || label === 'OrigQuote') &&
-            !selected
-          )
+            (label === 'Quote' || label === 'OrigQuote')
+          ) {
             setCurrentCheck({
               quote: updatedItem['quote'] || value,
               occurrence: updatedItem['occurrence'] || Occurrence,
               SupportReference,
               reference: item.Reference,
             })
-          else if (setCurrentCheck && selected) setCurrentCheck(null)
+          }
         }}
       >
         <Legend
