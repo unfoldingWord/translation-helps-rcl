@@ -1,6 +1,6 @@
 {
     "name": "translation-helps-rcl",
-    "version": "3.6.0",
+    "version": "3.6.2-beta.16",
     "main": "dist/index.cjs.js",
     "module": "dist/index.es.js",
     "homepage": "https://translation-helps-rcl.netlify.app/",
@@ -19,13 +19,14 @@
     "scripts": {
         "start": "NODE_OPTIONS=--openssl-legacy-provider npx styleguidist server",
         "build": "NODE_OPTIONS=--openssl-legacy-provider npx styleguidist build",
-        "build:vite": "vite build",
+        "build:prod": "cross-env MINIFY=true vite build",
+        "build:dev": "cross-env MINIFY=false vite build",
         "test": "jest",
         "lint": "eslint ./src",
         "lint:fix": "eslint ./src --fix",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-        "prepublishOnly": "rm -fr ./dist && vite build",
-        "postpublish": "git tag v$npm_package_version && git push origin v$npm_package_version"
+        "prepublishOnly": "rm -fr ./dist && npm run build:dev",
+        "xpostpublish": "git tag v$npm_package_version && git push origin v$npm_package_version"
     },
     "files": [
         "dist/*"
@@ -58,6 +59,7 @@
         "@vitejs/plugin-react": "^4.2.1",
         "babel-jest": "^27.3.1",
         "babel-loader": "^8.2.2",
+        "cross-env": "^7.0.3",
         "eslint": "^9.2.0",
         "gitea-react-toolkit": "^2.1.2",
         "jest": "^27.3.1",
