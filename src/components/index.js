@@ -8,13 +8,13 @@ export { default as TsvContent } from './TsvContent'
 export { default as DraggableCard } from './DraggableCard'
 export { default as CircularProgress } from './CircularProgress'
 export {
-  MergeBranchButton,
-  MergeDialog,
-  ErrorDialog,
-  UpdateBranchButton,
-  useBranchMerger,
-  useContentUpdateProps,
-  useMasterMergeProps,
-  useBranchMergerContext,
-  BranchMergerProvider,
+    MergeBranchButton,
+    MergeDialog,
+    ErrorDialog,
+    UpdateBranchButton,
+    useBranchMerger,
+    useContentUpdateProps,
+    useMasterMergeProps,
+    useBranchMergerContext,
+    BranchMergerProvider,
 } from './BranchMerger'

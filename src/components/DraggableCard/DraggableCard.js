@@ -1,12 +1,13 @@
 import React, { useRef } from 'react'
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types'
-import { BlockEditable } from 'markdown-translatable'
+import BlockEditable from 'markdown-translatable/dist/components/block-editable'
 import styledComponents from 'styled-components'
 import DraggableModal from '../DraggableModal'
 import Card from '../Card'
 import useBoundsUpdater from '../../hooks/useBoundsUpdater'
 import stripReferenceLinksFromMarkdown from '../../core/stripReferenceLinksFromMarkdown'
-import { styled, Backdrop } from "@mui/material";
+import {Backdrop} from "@mui/material";
 
 const PREFIX = 'DraggableCard';
 

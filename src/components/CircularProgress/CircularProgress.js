@@ -1,11 +1,12 @@
 import React from 'react'
-import { styled, CircularProgress as CircularProgressUI } from '@mui/material'
+import { styled } from '@mui/material/styles';
+import CircularProgressUI from '@mui/material/CircularProgress'
 
-const PREFIX = 'CircularProgress'
+const PREFIX = 'CircularProgress';
 
 const classes = {
-  root: `${PREFIX}-root`,
-}
+  root: `${PREFIX}-root`
+};
 
 const Root = styled('div')(() => ({
   [`&.${classes.root}`]: {
@@ -16,15 +17,17 @@ const Root = styled('div')(() => ({
     width: '100%',
     height: '100%',
     padding: '3rem',
-  },
-}))
+  }
+}));
 
 function CircularProgress({ size }) {
+
+
   return (
     <Root className={classes.root}>
       <CircularProgressUI size={size} />
     </Root>
-  )
+  );
 }
 
 export default CircularProgress
