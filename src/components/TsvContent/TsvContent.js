@@ -164,7 +164,10 @@ const Item = ({
 
   function cleanQuote(originalQuote) {
     // cleanup - replace ellipsis
-    const quote = originalQuote.replaceAll('...', '…').replace(/( ?… ?)+/g, " & ")
+    const quote = originalQuote
+      .replaceAll('...', '…')
+      .replace(/( ?… ?)+/g, ' & ')
+      .replaceAll(/\n/g, '')
     return quote
   }
 
@@ -173,8 +176,8 @@ const Item = ({
       let value = event.target.value
       let quote
       if (updatedLabel === 'quote') {
-        const originalQuote = updatedItem.quote || value;
-        quote = cleanQuote(originalQuote);
+        const originalQuote = updatedItem.quote || value
+        quote = cleanQuote(originalQuote)
 
         if (quote !== originalQuote) {
           setUpdatedItem('quote', quote)
@@ -208,10 +211,7 @@ const Item = ({
         caution={caution}
         error={error}
         onClick={() => {
-          if (
-            setCurrentCheck &&
-            (label === 'Quote' || label === 'OrigQuote')
-          ) {
+          if (setCurrentCheck && (label === 'Quote' || label === 'OrigQuote')) {
             setCurrentCheck({
               quote: updatedItem['quote'] || value,
               occurrence: updatedItem['occurrence'] || Occurrence,
@@ -231,8 +231,8 @@ const Item = ({
           {label}
         </Legend>
         {label === 'Annotation' ||
-          label === 'Note' ||
-          label === 'OccurrenceNote' ? (
+        label === 'Note' ||
+        label === 'OccurrenceNote' ? (
           <BlockEditable
             id={valueId}
             editable={isEditable}
@@ -261,15 +261,15 @@ const Item = ({
             style={
               isFocused
                 ? {
-                  fontSize: fontSize,
-                  resize: 'none',
-                  color: '#38ADDF',
-                }
+                    fontSize: fontSize,
+                    resize: 'none',
+                    color: '#38ADDF',
+                  }
                 : {
-                  fontSize: fontSize,
-                  resize: 'none',
-                  border: 'none',
-                }
+                    fontSize: fontSize,
+                    resize: 'none',
+                    border: 'none',
+                  }
             }
             onFocus={event => setIsFocused(true)}
             onBlur={event => {
@@ -283,7 +283,14 @@ const Item = ({
                 onBlur(event)
               }
             }}
-            onChange={e => setUpdatedItem(updatedLabel, e.target.value)}
+            onChange={e => {
+              if (updatedLabel === 'quote') {
+                const quote = cleanQuote(e.target.value)
+                setUpdatedItem(updatedLabel, quote)
+              } else {
+                setUpdatedItem(updatedLabel, e.target.value)
+              }
+            }}
             clickable={setCurrentCheck && 'true'}
           />
         ) : (
