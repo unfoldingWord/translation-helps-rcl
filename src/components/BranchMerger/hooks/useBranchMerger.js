@@ -1,133 +1,261 @@
-import { useCallback, useEffect, useState, useMemo } from 'react'
-import {
-  mergeDefaultIntoUserBranch,
-  checkMergeDefaultIntoUserBranch,
-  checkMergeUserIntoDefaultBranch,
-  mergeUserIntoDefaultBranch
-} from "dcs-branch-merger"
-
-const defaultStatus = {
-  "mergeNeeded": false,
-  "conflict": false,
-  "success": false,
-  "userBranchDeleted": false,
-  "error": false,
-  "message": "",
-  "pullRequest": "",
-}
+import { useCallback, useEffect, useState, useMemo, useRef } from 'react'
+import { defaultStatus, DEFAULT_AUTO_CHECK_INTERVAL } from '../constants'
+import { branchOperations } from '../branchOperations'
+import { createQueuedOperation } from '../utils/queuedOperation'
+import { withRetry } from '../utils/withRetry'
 
 /**
- * Legend:
- * merge = push from user branch to master branch
- * update = pull from master branch to user branch
- **/
+ * Hook for managing git branch operations between user branch and default/master branch.
+ * Handles merging, updating, and checking status of branches with rate limiting and retries.
+ *
+ * @param {Object} params
+ * @param {string} params.server - Server URL
+ * @param {string} params.owner - Repository owner
+ * @param {string} params.repo - Repository name
+ * @param {string} params.userBranch - User branch name
+ * @param {string} params.tokenid - Authentication token
+ * @param {Object} [options]
+ * @param {boolean} [options.autoCheck=false] - Enable automatic status checking
+ * @param {number} [options.autoCheckInterval=30000] - Interval for auto checking in ms
+ */
 
-//Adapters
-const update = (params) => mergeDefaultIntoUserBranch(params);
-const checkUpdate = (params) => checkMergeDefaultIntoUserBranch(params);
-const merge = (params) => mergeUserIntoDefaultBranch(params);
-const checkMerge = (params) => checkMergeUserIntoDefaultBranch(params);
+// Create a single shared queue for all hook instances
+const globalQueuedOperation = createQueuedOperation()
 
-export default function useBranchMerger({ server, owner, repo, userBranch, tokenid }) {
+export function useBranchMerger(
+  { server, owner, repo, userBranch, tokenid },
+  { autoCheck = false, autoCheckInterval = DEFAULT_AUTO_CHECK_INTERVAL } = {}
+) {
+  const [mergeStatus, setMergeStatus] = useState(defaultStatus)
+  const [updateStatus, setUpdateStatus] = useState(defaultStatus)
+  const [loadingUpdate, setLoadingUpdate] = useState(false)
+  const [loadingMerge, setLoadingMerge] = useState(false)
+  const [isAutoChecking, setIsAutoChecking] = useState(autoCheck)
 
-  const [mergeStatus, setMergeStatus] = useState(defaultStatus);
-  const [updateStatus, setUpdateStatus] = useState(defaultStatus);
-  const [loadingUpdate, setLoadingUpdate] = useState(false);
-  const [loadingMerge, setLoadingMerge] = useState(false);
+  // Store interval ID for cleanup
+  const autoCheckIntervalId = useRef(null)
 
-  const params = useMemo(() => ({ server, owner, repo, userBranch, tokenid }), [server, owner, repo, userBranch, tokenid])
+  // Remove the queuedOperation from useMemo
+  const params = useMemo(
+    () => ({
+      server,
+      owner,
+      repo,
+      userBranch,
+      tokenid,
+    }),
+    [server, owner, repo, userBranch, tokenid]
+  )
 
-  const setStatus = useCallback((setter, newStatus) => setter( prevStatus => {
-    if (Object.keys(prevStatus).some(key => prevStatus[key] !== newStatus[key])) return {...prevStatus, ...newStatus};
-    return prevStatus;
-  }), [])
+  // Validate all required parameters are present
+  const validateParams = useCallback(() => {
+    const missingParams = Object.entries(params)
+      .filter(([_, value]) => !value)
+      .map(([key]) => key)
 
-  const isInvalid =  useCallback((setter, {server, owner, repo, userBranch, tokenid}) => {
-    if (![server, owner, repo, userBranch, tokenid].every(Boolean))  {
-      setStatus(setter, defaultStatus);
-      return Promise.resolve(defaultStatus);
-    };
-  }, [setStatus])
+    if (missingParams.length > 0) {
+      return {
+        ...defaultStatus,
+        error: true,
+        message: `Missing required parameters: ${missingParams.join(', ')}`,
+      }
+    }
+  }, [params])
 
-  const runMergeHandler = useCallback(async ({setter,handler,params}) => isInvalid(setter, params) ?? handler(params)
-  .then((newStatus) => {
-    setStatus(setter, newStatus)
-    return newStatus
-  }).catch(e => {
-    const newStatus = {...defaultStatus, error:true, message: e.message}
-    setStatus(setter, newStatus)
-    return newStatus
-  }),[isInvalid,setStatus]);
+  // Create operations with consistent error handling and loading states
+  const checkUpdateStatus = useCallback(
+    async (additionalParams = {}) => {
+      const validationError = validateParams()
+      if (validationError) return validationError
+
+      setLoadingUpdate(true)
+      try {
+        const result = await withRetry(() =>
+          globalQueuedOperation(() =>
+            branchOperations.checkPullFromDefault({
+              ...params,
+              ...additionalParams,
+            })
+          )
+        )
+        setUpdateStatus(result)
+        return result
+      } catch (error) {
+        const errorStatus = {
+          ...defaultStatus,
+          error: true,
+          message: error.message,
+        }
+        setUpdateStatus(errorStatus)
+        return errorStatus
+      } finally {
+        setLoadingUpdate(false)
+      }
+    },
+    [params, validateParams]
+  )
+
+  const updateUserBranch = useCallback(
+    async (additionalParams = {}) => {
+      const validationError = validateParams()
+      if (validationError) return validationError
+
+      setLoadingUpdate(true)
+      try {
+        const result = await withRetry(() =>
+          globalQueuedOperation(() =>
+            branchOperations.pullFromDefault({ ...params, ...additionalParams })
+          )
+        )
+        setUpdateStatus(result)
+        return result
+      } catch (error) {
+        const errorStatus = {
+          ...defaultStatus,
+          error: true,
+          message: error.message,
+        }
+        setUpdateStatus(errorStatus)
+        return errorStatus
+      } finally {
+        setLoadingUpdate(false)
+      }
+    },
+    [params, validateParams]
+  )
+
+  const checkMergeStatus = useCallback(
+    async (additionalParams = {}) => {
+      const validationError = validateParams()
+      if (validationError) return validationError
+
+      setLoadingMerge(true)
+      try {
+        const result = await withRetry(() =>
+          globalQueuedOperation(() =>
+            branchOperations.checkPushToDefault({
+              ...params,
+              ...additionalParams,
+            })
+          )
+        )
+        setMergeStatus(result)
+        return result
+      } catch (error) {
+        const errorStatus = {
+          ...defaultStatus,
+          error: true,
+          message: error.message,
+        }
+        setMergeStatus(errorStatus)
+        return errorStatus
+      } finally {
+        setLoadingMerge(false)
+      }
+    },
+    [params, validateParams]
+  )
+
+  const mergeMasterBranch = useCallback(
+    async prDescription => {
+      const validationError = validateParams()
+      if (validationError) return validationError
+
+      setLoadingMerge(true)
+      try {
+        const result = await withRetry(() =>
+          globalQueuedOperation(() =>
+            branchOperations.pushToDefault({ ...params, prDescription })
+          )
+        )
+        setMergeStatus(result)
+        return result
+      } catch (error) {
+        const errorStatus = {
+          ...defaultStatus,
+          error: true,
+          message: error.message,
+        }
+        setMergeStatus(errorStatus)
+        return errorStatus
+      } finally {
+        setLoadingMerge(false)
+      }
+    },
+    [params, validateParams]
+  )
 
   /**
-   * updates the updateStatus state
+   * Start automatic status checking at specified interval
    */
-  const checkUpdateStatus = useCallback(() => {
-    setLoadingUpdate(true);
-    const setter = setUpdateStatus;
-    const handler = checkUpdate;
-    console.log("branch-merger: started checking update");
-    return runMergeHandler({setter,handler,params}).then(r => {
-      setLoadingUpdate(false);
-      console.log("branch-merger: finished checking update");
-      return r
-    })
-  },[params,runMergeHandler])
+  const startAutoCheck = useCallback(() => {
+    if (autoCheckIntervalId.current) return // Already running
+
+    setIsAutoChecking(true)
+    checkUpdateStatus() // Initial check
+    autoCheckIntervalId.current = setInterval(
+      checkUpdateStatus,
+      autoCheckInterval
+    )
+  }, [checkUpdateStatus, autoCheckInterval])
 
   /**
-   * pulls master branch from user branch
+   * Stop automatic status checking
    */
-  const updateUserBranch = useCallback(() => {
-    if (loadingUpdate) return
-    setLoadingUpdate(true);
-    const setter = setUpdateStatus;
-    const handler = update;
-    return runMergeHandler({setter,handler,params}).then(r => { setLoadingUpdate(false);  return r})
-  },[params,runMergeHandler]);
+  const stopAutoCheck = useCallback(() => {
+    if (autoCheckIntervalId.current) {
+      clearInterval(autoCheckIntervalId.current)
+      autoCheckIntervalId.current = null
+    }
+    setIsAutoChecking(false)
+  }, [])
 
-   /**
-   * updates the mergeStatus state
-   */
-  const checkMergeStatus = useCallback(() => {
-    if (loadingMerge) return
-    setLoadingMerge(true);
-    const setter = setMergeStatus;
-    const handler = checkMerge;
-    return runMergeHandler({setter,handler,params}).then(r => { setLoadingMerge(false);  return r})
-  }, [params,runMergeHandler])
-
-  /**
-   * pushes user branch to master branch
-   */
-  const mergeMasterBranch = useCallback((prDescription) => {
-    setLoadingMerge(true);
-    const setter = setMergeStatus;
-    const handler = merge;
-    return runMergeHandler({ setter, handler, params: { ...params, prDescription } }).then(r => {
-      setLoadingMerge(false);
-      return r
-    })
-  },[params,runMergeHandler]);
-
+  // Handle auto-check initialization and cleanup
   useEffect(() => {
-    checkMergeStatus();
-  }, [checkMergeStatus])
+    if (autoCheck) {
+      startAutoCheck()
+    }
 
+    return () => {
+      if (autoCheckIntervalId.current) {
+        clearInterval(autoCheckIntervalId.current)
+      }
+    }
+  }, [autoCheck, startAutoCheck])
+
+  // Handle changes to autoCheckInterval
   useEffect(() => {
-    checkUpdateStatus();
-  }, [checkUpdateStatus])
+    if (isAutoChecking) {
+      stopAutoCheck()
+      startAutoCheck()
+    }
+  }, [autoCheckInterval, isAutoChecking, startAutoCheck, stopAutoCheck])
+
+  // Initial status check
+  useEffect(() => {
+    checkMergeStatus()
+    if (!autoCheck) {
+      checkUpdateStatus() // Only check if not auto-checking
+    }
+  }, [checkMergeStatus, checkUpdateStatus, autoCheck])
 
   return {
     state: {
       mergeStatus,
       updateStatus,
       loadingUpdate,
-      loadingMerge
-    }, actions: {
+      loadingMerge,
+      isAutoChecking,
+    },
+    actions: {
       checkUpdateStatus,
       checkMergeStatus,
       updateUserBranch,
-      mergeMasterBranch
-    }
+      mergeMasterBranch,
+      startAutoCheck,
+      stopAutoCheck,
+    },
   }
 }
+
+export default useBranchMerger

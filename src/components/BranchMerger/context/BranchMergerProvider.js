@@ -1,10 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-
-export const BranchMergerContext = createContext();
-export const useBranchMergerContext = () => {
-    return useContext(BranchMergerContext)
-}
+import { BranchMergerContext } from './BranchMergerContext'
 
 const BranchMergerProvider = ({ children }) => {
 
