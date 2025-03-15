@@ -17,6 +17,9 @@ import { withRetry } from '../utils/withRetry'
  * @param {Object} [options]
  * @param {boolean} [options.autoCheck=false] - Enable automatic status checking
  * @param {number} [options.autoCheckInterval=30000] - Interval for auto checking in ms
+ * @param {Function} [options.onUpdateError] - Callback when update operations fail
+ * @param {Function} [options.onMergeError] - Callback when merge operations fail
+ * @param {Function} [options.onCheckError] - Callback when status check operations fail
  */
 
 // Create a single shared queue for all hook instances
@@ -24,7 +27,13 @@ const globalQueuedOperation = createQueuedOperation()
 
 export function useBranchMerger(
   { server, owner, repo, userBranch, tokenid },
-  { autoCheck = false, autoCheckInterval = DEFAULT_AUTO_CHECK_INTERVAL } = {}
+  {
+    autoCheck = false,
+    autoCheckInterval = DEFAULT_AUTO_CHECK_INTERVAL,
+    onUpdateError,
+    onMergeError,
+    onCheckError,
+  } = {}
 ) {
   const [mergeStatus, setMergeStatus] = useState(defaultStatus)
   const [updateStatus, setUpdateStatus] = useState(defaultStatus)
@@ -87,12 +96,13 @@ export function useBranchMerger(
           message: error.message,
         }
         setUpdateStatus(errorStatus)
+        onCheckError?.(error, 'update')
         return errorStatus
       } finally {
         setLoadingUpdate(false)
       }
     },
-    [params, validateParams]
+    [params, validateParams, onCheckError]
   )
 
   const updateUserBranch = useCallback(
@@ -116,12 +126,13 @@ export function useBranchMerger(
           message: error.message,
         }
         setUpdateStatus(errorStatus)
+        onUpdateError?.(error)
         return errorStatus
       } finally {
         setLoadingUpdate(false)
       }
     },
-    [params, validateParams]
+    [params, validateParams, onUpdateError]
   )
 
   const checkMergeStatus = useCallback(
@@ -148,12 +159,13 @@ export function useBranchMerger(
           message: error.message,
         }
         setMergeStatus(errorStatus)
+        onCheckError?.(error, 'merge')
         return errorStatus
       } finally {
         setLoadingMerge(false)
       }
     },
-    [params, validateParams]
+    [params, validateParams, onCheckError]
   )
 
   const mergeMasterBranch = useCallback(
@@ -177,12 +189,13 @@ export function useBranchMerger(
           message: error.message,
         }
         setMergeStatus(errorStatus)
+        onMergeError?.(error)
         return errorStatus
       } finally {
         setLoadingMerge(false)
       }
     },
-    [params, validateParams]
+    [params, validateParams, onMergeError]
   )
 
   /**

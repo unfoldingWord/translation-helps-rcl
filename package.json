@@ -1,6 +1,6 @@
 {
     "name": "translation-helps-rcl",
-    "version": "3.6.4",
+    "version": "3.6.5",
     "main": "dist/index.js",
     "homepage": "https://translation-helps-rcl.netlify.app/",
     "repository": "https://github.com/unfoldingWord/translation-helps-rcl.git",
@@ -14,7 +14,10 @@
         "lint:fix": "eslint ./src --fix",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
         "prepublishOnly": "rm -rf ./dist && babel ./src --out-dir ./dist -s inline",
-        "postpublish": "git tag \"v$npm_package_version\" && git push origin \"v$npm_package_version\""
+        "postpublish": "git tag \"v$npm_package_version\" && git push origin \"v$npm_package_version\"",
+        "dev": "babel ./src --out-dir ./dist -s inline --watch",
+        "watch:dist": "chokidar \"dist/**/*\" -c \"yalc publish --push --no-scripts\"",
+        "dev:sync": "concurrently \"yarn dev\" \"yarn watch:dist\""
     },
     "files": [
         "dist/*"
@@ -49,6 +52,8 @@
         "@mui/styles": "^5.8.7",
         "babel-jest": "^27.3.1",
         "babel-loader": "^8.2.2",
+        "chokidar-cli": "^3.0.0",
+        "concurrently": "^9.1.2",
         "gitea-react-toolkit": "^2.1.2",
         "jest": "^27.3.1",
         "markdown-translatable": "^2.1.1",

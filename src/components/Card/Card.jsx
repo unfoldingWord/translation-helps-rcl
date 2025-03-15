@@ -357,7 +357,7 @@ const Card = ({
         enableAutoScrollToTop={enableAutoScrollToTop}
       />
     </StyledPaper>
-  );
+  )
 }
 
 Card.defaultProps = {
