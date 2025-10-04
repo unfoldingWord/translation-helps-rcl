@@ -29,7 +29,7 @@ let cardNames = {
     gst: 'Gateway Language Simplified Text',
 };
 
-export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards, cardsToMerge }) {
+export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadingProps, mergeStatusForCards, cardsToMerge, cardTitles }) {
     const [checkedIds, setCheckedIds] = useState([]);
 
     const descriptionRef = useRef(null);
@@ -61,7 +61,7 @@ export default function MergeDialog({ onSubmit, onCancel, open, isLoading, loadi
                             sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}
                         >
                             <FormControlLabel
-                                label={cardNames[cardId]}
+                                label={cardNames[cardId] || cardTitles?.[cardId] || ''}
                                 control={<Checkbox
                                     value={cardId}
                                     checked={checkedIds.includes(cardId)}
