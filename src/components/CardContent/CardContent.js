@@ -7,28 +7,28 @@ import TsvList from '../TsvList'
 import TqContent from '../TqContent'
 
 const CardContent = ({
-  id,
-  item,
-  items,
-  onEdit,
-  filters,
-  markdown,
-  viewMode,
-  setCurrentCheck,
-  editable,
-  isLoading,
-  onTsvEdit,
-  setContent,
-  markdownView,
-  errorMessage,
-  twlActionButtons,
-  selectedQuote,
-  shouldDisableClick,
-  cardResourceId,
-  updateTaDetails,
-  fontSize: _fontSize,
-  showSaveChangesPrompt,
-  setItemIndex,
+   cardResourceId,
+   editable = false,
+   errorMessage,
+   filters,
+   fontSize: _fontSize = 100,
+   id,
+   item,
+   isLoading = false,
+   items,
+   markdown,
+   markdownView,
+   onEdit = () => {},
+   onTsvEdit,
+   selectedQuote,
+   setContent,
+   setCurrentCheck,
+   setItemIndex,
+   shouldDisableClick,
+   showSaveChangesPrompt,
+   twlActionButtons,
+   updateTaDetails,
+   viewMode = 'default',
 }) => {
   const fontSize = _fontSize === 100 ? 'inherit' : `${_fontSize}%`
 
@@ -145,14 +145,6 @@ const CardContent = ({
       </div>
     )
   }
-}
-
-CardContent.defaultProps = {
-  fontSize: 100,
-  editable: false,
-  isLoading: false,
-  onEdit: () => {},
-  viewMode: 'default',
 }
 
 CardContent.propTypes = {
