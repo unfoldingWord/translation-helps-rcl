@@ -45,19 +45,19 @@ const Message = styledComponents.div`
 `
 
 export default function DraggableCard({
-  open,
   error,
-  title,
-  content,
-  onClose,
-  loading,
-  fontSize,
-  id,
-  showRawContent,
-  workspaceRef,
+  dimBackground = false,
+  fontSize = '100%',
+  title = '',
+  content = '',
+  id = 'draggable_article_card',
   initialPosition,
-  updateBounds,
-  dimBackground,
+  loading,
+  open,
+  onClose,
+  showRawContent = false,
+  updateBounds = 0,
+  workspaceRef = null,
 }) {
 
   const cardRef = useRef(null)
@@ -155,16 +155,6 @@ export default function DraggableCard({
     getDraggableModal();
 }
 
-DraggableCard.defaultProps = {
-  id: 'draggable_article_card',
-  title: '',
-  content: '',
-  fontSize: '100%',
-  showRawContent: false,
-  workspaceRef: null,
-  updateBounds: 0,
-  dimBackground: false,
-}
 
 DraggableCard.propTypes = {
   /** Determines whether the DraggableCard is opened or not */

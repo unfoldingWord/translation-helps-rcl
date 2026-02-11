@@ -7,20 +7,19 @@ import cleanMarkdownLineBreak from '../../core/cleanMarkdownLineBreak'
 import { TextareaAutosize } from '@mui/material'
 
 export default function TsvContent({
-  id,
-  item,
-  filters,
-  editable,
-  setCurrentCheck,
-  onTsvEdit,
-  setContent,
-  markdownView,
-
-  selectedQuote,
-  cardResourceId,
-  updateTaDetails,
-  fontSize: _fontSize,
-  showSaveChangesPrompt,
+ cardResourceId,
+ editable,
+ filters,
+ fontSize: _fontSize = 100,
+ id = '',
+ item,
+ markdownView,
+ onTsvEdit,
+ selectedQuote,
+ setContent,
+ setCurrentCheck,
+ showSaveChangesPrompt,
+ updateTaDetails,
 }) {
   const [updatedItem, setUpdatedItemState] = useState({
     quote: null,
@@ -323,11 +322,6 @@ const Item = ({
       )}
     </Fragment>
   )
-}
-
-TsvContent.defaultProps = {
-  fontSize: 100,
-  id: '',
 }
 
 TsvContent.propTypes = {

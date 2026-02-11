@@ -23,14 +23,14 @@ const Input = styled.input`
   }
 `
 export default function TsvList({
-  items,
-  filters,
-  fontSize,
-  setCurrentCheck,
   editable,
+  filters,
+  fontSize = 100,
+  items,
   onTsvEdit,
   renderedActionButtons,
   setContent,
+  setCurrentCheck,
   setItemIndex,
   selectedQuote,
   showSaveChangesPrompt,
@@ -118,10 +118,6 @@ export default function TsvList({
       </Table>
     </Container>
   )
-}
-
-TsvList.defaultProps = {
-  fontSize: 100,
 }
 
 TsvList.propTypes = {
