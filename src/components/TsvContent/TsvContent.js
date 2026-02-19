@@ -149,6 +149,8 @@ const Item = ({
     'OrigQuote',
     'Quote',
     'Note',
+    'Question',
+    'Response'
   ]
   const isEditable = editable && editableFields.includes(label)
   const { Note, Annotation, OccurrenceNote } = item
