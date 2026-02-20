@@ -98,7 +98,7 @@ const useCardState = ({
     ) {
       // If different Tsv Version reset headers & filters.
       setHeaders(initialHeaders)
-      setFilters(initialHeaders)
+      setFilters(initialHeaders) // TODO - need to add initialFilters prop
     }
   }, [item, headers])
 
