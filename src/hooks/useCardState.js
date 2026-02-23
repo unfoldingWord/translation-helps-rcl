@@ -3,15 +3,16 @@ import useDeepCompareEffect from 'use-deep-compare-effect'
 import determineDiffTsvVersion from '../core/determineDiffTsvVersion'
 
 const useCardState = ({
-  id,
-  items,
-  verse,
   chapter,
-  setCurrentCheck,
+  id,
+  initialFilters = null,
+  items,
   projectId,
   resourceId,
   selectedQuote = {},
+  setCurrentCheck,
   useUserLocalStorage,
+  verse,
 }) => {
   const [itemIndex, setItemIndex] = useState(0)
   const item = items ? items[itemIndex] : null
@@ -25,7 +26,7 @@ const useCardState = ({
     : useState([])
   const [filters, setFilters] = useUserLocalStorage
     ? useUserLocalStorage(`filters_${id}`, null)
-    : useState(null)
+    : useState(initialFilters)
   const [markdownView, setMarkdownView] = useUserLocalStorage
     ? useUserLocalStorage(`markdownView${id}`, false)
     : useState(false)
@@ -84,9 +85,26 @@ const useCardState = ({
     }
   }, [item, headers])
 
-  useDeepCompareEffect(() => {
-    if (!filters && headers.length > 0) {
+  /**
+   * Initializes filters based on the provided initial filters or headers.
+   * If initialFilters are available, they are set as the filters. Otherwise,
+   * headers are used as the filters if they are available.
+   *
+   * @param {Array} initialFilters - An array containing the initial filter values.
+   * @param {Array} headers - An array containing header values to fall back on if initialFilters are not provided.
+   * @return {void} This function does not return any value.
+   */
+  function initializeFilters(initialFilters, headers) {
+    if (initialFilters?.length > 0) {
+      setFilters(initialFilters)
+    } else if (headers?.length > 0) {
       setFilters(headers)
+    }
+  }
+
+  useDeepCompareEffect(() => {
+    if (!filters) {
+      initializeFilters(initialFilters, headers);
     }
   }, [headers])
 
@@ -98,7 +116,7 @@ const useCardState = ({
     ) {
       // If different Tsv Version reset headers & filters.
       setHeaders(initialHeaders)
-      setFilters(initialHeaders) // TODO - need to add initialFilters prop
+      initializeFilters(initialFilters, initialHeaders)
     }
   }, [item, headers])
 
