@@ -101,6 +101,7 @@ async function searchCatalog(server, config, params) {
     config: {
       ...config,
       server,
+      skipNetworkCheck: true,
     },
     params: params_,
     fullResponse: config.fullResponse,

@@ -141,10 +141,14 @@ export default function useTsvItems({
               // only fetch data if we were able to get path for item
               const ref = item?.SupportReference || item?.TWLink
               try {
+                const config = {
+                  ...httpConfig,
+                  skipNetworkCheck: true,
+                };
                 const result = await get({
                   url,
                   params: {},
-                  config: httpConfig,
+                  config,
                   fullResponse: true,
                 }).then(response => {
                   const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`

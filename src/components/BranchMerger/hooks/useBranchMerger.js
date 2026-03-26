@@ -5,23 +5,65 @@ import { createQueuedOperation } from '../utils/queuedOperation'
 import { withRetry } from '../utils/withRetry'
 
 /**
- * Hook for managing git branch operations between user branch and default/master branch.
- * Handles merging, updating, and checking status of branches with rate limiting and retries.
+ * useBranchMerger
  *
- * @param {Object} params
- * @param {string} params.server - Server URL
- * @param {string} params.owner - Repository owner
- * @param {string} params.repo - Repository name
- * @param {string} params.userBranch - User branch name
- * @param {string} params.tokenid - Authentication token
- * @param {Object} [options]
- * @param {boolean} [options.autoCheck=false] - Enable automatic status checking
- * @param {number} [options.autoCheckInterval=30000] - Interval for auto checking in ms
+ * Central hook for managing branch-merger state and actions between a user's
+ * working branch and the repository default branch.
+ *
+ * It provides a small state machine around common branch operations:
+ * - checking whether the user branch needs updates from the default branch
+ * - pulling default-branch changes into the user branch
+ * - checking whether the user branch is ready to merge back to default
+ * - pushing the user branch to default
+ *
+ * The hook also adds a few operational guarantees around those requests:
+ * - required parameter validation before network operations begin
+ * - retry behavior for transient failures
+ * - queued execution so branch operations do not overlap in unsafe ways
+ * - optional automatic polling for update status
+ *
+ * This keeps UI components simple: they can consume one hook for state,
+ * loading flags, and actions rather than coordinating branch operations
+ * themselves.
  */
 
-// Create a single shared queue for all hook instances
+// A single shared queue is used across all instances of the hook so branch
+// operations are executed sequentially instead of competing with each other.
 const globalQueuedOperation = createQueuedOperation()
 
+/**
+ * Hook for managing git branch operations between a user branch and the
+ * repository default branch.
+ *
+ * @param {Object} params Required repository and authentication parameters.
+ * @param {string} params.server Base server URL.
+ * @param {string} params.owner Repository owner or organization name.
+ * @param {string} params.repo Repository name.
+ * @param {string} params.userBranch Name of the user's working branch.
+ * @param {string} params.tokenid Authentication token identifier.
+ * @param {Object} [options={}] Optional hook behavior.
+ * @param {boolean} [options.autoCheck=false] When true, periodically checks
+ * whether the user branch needs updates from the default branch.
+ * @param {number} [options.autoCheckInterval=DEFAULT_AUTO_CHECK_INTERVAL]
+ * Polling interval in milliseconds for automatic update checks.
+ * @returns {{
+ *   state: {
+ *     mergeStatus: Object,
+ *     updateStatus: Object,
+ *     loadingUpdate: boolean,
+ *     loadingMerge: boolean,
+ *     isAutoChecking: boolean
+ *   },
+ *   actions: {
+ *     checkUpdateStatus: (additionalParams?: Object) => Promise<Object>,
+ *     checkMergeStatus: (additionalParams?: Object) => Promise<Object>,
+ *     updateUserBranch: (additionalParams?: Object) => Promise<Object>,
+ *     mergeMasterBranch: (prDescription?: string) => Promise<Object>,
+ *     startAutoCheck: () => void,
+ *     stopAutoCheck: () => void
+ *   }
+ * }}
+ */
 export function useBranchMerger(
   { server, owner, repo, userBranch, tokenid },
   { autoCheck = false, autoCheckInterval = DEFAULT_AUTO_CHECK_INTERVAL } = {}
@@ -32,10 +74,12 @@ export function useBranchMerger(
   const [loadingMerge, setLoadingMerge] = useState(false)
   const [isAutoChecking, setIsAutoChecking] = useState(autoCheck)
 
-  // Store interval ID for cleanup
+  // Holds the active polling interval so it can be restarted or cleaned up
+  // safely when options change or the component unmounts.
   const autoCheckIntervalId = useRef(null)
 
-  // Remove the queuedOperation from useMemo
+  // Memoize the operation parameters so callbacks can depend on one stable
+  // object rather than individual values.
   const params = useMemo(
     () => ({
       server,
@@ -47,7 +91,16 @@ export function useBranchMerger(
     [server, owner, repo, userBranch, tokenid]
   )
 
-  // Validate all required parameters are present
+  /**
+   * Validates that all required branch-operation parameters are present.
+   *
+   * Instead of throwing, this returns a status-like error object that matches
+   * the rest of the hook API. That makes it easier for consumers to handle
+   * validation failures the same way they handle remote operation failures.
+   *
+   * @returns {Object|undefined} A status-shaped error object when validation
+   * fails; otherwise `undefined`.
+   */
   const validateParams = useCallback(() => {
     const missingParams = Object.entries(params)
       .filter(([_, value]) => !value)
@@ -62,7 +115,17 @@ export function useBranchMerger(
     }
   }, [params])
 
-  // Create operations with consistent error handling and loading states
+  /**
+   * Checks whether the user branch needs to pull changes from the default
+   * branch.
+   *
+   * The request is queued and retried so overlapping branch operations are
+   * avoided and transient failures have a chance to recover.
+   *
+   * @param {Object} [additionalParams={}] Optional overrides merged into the
+   * request parameters.
+   * @returns {Promise<Object>} The resulting update-status object.
+   */
   const checkUpdateStatus = useCallback(
     async (additionalParams = {}) => {
       const validationError = validateParams()
@@ -95,6 +158,16 @@ export function useBranchMerger(
     [params, validateParams]
   )
 
+  /**
+   * Pulls changes from the default branch into the user branch.
+   *
+   * The returned status is written back into `updateStatus` so consumers can
+   * immediately reflect the latest update result in the UI.
+   *
+   * @param {Object} [additionalParams={}] Optional overrides merged into the
+   * request parameters.
+   * @returns {Promise<Object>} The resulting update-status object.
+   */
   const updateUserBranch = useCallback(
     async (additionalParams = {}) => {
       const validationError = validateParams()
@@ -124,6 +197,16 @@ export function useBranchMerger(
     [params, validateParams]
   )
 
+  /**
+   * Checks whether the user branch is ready to merge into the default branch.
+   *
+   * This is tracked separately from update status because "can I merge?" and
+   * "do I need to update first?" are related but distinct repository states.
+   *
+   * @param {Object} [additionalParams={}] Optional overrides merged into the
+   * request parameters.
+   * @returns {Promise<Object>} The resulting merge-status object.
+   */
   const checkMergeStatus = useCallback(
     async (additionalParams = {}) => {
       const validationError = validateParams()
@@ -156,6 +239,13 @@ export function useBranchMerger(
     [params, validateParams]
   )
 
+  /**
+   * Merges the user branch into the default branch.
+   *
+   * @param {string} [prDescription] Optional pull-request or merge description
+   * passed through to the branch operation.
+   * @returns {Promise<Object>} The resulting merge-status object.
+   */
   const mergeMasterBranch = useCallback(
     async prDescription => {
       const validationError = validateParams()
@@ -186,13 +276,20 @@ export function useBranchMerger(
   )
 
   /**
-   * Start automatic status checking at specified interval
+   * Starts periodic update-status polling.
+   *
+   * If polling is already active, this function exits early to avoid creating
+   * duplicate intervals.
    */
   const startAutoCheck = useCallback(() => {
-    if (autoCheckIntervalId.current) return // Already running
+    if (autoCheckIntervalId.current) return
 
     setIsAutoChecking(true)
-    checkUpdateStatus() // Initial check
+
+    // Run one check immediately so the UI does not wait for the first interval
+    // tick before showing current update state.
+    checkUpdateStatus()
+
     autoCheckIntervalId.current = setInterval(
       checkUpdateStatus,
       autoCheckInterval
@@ -200,7 +297,7 @@ export function useBranchMerger(
   }, [checkUpdateStatus, autoCheckInterval])
 
   /**
-   * Stop automatic status checking
+   * Stops periodic update-status polling and clears the active interval.
    */
   const stopAutoCheck = useCallback(() => {
     if (autoCheckIntervalId.current) {
@@ -210,7 +307,8 @@ export function useBranchMerger(
     setIsAutoChecking(false)
   }, [])
 
-  // Handle auto-check initialization and cleanup
+  // Start polling automatically when requested, and always clean up the active
+  // interval when the component using this hook unmounts.
   useEffect(() => {
     if (autoCheck) {
       startAutoCheck()
@@ -223,7 +321,8 @@ export function useBranchMerger(
     }
   }, [autoCheck, startAutoCheck])
 
-  // Handle changes to autoCheckInterval
+  // If the polling interval changes while auto-checking is active, restart the
+  // timer so the new interval takes effect immediately.
   useEffect(() => {
     if (isAutoChecking) {
       stopAutoCheck()
@@ -231,7 +330,10 @@ export function useBranchMerger(
     }
   }, [autoCheckInterval, isAutoChecking, startAutoCheck, stopAutoCheck])
 
-  // Initial status check
+  // Run initial status checks on mount:
+  // - merge status is always checked
+  // - update status is checked here only when polling is disabled, because the
+  //   polling startup path already performs an immediate update check
   useEffect(() => {
     checkMergeStatus()
     if (!autoCheck) {
