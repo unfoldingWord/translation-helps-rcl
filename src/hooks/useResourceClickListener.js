@@ -119,6 +119,7 @@ export default function useResourceClickListener({
           const _config = {
             ...authentication.config,
             ...httpConfig,
+            skipNetworkCheck: true,
           }
 
           if (url) {
