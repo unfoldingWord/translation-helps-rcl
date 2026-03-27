@@ -65,7 +65,7 @@ const globalQueuedOperation = createQueuedOperation()
  * }}
  */
 export function useBranchMerger(
-  { server, owner, repo, userBranch, tokenid },
+  { server, owner, repo, userBranch, tokenid, userId },
   { autoCheck = false, autoCheckInterval = DEFAULT_AUTO_CHECK_INTERVAL } = {}
 ) {
   const [mergeStatus, setMergeStatus] = useState(defaultStatus)
@@ -87,8 +87,9 @@ export function useBranchMerger(
       repo,
       userBranch,
       tokenid,
+      userId
     }),
-    [server, owner, repo, userBranch, tokenid]
+    [server, owner, repo, userBranch, tokenid, userId]
   )
 
   /**
